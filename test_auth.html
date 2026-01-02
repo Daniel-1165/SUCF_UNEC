@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supabase Isolation Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: sans-serif; padding: 40px; background: #f0fdf4; color: #064e3b;">
+    <h1>Supabase Isolation Test</h1>
+    <p>This page runs OUTSIDE your React app. If this fails, your Supabase Project is 100% broken.</p>
+    
+    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+        <input type="email" id="testEmail" placeholder="test@example.com" style="padding: 10px; width: 100%; margin-bottom: 10px;">
+        <input type="password" id="testPass" placeholder="password123" style="padding: 10px; width: 100%; margin-bottom: 10px;">
+        <button onclick="runTest()" style="padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Attempt Sign Up
+        </button>
+    </div>
+
+    <div id="logs" style="margin-top: 20px; font-family: monospace; white-space: pre-wrap; background: #111; color: #4ade80; padding: 20px; border-radius: 10px;">Waiting...</div>
+
+    <script>
+        // REPLACE THESE WITH YOUR VALUES IF NEEDED (I grabbed them from your env context)
+        const SUPABASE_URL = 'https://rwfihokueijosudunhta.supabase.co'; 
+        const SUPABASE_KEY = 'sb_publishable_xT6ci8NTPTrBLRMcAgSwwg_c-Q6uE7b'; // This looked like the key from earlier context, verify if possible
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function log(msg, isError = false) {
+            const el = document.getElementById('logs');
+            const color = isError ? '#ef4444' : '#4ade80';
+            const time = new Date().toLocaleTimeString();
+            el.innerHTML += `<div style="color: ${color}">[${time}] ${msg}</div>`;
+        }
+
+        async function runTest() {
+            const email = document.getElementById('testEmail').value || 'test_' + Math.floor(Math.random() * 9999) + '@test.com';
+            const password = document.getElementById('testPass').value || 'password123';
+
+            document.getElementById('logs').innerHTML = 'Starting test...<br>';
+            log(`Target: ${SUPABASE_URL}`);
+            log(`Attempting to register: ${email}`);
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    log(`FAILED: ${error.message}`, true);
+                    log(`Status: ${error.status || 'Unknown'}`, true);
+                    console.error(error);
+                } else {
+                    log('SUCCESS!');
+                    log(`User ID: ${data.user.id}`);
+                    log(`Confirmation Sent? ${!data.session}`);
+                }
+            } catch (err) {
+                log(`CRASH: ${err.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>
