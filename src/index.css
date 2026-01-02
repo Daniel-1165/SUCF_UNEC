@@ -11,6 +11,13 @@
   --emerald-500: #10b981;
   --emerald-50: #ecfdf5;
   
+  /* Zeni Design Tokens */
+  --zeni-dark: #00211F;
+  --zeni-mint: #E8F3EF;
+  --zeni-cream: #F5F9F7;
+  --zeni-emerald: #10b981;
+  --zeni-accent: #D1E8E0;
+
   /* Background Vars */
   --bg-subtle: #f9fafb;
 
@@ -50,9 +57,27 @@
   .section-tag {
     @apply inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 mb-6 text-[10px] font-bold text-emerald-900 tracking-widest uppercase;
   }
+
+  /* Zeni Specific Components */
+  .zeni-card {
+    @apply bg-white rounded-[3rem] border border-[#E8F3EF] shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.05)] transition-all duration-700;
+  }
+
+  .zeni-card-dark {
+    @apply bg-[#00211F] text-white rounded-[3rem] shadow-[0_20px_60px_rgba(0,33,31,0.2)] transition-all duration-700;
+  }
 }
 
 /* Custom Utilities */
 .text-gradient {
   @apply text-transparent bg-clip-text bg-gradient-to-r from-emerald-900 to-emerald-500;
+}
+
+.zeni-mesh-gradient {
+  background-color: #F5F9F7;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(209, 232, 224, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(232, 243, 239, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
 }
