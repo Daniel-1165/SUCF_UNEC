@@ -12,21 +12,27 @@ const executives = [
 
 const Executives = () => {
     return (
-        <div className="pt-32 pb-20 min-h-screen bg-white">
+        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
             <div className="container mx-auto px-6 text-center mb-24 max-w-2xl">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 mb-6"
+                    className="section-tag mb-6"
                 >
-                    <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    <span className="text-[10px] font-bold text-emerald-900 tracking-widest uppercase">The Servants</span>
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    The Servants
                 </motion.div>
-                <h1 className="text-4xl md:text-5xl font-serif text-emerald-900 font-bold mb-4">Our Leadership</h1>
-                <p className="text-gray-600 text-lg">Standard bearers and visionaries upholding righteous standards for the 2024/2025 academic session.</p>
+
+                <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
+                    The <span className="text-emerald-600 italic">Council.</span>
+                </h1>
+
+                <p className="text-[#00211F] text-xl font-medium opacity-40 leading-relaxed">
+                    Standard bearers and visionaries upholding righteous standards for the 2024/2025 academic session.
+                </p>
             </div>
 
-            <div className="container mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+            <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 max-w-7xl">
                 {executives.map((exec, idx) => (
                     <motion.div
                         key={idx}
@@ -34,39 +40,63 @@ const Executives = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.05 }}
-                        className="relative group pt-12"
+                        className="relative group pt-16"
                     >
-                        {/* Card Body */}
-                        <div className="bg-gray-50 rounded-[2.5rem] p-8 pt-20 text-center border border-transparent hover:border-emerald-100 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
-                            {/* Avatar - Floating above the card */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12">
+                        {/* Zeni Style Card */}
+                        <div className="zeni-card h-full p-8 pt-24 text-center group-hover:bg-white transition-all duration-500">
+                            {/* Avatar - Floating above/within the card */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-16">
                                 <div className="relative">
-                                    <div className="absolute inset-0 bg-emerald-800 rounded-full scale-0 group-hover:scale-110 transition-transform duration-500 opacity-20 blur-xl" />
-                                    <div className="w-40 h-40 rounded-full overflow-hidden border-8 border-white shadow-xl relative z-10 group-hover:border-emerald-50 transition-all duration-500">
-                                        <img src={exec.img} alt={exec.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-2xl group-hover:bg-emerald-500/30 transition-all duration-700 opacity-0 group-hover:opacity-100" />
+                                    <div className="w-44 h-44 rounded-full overflow-hidden border-8 border-[#F5F9F7] shadow-2xl relative z-10 group-hover:border-emerald-50 transition-all duration-500">
+                                        <img
+                                            src={exec.img}
+                                            alt={exec.name}
+                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        />
                                     </div>
                                 </div>
                             </div>
 
-                            <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-emerald-800 transition-colors uppercase tracking-tight">{exec.name}</h3>
-                            <p className="text-sm font-bold text-emerald-600 uppercase tracking-widest mb-2">{exec.role}</p>
-                            <p className="text-xs text-gray-400 font-medium uppercase tracking-tighter mb-6">{exec.dept}</p>
+                            <div className="h-full flex flex-col">
+                                <div className="mb-6">
+                                    <h3 className="text-xl font-black text-[#00211F] mb-2 uppercase tracking-tight group-hover:text-emerald-600 transition-colors">
+                                        {exec.name}
+                                    </h3>
+                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">
+                                        {exec.role}
+                                    </p>
+                                    <div className="h-px w-8 bg-emerald-100 mx-auto group-hover:w-12 transition-all" />
+                                </div>
 
-                            {/* Social Icons */}
-                            <div className="flex justify-center gap-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                <button className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
-                                    <FiInstagram />
-                                </button>
-                                <button className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
-                                    <FiLinkedin />
-                                </button>
-                                <button className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm">
-                                    <FiTwitter />
-                                </button>
+                                <p className="text-xs text-[#00211F] font-bold uppercase tracking-widest opacity-30 mb-8">
+                                    {exec.dept}
+                                </p>
+
+                                {/* Social Icons - Zeni Style */}
+                                <div className="mt-auto flex justify-center gap-4">
+                                    {[FiInstagram, FiLinkedin, FiTwitter].map((Icon, i) => (
+                                        <button
+                                            key={i}
+                                            className="w-10 h-10 rounded-xl bg-[#F5F9F7] text-emerald-900/40 flex items-center justify-center hover:bg-[#00211F] hover:text-white transition-all shadow-sm"
+                                        >
+                                            <Icon className="text-lg" />
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </motion.div>
                 ))}
+            </div>
+
+            {/* Note Section */}
+            <div className="container mx-auto px-6 mt-40 max-w-5xl text-center">
+                <div className="zeni-card p-12 bg-white/40 backdrop-blur-md border-emerald-100/50">
+                    <p className="text-[#00211F] text-lg font-medium opacity-40 leading-relaxed italic">
+                        "Leading a generation to uphold righteous standards, excelling in spirit and in truth."
+                    </p>
+                </div>
             </div>
         </div>
     );

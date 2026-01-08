@@ -43,21 +43,27 @@ const Activities = () => {
     ];
 
     return (
-        <div className="pt-32 pb-16 min-h-screen bg-gray-50/50">
-            <header className="container mx-auto px-6 mb-24 max-w-4xl">
+        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+            <header className="container mx-auto px-6 mb-24 max-w-7xl">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100 mb-6"
+                    className="section-tag mb-8"
                 >
-                    <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    <span className="text-[10px] font-bold text-emerald-900 tracking-widest uppercase">Weekly Gatherings</span>
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Weekly Gatherings
                 </motion.div>
-                <h1 className="text-4xl md:text-6xl font-serif text-emerald-900 font-bold mb-6">Join Our Fellowship</h1>
-                <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">We gather three times a week to grow, pray, and sharpen one another. Every student is welcome to the Den.</p>
+
+                <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
+                    Join Our <span className="text-emerald-600 italic">Fellowship.</span>
+                </h1>
+
+                <p className="text-[#00211F] text-xl font-medium opacity-40 leading-relaxed mb-12 max-w-2xl">
+                    We gather three times a week to grow, pray, and sharpen one another. Every student is welcome to the Den.
+                </p>
             </header>
 
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-24">
+            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-32 max-w-7xl">
                 {events.map((event, index) => (
                     <motion.div
                         key={index}
@@ -67,68 +73,95 @@ const Activities = () => {
                         transition={{ delay: index * 0.1 }}
                         className="group relative"
                     >
-                        {/* Background Design */}
-                        <div className={`absolute inset-0 bg-gradient-to-br ${event.color} rounded-[3rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500`} />
+                        <div className="zeni-card h-full flex flex-col relative z-10 overflow-hidden">
+                            {/* Header Section with Image */}
+                            <div className="relative aspect-[16/10] overflow-hidden bg-[#F5F9F7]">
+                                <img
+                                    src={event.image}
+                                    alt={event.day}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
-                        <div className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col relative z-10">
-                            {/* Day Badge */}
-                            <div className="flex justify-between items-start mb-8">
-                                <div className={`w-16 h-16 rounded-[1.5rem] bg-gradient-to-br ${event.color} flex items-center justify-center text-3xl shadow-lg ring-8 ring-gray-50`}>
-                                    {event.icon}
-                                </div>
-                                <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full border ${index === 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : index === 1 ? 'bg-red-50 text-red-700 border-red-100' : 'bg-amber-50 text-amber-700 border-amber-100'}`}>
-                                    {event.tag}
-                                </span>
-                            </div>
-
-                            <h2 className="text-3xl font-bold font-serif text-gray-900 mb-2">{event.day}</h2>
-                            <h3 className="text-xl font-medium text-gray-500 mb-8">{event.title}</h3>
-
-                            {/* Image Preview */}
-                            <div className="mb-8 rounded-[2rem] overflow-hidden aspect-[4/3] shadow-inner bg-gray-50 border border-gray-100">
-                                <img src={event.image} alt={event.day} className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
-                            </div>
-
-                            {/* Info */}
-                            <div className="space-y-4 mb-8 flex-grow">
-                                <div className="flex items-center gap-4 text-gray-600">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-sm">
-                                        <FiClock />
+                                <div className="absolute top-6 left-6">
+                                    <div className={`w-14 h-14 rounded-2xl bg-white shadow-xl flex items-center justify-center text-3xl`}>
+                                        {event.icon}
                                     </div>
-                                    <span className="font-bold text-sm tracking-tight">{event.time}</span>
                                 </div>
-                                <div className="flex items-center gap-4 text-gray-600">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-sm">
-                                        <FiMapPin />
-                                    </div>
-                                    <span className="font-medium text-xs leading-tight">{event.location}</span>
+
+                                <div className="absolute top-6 right-6">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full bg-white/90 backdrop-blur-md text-[#00211F] border border-white/20">
+                                        {event.tag}
+                                    </span>
                                 </div>
                             </div>
 
-                            {/* Action / Detail */}
-                            <button className="w-full py-4 rounded-2xl bg-gray-50 text-gray-800 font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-emerald-800 group-hover:text-white transition-all duration-300">
-                                Get Directions <FiCompass />
-                            </button>
+                            <div className="p-10 flex-grow flex flex-col">
+                                <h2 className="text-3xl font-black text-[#00211F] mb-1">{event.day}</h2>
+                                <h3 className="text-lg font-bold text-emerald-600 mb-8 uppercase tracking-widest">{event.title}</h3>
+
+                                <div className="space-y-6 mb-10 flex-grow">
+                                    <div className="flex items-center gap-4 text-[#00211F]">
+                                        <div className="w-10 h-10 rounded-xl bg-[#F5F9F7] flex items-center justify-center text-emerald-600">
+                                            <FiClock className="text-xl" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-0.5">Time</p>
+                                            <p className="font-bold">{event.time}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-4 text-[#00211F]">
+                                        <div className="w-10 h-10 rounded-xl bg-[#F5F9F7] flex items-center justify-center text-emerald-600">
+                                            <FiMapPin className="text-xl" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-0.5">Location</p>
+                                            <p className="font-bold text-sm leading-tight">{event.location}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button className="w-full py-5 rounded-[1.5rem] bg-[#00211F] text-white font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10">
+                                    Get Directions <FiCompass className="text-lg" />
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 ))}
             </div>
 
             <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="container mx-auto px-6 text-center"
+                className="container mx-auto px-6 max-w-7xl"
             >
-                <div className="inline-flex flex-col md:flex-row items-center gap-6 bg-emerald-900 text-white px-10 py-8 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                    {/* Background Shine */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                    <p className="text-lg font-medium relative z-10">
-                        <span className="font-bold text-emerald-400">Note:</span> We also have other Weekly Wing Activities and special programs throughout the semester.
-                    </p>
-                    <button className="bg-white text-emerald-900 px-8 py-3 rounded-full font-bold text-sm hover:bg-emerald-100 transition-colors shrink-0 relative z-10">
+                <div className="zeni-card-dark p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
+                    <div className="relative z-10 max-w-2xl">
+                        <div className="flex items-center gap-2 mb-6">
+                            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                            <span className="text-[10px] font-black text-emerald-400 tracking-[0.3em] uppercase">Weekly Note</span>
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
+                            More than just <br />
+                            <span className="text-emerald-400 italic">Gatherings.</span>
+                        </h2>
+                        <p className="text-white/60 text-lg font-medium leading-relaxed">
+                            We also have other Weekly Wing Activities and special programs throughout the semester. Connect with us to stay updated.
+                        </p>
+                    </div>
+
+                    <Link
+                        to="/contact"
+                        className="bg-emerald-500 text-[#00211F] px-12 py-6 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-white hover:scale-105 transition-all shrink-0 relative z-10 shadow-2xl shadow-emerald-500/20"
+                    >
                         Contact Wing Reps
-                    </button>
+                    </Link>
+
+                    {/* Background decoration */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
                 </div>
             </motion.div>
         </div>
