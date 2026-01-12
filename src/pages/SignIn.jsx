@@ -48,17 +48,20 @@ const SignIn = () => {
             const { data, error } = await Promise.race([authPromise, timeoutPromise]);
 
             if (error) {
-                console.error("SignIn Error:", error);
+                console.error("SignIn Error Object:", error);
                 throw error;
             }
 
             console.log("SignIn: Promise Resolved Successfully", data);
-            // navigate('/') is handled by the useEffect above
         } catch (error) {
-            console.error("SignIn Exception:", error.message);
-            // Only show error if we aren't actually logging in (sometimes it times out but signs in anyway)
+            console.error("SignIn Exception:", error);
+            // Show detailed error in alert for the user to see
+            const detailedError = error.message || JSON.stringify(error);
+            setErrorMsg(`Login Failed: ${detailedError}`);
+
+            // Still allow context to redirect if user state updates
             if (!user) {
-                setErrorMsg(error.message || "Failed to sign in");
+                // Keep error visible
             }
         } finally {
             setLoading(false);

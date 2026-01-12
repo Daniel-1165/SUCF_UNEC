@@ -20,9 +20,13 @@ const Debug = () => {
 
         if (!url || !key) return;
 
-        // 2. Test Connection (Read Profiles - RLS might block, but connection shouldn't fail)
+        // 2. Test Connection (Read Profiles)
         try {
-            const { data, error, status } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
+            const connectionPromise = supabase.from('profiles').select('count', { count: 'exact', head: true });
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timed out")), 5000));
+
+            const { data, error, status } = await Promise.race([connectionPromise, timeoutPromise]);
+
             if (error) {
                 addLog(`Connection Test (Public Read): Failed (${status}) - ${error.message}`, 'warning');
             } else {
@@ -72,8 +76,8 @@ const Debug = () => {
                 {logs.length === 0 && <span className="text-gray-500">Ready to run tests...</span>}
                 {logs.map((log, i) => (
                     <div key={i} className={`mb-2 border-b border-gray-800 pb-1 ${log.type === 'error' ? 'text-red-400' :
-                            log.type === 'success' ? 'text-green-400' :
-                                log.type === 'warning' ? 'text-yellow-400' : 'text-gray-300'
+                        log.type === 'success' ? 'text-green-400' :
+                            log.type === 'warning' ? 'text-yellow-400' : 'text-gray-300'
                         }`}>
                         <span className="text-gray-600 mr-4">[{log.timestamp.split('T')[1].split('.')[0]}]</span>
                         {log.msg}

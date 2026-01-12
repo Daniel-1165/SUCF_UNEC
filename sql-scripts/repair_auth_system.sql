@@ -1,8 +1,22 @@
--- COMPREHENSIVE REPAIR SCRIPT
--- This script repairs the entire auth-to-profile flow.
+-- COMPREHENSIVE REPAIR SCRIPT (FIXED RECURSION)
+-- This script fixes the auth system and Prevents Infinite RLS Loops.
 -- Run this in the Supabase SQL Editor.
 
--- 1. Ensure PROFILES table exists
+-- 1. Create a Secure Function to check Admin status (Prevents Infinite Recursion)
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() 
+    AND is_admin = true
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+-- SECURITY DEFINER means this function runs with admin privileges, 
+-- bypassing the RLS check on the profiles table itself to avoid the loop.
+
+-- 2. Ensure PROFILES table exists
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT,
@@ -15,13 +29,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   avatar_url TEXT
 );
 
--- 2. Ensure RLS is enabled
+-- 3. Ensure RLS is enabled
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- 3. Create policies (Drop first to avoid errors)
+-- 4. Create policies (Drop first to avoid errors)
 DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON public.profiles;
 DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Admins can view all profiles" ON public.profiles;
 
 -- Allow users to see their own profile
@@ -29,23 +44,17 @@ CREATE POLICY "Users can view own profile"
 ON public.profiles FOR SELECT 
 USING (auth.uid() = id);
 
--- Allow admins to see all profiles
+-- Allow admins to see all profiles (Using the safe function)
 CREATE POLICY "Admins can view all profiles" 
 ON public.profiles FOR SELECT 
-USING (
-  EXISTS (
-    SELECT 1 FROM public.profiles 
-    WHERE profiles.id = auth.uid() 
-    AND profiles.is_admin = true
-  )
-);
+USING (public.is_admin());
 
 -- Allow users to update their own profile
 CREATE POLICY "Users can update own profile" 
 ON public.profiles FOR UPDATE 
 USING (auth.uid() = id);
 
--- 4. Create proper Trigger Function
+-- 5. Create proper Trigger Function
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
@@ -66,15 +75,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 5. Re-create the Trigger
+-- 6. Re-create the Trigger
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
--- 6. BACKFILL EXISTING USERS
--- This is critical for users who already signed up but have no profile
+-- 7. BACKFILL EXISTING USERS
 INSERT INTO public.profiles (id, email, full_name, school, department, level)
 SELECT 
   id, 
@@ -86,7 +94,4 @@ SELECT
 FROM auth.users
 ON CONFLICT (id) DO NOTHING;
 
--- 7. Verify Admin Status (Optional: Set specific email as admin if needed)
--- UPDATE public.profiles SET is_admin = true WHERE email = 'your-email@example.com';
-
-SELECT 'Auth system repaired and profiles backfilled successfully' as status;
+SELECT 'Auth system repaired, recursion fixed, and profiles backfilled.' as status;

@@ -25,11 +25,20 @@ export const AuthProvider = ({ children }) => {
             if (!userId) return false;
             console.log(`Auth: Fetching admin status for ${userId}...`);
             try {
-                const { data, error } = await supabase
+                // Create a promise that rejects after 2 seconds
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error("Admin check timed out")), 2000)
+                );
+
+                // The actual Supabase query
+                const queryPromise = supabase
                     .from('profiles')
                     .select('is_admin')
                     .eq('id', userId)
                     .single();
+
+                // Race them
+                const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
                 if (error) {
                     if (error.code !== 'PGRST116') {
@@ -42,8 +51,8 @@ export const AuthProvider = ({ children }) => {
                 console.log("Auth: Admin status fetched:", data.is_admin);
                 return data.is_admin || false;
             } catch (err) {
-                console.error("Auth: Exception in admin fetch:", err);
-                return false;
+                console.error("Auth: Exception in admin fetch:", err.message);
+                return false; // Fail safe: assume not admin, but let them in!
             }
         };
 
