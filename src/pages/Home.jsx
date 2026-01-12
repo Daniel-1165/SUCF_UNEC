@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
+import NewsSection from '../components/NewsSection';
 
 // Use the assets we have
 const heroImages = [
@@ -122,15 +123,14 @@ const Home = () => {
                             Welcome to the Den
                         </motion.div>
 
-                        <motion.h1
-                            variants={fadeIn}
-                            className="text-6xl md:text-8xl font-black text-[#00211F] leading-[0.9] tracking-tighter"
+                        <h1
+                            className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.9] tracking-tighter"
                         >
                             Empowering <br />
                             <span className="text-emerald-600 italic">
                                 Your Destiny.
                             </span>
-                        </motion.h1>
+                        </h1>
 
                         <motion.p variants={fadeIn} className="text-xl text-[#00211F] opacity-40 max-w-lg leading-relaxed font-medium">
                             A royal family of believers, upholding righteous standards as the unique fellowship on campus.
@@ -166,7 +166,7 @@ const Home = () => {
                                     key={currentSlide}
                                     custom={direction}
                                     variants={slideVariants}
-                                    initial="enter"
+                                    initial="center"
                                     animate="center"
                                     exit="exit"
                                     transition={{
@@ -187,9 +187,9 @@ const Home = () => {
                                     <img
                                         src={heroImages[currentSlide]}
                                         alt={`Slide ${currentSlide + 1}`}
-                                        className="w-full h-full object-cover pointer-events-none grayscale hover:grayscale-0 transition-all duration-1000"
+                                        className="w-full h-full object-cover pointer-events-none transition-all duration-1000"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/60 via-transparent to-transparent pointer-events-none" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent pointer-events-none" />
 
                                     {/* Slide Content Overlay */}
                                     <div className="absolute bottom-16 left-16 text-white pointer-events-none">
@@ -302,7 +302,7 @@ const Home = () => {
                                 className="zeni-card !bg-white/5 !border-white/10 overflow-hidden group/item flex flex-col md:flex-row h-full transition-all hover:!bg-white/10"
                             >
                                 <div className="md:w-2/5 h-64 md:h-auto overflow-hidden">
-                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover grayscale group-hover/item:grayscale-0 transition-all duration-700 group-hover/item:scale-110" />
+                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover transition-all duration-700 group-hover/item:scale-110" />
                                 </div>
                                 <div className="p-10 md:w-3/5 flex flex-col">
                                     <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">{article.category}</span>
@@ -319,6 +319,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* News Section */}
+            <NewsSection />
 
             {/* Books Subsection */}
             <BooksSection />
@@ -368,8 +371,8 @@ const Home = () => {
                             whileHover={{ y: -20 }}
                             className="min-w-[350px] md:min-w-[500px] h-[600px] zeni-card overflow-hidden !rounded-[3.5rem] !p-0 border-[12px] border-white relative group"
                         >
-                            <img src={img} alt="Gallery" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            <img src={img} alt="Gallery" className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         </motion.div>
                     ))}
                     <Link

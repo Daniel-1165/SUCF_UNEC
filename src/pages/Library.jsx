@@ -53,7 +53,7 @@ const Library = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter"
+                        className="text-5xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter"
                     >
                         The <span className="text-emerald-600 italic">Word.</span>
                     </motion.h1>

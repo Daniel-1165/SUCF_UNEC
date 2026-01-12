@@ -66,65 +66,83 @@ const SignIn = () => {
     };
 
     return (
-        <div className="min-h-screen pt-32 pb-20 bg-gray-50 flex items-center justify-center px-6">
+        <div className="min-h-screen zeni-mesh-gradient flex items-center justify-center p-6 pt-32 selection:bg-emerald-600 selection:text-white">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full bg-white rounded-[2.5rem] p-10 shadow-xl border border-gray-100"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-full max-w-md"
             >
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-serif font-bold text-emerald-900 mb-2">Welcome Back</h2>
-                    <p className="text-gray-500 text-sm">Sign in to access your account.</p>
+                <div className="zeni-card p-12 relative overflow-hidden">
+                    {/* Header */}
+                    <div className="mb-10 text-center">
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-20 h-20 bg-emerald-500/10 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl"
+                        >
+                            <FiMail size={32} />
+                        </motion.div>
+                        <h1 className="text-4xl font-black text-[#00211F] italic uppercase tracking-tighter mb-2 leading-none">Welcome Back.</h1>
+                        <p className="text-[#00211F] opacity-40 font-bold italic uppercase text-[10px] tracking-widest">Unique Fellowship on Campus</p>
+                    </div>
+
+                    {errorMsg && (
+                        <div className="mb-6 bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium text-center border border-red-100">
+                            {errorMsg}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00211F] opacity-40 ml-4">Email Address</label>
+                            <input
+                                type="email"
+                                name="email"
+                                required
+                                onChange={handleChange}
+                                className="w-full px-8 py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                                placeholder="name@example.com"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00211F] opacity-40 ml-4">Secret Code</label>
+                            <input
+                                type="password"
+                                name="password"
+                                required
+                                onChange={handleChange}
+                                className="w-full px-8 py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                                placeholder="••••••••"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-[#00211F] text-white py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10 disabled:opacity-50 mt-4 group"
+                        >
+                            {loading ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce [animation-delay:-.3s]"></span>
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce [animation-delay:-.5s]"></span>
+                                </span>
+                            ) : (
+                                <span className="flex items-center justify-center gap-2 group-hover:gap-4 transition-all">
+                                    Sign In <FiArrowRight size={14} />
+                                </span>
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="mt-12 pt-8 border-t border-[#F5F9F7] text-center">
+                        <p className="text-[#00211F] opacity-60 text-[10px] font-black uppercase tracking-widest leading-loose">
+                            New to the family? <br />
+                            <Link to="/signup" className="text-emerald-600 hover:text-emerald-700 transition-colors">Apply for membership</Link>
+                        </p>
+                    </div>
                 </div>
-
-                {errorMsg && (
-                    <div className="mb-6 bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium text-center border border-red-100">
-                        {errorMsg}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Email */}
-                    <div className="relative group">
-                        <FiMail className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email Address"
-                            required
-                            className="w-full bg-gray-50 border-2 border-transparent focus:bg-white focus:border-emerald-500 rounded-2xl py-3 pl-12 pr-6 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    {/* Password */}
-                    <div className="relative group">
-                        <FiLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            required
-                            className="w-full bg-gray-50 border-2 border-transparent focus:bg-white focus:border-emerald-500 rounded-2xl py-3 pl-12 pr-6 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <button
-                        disabled={loading}
-                        className="w-full bg-emerald-900 text-white rounded-2xl py-4 font-bold uppercase tracking-widest text-xs hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2 mt-4"
-                    >
-                        {loading ? 'Signing In...' : 'Sign In'}
-                        {!loading && <FiArrowRight />}
-                    </button>
-                </form>
-
-                <p className="text-center mt-8 text-sm text-gray-500">
-                    Don't have an account?{' '}
-                    <Link to="/signup" className="text-emerald-700 font-bold hover:underline">
-                        Sign Up
-                    </Link>
-                </p>
             </motion.div>
         </div>
     );

@@ -54,7 +54,7 @@ const Activities = () => {
                     Weekly Gatherings
                 </motion.div>
 
-                <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
+                <h1 className="text-5xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
                     Join Our <span className="text-emerald-600 italic">Fellowship.</span>
                 </h1>
 
@@ -81,7 +81,7 @@ const Activities = () => {
                                     alt={event.day}
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
 
                                 <div className="absolute top-6 left-6">
                                     <div className={`w-14 h-14 rounded-2xl bg-white shadow-xl flex items-center justify-center text-3xl`}>

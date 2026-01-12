@@ -29,32 +29,21 @@ const SignUp = () => {
         setErrorMsg('');
 
         try {
-            // 1. Sign Up the User (Minimal Request)
+            // Sign Up the User with metadata - The DB trigger will handle profile creation
             const { data, error: signUpError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
+                options: {
+                    data: {
+                        full_name: formData.fullName,
+                        school: formData.school,
+                        department: formData.department,
+                        level: formData.level
+                    }
+                }
             });
 
             if (signUpError) throw signUpError;
-
-            // 2. Manual Profile Creation
-            if (data?.user) {
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .insert([
-                        {
-                            id: data.user.id,
-                            full_name: formData.fullName,
-                            school: formData.school,
-                            department: formData.department,
-                            level: formData.level
-                        }
-                    ]);
-
-                if (profileError) {
-                    console.error("Profile creation warning:", profileError);
-                }
-            }
 
             // Success UI
             alert(`Success! Confirmation email sent to ${formData.email}. Please verify and then log in.`);

@@ -15,15 +15,15 @@ const Executives = () => {
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
             <div className="container mx-auto px-6 text-center mb-24 max-w-2xl">
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 1, scale: 1 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     className="section-tag mb-6"
                 >
                     <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
                     The Servants
                 </motion.div>
 
-                <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
+                <h1 className="text-5xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">
                     The <span className="text-emerald-600 italic">Council.</span>
                 </h1>
 
@@ -52,7 +52,7 @@ const Executives = () => {
                                         <img
                                             src={exec.img}
                                             alt={exec.name}
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                            className="w-full h-full object-cover transition-all duration-700"
                                         />
                                     </div>
                                 </div>

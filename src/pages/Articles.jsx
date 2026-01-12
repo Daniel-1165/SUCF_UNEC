@@ -77,76 +77,74 @@ const Articles = () => {
 
     const allArticles = [...dbArticles, ...staticArticles];
     return (
-        <div className="pt-32 pb-20 min-h-screen bg-[#1a1f1e] selection:bg-emerald-600 selection:text-white">
-            <div className="container mx-auto px-6">
-                <header className="text-center mb-24 max-w-3xl mx-auto relative">
+        <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
+            <div className="container mx-auto px-6 max-w-7xl">
+                <header className="text-center mb-16 md:mb-24 max-w-3xl mx-auto relative">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4A6741]/20 border border-[#4A6741]/30 text-[#8B7355] text-xs font-bold uppercase tracking-[0.2em] mb-6 backdrop-blur-md"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-900 text-[10px] font-black uppercase tracking-[0.2em] mb-6"
                     >
-                        <span className="w-1.5 h-1.5 bg-[#4A6741] rounded-full animate-pulse"></span>
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                         Wisdom & Revelation
                     </motion.div>
-                    <h1 className="text-5xl md:text-7xl font-serif font-black mb-6 tracking-tight text-[#F5F1E8] uppercase italic leading-[0.9]">
-                        Edifying <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4A6741] to-[#8B7355]">Reads</span>
+                    <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-[#00211F] leading-none uppercase italic">
+                        Edifying <span className="text-emerald-600">Reads.</span>
                     </h1>
-                    <p className="text-[#9CA3AF] text-lg md:text-xl font-light leading-relaxed">
-                        Articles, Testimonies, and Words of Exhortation to build your spirit and strengthen your faith.
+                    <p className="text-[#00211F] opacity-40 text-lg md:text-xl font-medium leading-relaxed">
+                        Articles, Testimonies, and Words of Exhortation to build your spirit.
                     </p>
                 </header>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {allArticles.map((article, index) => (
                         <motion.div
                             key={article.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
-                            className="relative"
+                            className="relative group"
                         >
                             {user?.isAdmin && !article.id.toString().startsWith('s') && (
                                 <button
                                     onClick={(e) => handleDelete(e, article.id)}
-                                    className="absolute top-6 right-6 z-20 p-3 bg-red-600/90 hover:bg-red-600 text-white rounded-2xl shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all"
-                                    title="Delete Article"
+                                    className="absolute top-6 right-6 z-20 p-3 bg-red-600 text-white rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-all"
                                 >
                                     <FiTrash2 size={18} />
                                 </button>
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="bg-[#2C3E3A]/40 backdrop-blur-sm rounded-[2.5rem] overflow-hidden group hover:bg-[#2C3E3A]/60 transition-all duration-500 border border-[#4A6741]/20 flex flex-col h-full relative hover:shadow-[0_20px_60px_rgba(74,103,65,0.3)]"
+                                className="zeni-card flex flex-col h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden"
                             >
                                 <div className="h-64 overflow-hidden relative">
                                     <img
                                         src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
                                         alt={article.title}
-                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 brightness-90 group-hover:brightness-100"
+                                        className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f1e] via-transparent to-transparent opacity-60"></div>
-                                    <div className="absolute top-6 left-6 bg-[#4A6741] backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-white uppercase tracking-widest shadow-lg">
+                                    <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[9px] font-black text-[#00211F] uppercase tracking-widest shadow-sm">
                                         {article.category || 'Word'}
                                     </div>
                                 </div>
 
                                 <div className="p-10 flex-grow flex flex-col">
-                                    <div className="flex items-center gap-4 text-[10px] font-black text-[#8B7355] mb-6 uppercase tracking-widest">
-                                        <span className="flex items-center gap-2"><FiUser className="text-[#4A6741]" /> {article.author_name || 'Admin'}</span>
-                                        <span className="w-1 h-1 bg-[#4A6741]/50 rounded-full"></span>
-                                        <span className="flex items-center gap-2"><FiClock className="text-[#4A6741]" /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                    <div className="flex items-center gap-4 text-[9px] font-black text-emerald-600 mb-6 uppercase tracking-widest opacity-60">
+                                        <span className="flex items-center gap-2"><FiUser /> {article.author_name || 'Admin'}</span>
+                                        <span className="w-1 h-1 bg-emerald-500 rounded-full opacity-30"></span>
+                                        <span className="flex items-center gap-2"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                     </div>
 
-                                    <h2 className="text-3xl font-serif font-black text-[#F5F1E8] mb-4 group-hover:text-[#8B7355] transition-colors leading-tight italic uppercase">
+                                    <h2 className="text-2xl md:text-3xl font-black text-[#00211F] mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter">
                                         {article.title}
                                     </h2>
 
-                                    <p className="text-[#9CA3AF] text-sm mb-8 line-clamp-3 leading-relaxed font-light">
-                                        {article.excerpt || article.content?.substring(0, 150) + '...'}
+                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-2 leading-relaxed font-medium">
+                                        {article.excerpt || article.content?.substring(0, 100) + '...'}
                                     </p>
 
-                                    <div className="mt-auto pt-6 border-t border-[#4A6741]/20 flex items-center gap-3 text-[#8B7355] font-black text-xs uppercase tracking-[0.2em] group-hover:gap-5 transition-all">
-                                        Read Fully <FiArrowRight />
+                                    <div className="mt-auto pt-6 border-t border-[#F5F9F7] flex items-center gap-3 text-emerald-700 font-black text-[10px] uppercase tracking-[0.2em] group-hover:gap-5 transition-all">
+                                        Read Fully <FiArrowRight className="text-lg" />
                                     </div>
                                 </div>
                             </Link>

@@ -117,11 +117,11 @@ const ArticleDetail = () => {
     }
 
     return (
-        <div className="pt-40 pb-20 min-h-screen bg-[#1a1f1e] selection:bg-emerald-600 selection:text-white">
+        <div className="pt-40 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
             <div className="container mx-auto px-6 max-w-5xl">
                 <Link
                     to="/articles"
-                    className="inline-flex items-center gap-2 text-[#8B7355] hover:text-[#4A6741] transition-all mb-12 font-black text-xs uppercase tracking-[0.2em] group"
+                    className="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900 transition-all mb-12 font-black text-[10px] uppercase tracking-[0.2em] group"
                 >
                     <FiArrowLeft className="group-hover:-translate-x-2 transition-transform" /> Back to Articles
                 </Link>
@@ -129,18 +129,17 @@ const ArticleDetail = () => {
                 <article className="relative">
                     {/* Featured Image */}
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="aspect-[21/9] w-full relative rounded-[3rem] overflow-hidden border border-[#4A6741]/30 mb-16 shadow-[0_30px_80px_rgba(0,0,0,0.5)]"
+                        initial={{ opacity: 1, scale: 1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="aspect-[21/9] w-full relative zeni-card !p-0 overflow-hidden border-[10px] border-white mb-16 shadow-2xl"
                     >
                         <img
                             src={article.image_url}
                             alt={article.title}
-                            className="w-full h-full object-cover hover:scale-105 transition-all duration-1000 brightness-90"
+                            className="w-full h-full object-cover transition-all duration-1000"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f1e] via-[#1a1f1e]/20 to-transparent" />
                         <div className="absolute top-10 left-10">
-                            <span className="bg-[#4A6741] text-white px-6 py-2 rounded-full text-[10px] font-black shadow-2xl uppercase tracking-[0.2em]">
+                            <span className="bg-emerald-600 text-white px-6 py-2 rounded-full text-[9px] font-black shadow-lg uppercase tracking-[0.2em]">
                                 {article.category}
                             </span>
                         </div>
@@ -148,59 +147,54 @@ const ArticleDetail = () => {
 
                     <div className="max-w-3xl mx-auto">
                         {/* Meta Header */}
-                        <div className="flex flex-wrap items-center gap-8 mb-12 pb-12 border-b border-[#4A6741]/20">
+                        <div className="flex flex-wrap items-center gap-8 mb-12 pb-12 border-b border-[#F5F9F7]">
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-[#4A6741]/20 border border-[#4A6741]/30 flex items-center justify-center text-[#8B7355]">
+                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                                     <FiUser size={24} />
                                 </div>
                                 <div>
-                                    <p className="text-[#8B7355]/70 text-[10px] uppercase font-black tracking-widest mb-1">Author</p>
-                                    <p className="text-[#F5F1E8] font-serif italic text-lg">{article.author_name || 'Admin'}</p>
+                                    <p className="text-[#00211F] opacity-30 text-[9px] uppercase font-black tracking-widest mb-1">Author</p>
+                                    <p className="text-[#00211F] font-black italic text-lg leading-none">{article.author_name || 'Admin'}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-[#4A6741]/20 border border-[#4A6741]/30 flex items-center justify-center text-[#8B7355]">
+                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                                     <FiClock size={24} />
                                 </div>
                                 <div>
-                                    <p className="text-[#8B7355]/70 text-[10px] uppercase font-black tracking-widest mb-1">Published</p>
-                                    <p className="text-[#F5F1E8] font-serif italic text-lg">
-                                        {new Date(article.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                    <p className="text-[#00211F] opacity-30 text-[9px] uppercase font-black tracking-widest mb-1">Published</p>
+                                    <p className="text-[#00211F] font-black italic text-lg leading-none">
+                                        {new Date(article.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                                     </p>
                                 </div>
                             </div>
-                            <button className="ml-auto w-14 h-14 rounded-2xl bg-[#4A6741]/20 border border-[#4A6741]/30 flex items-center justify-center text-[#8B7355] hover:bg-[#4A6741] hover:text-white transition-all shadow-xl group">
-                                <FiShare2 className="group-hover:rotate-12 transition-transform" />
-                            </button>
                         </div>
 
                         {/* Content */}
                         <motion.h1
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-4xl md:text-7xl font-serif font-black text-[#F5F1E8] italic uppercase leading-[0.9] mb-16 tracking-tight"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-4xl md:text-7xl font-black text-[#00211F] italic uppercase leading-none mb-16 tracking-tighter"
                         >
                             {article.title}
                         </motion.h1>
 
                         <div
-                            className="prose prose-lg prose-invert max-w-none text-[#9CA3AF] leading-relaxed font-light"
+                            className="prose prose-lg max-w-none text-[#00211F] opacity-60 leading-relaxed font-medium"
                             style={{
-                                '--tw-prose-headings': '#F5F1E8',
-                                '--tw-prose-links': '#8B7355',
-                                '--tw-prose-bold': '#F5F1E8',
-                                '--tw-prose-quotes': '#8B7355',
-                                '--tw-prose-quote-borders': '#4A6741'
+                                '--tw-prose-headings': '#00211F',
+                                '--tw-prose-links': '#10b981',
+                                '--tw-prose-bold': '#00211F',
+                                '--tw-prose-quotes': '#10b981',
                             }}
                             dangerouslySetInnerHTML={{ __html: article.content }}
                         />
 
                         {/* Tags */}
                         {article.tags && (
-                            <div className="mt-20 pt-12 border-t border-[#4A6741]/20 flex flex-wrap gap-3">
+                            <div className="mt-20 pt-12 border-t border-[#F5F9F7] flex flex-wrap gap-3">
                                 {article.tags.map(tag => (
-                                    <span key={tag} className="inline-flex items-center gap-2 px-6 py-2 bg-[#4A6741]/20 text-[#8B7355] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:bg-[#4A6741] hover:text-white cursor-default border border-[#4A6741]/30">
+                                    <span key={tag} className="inline-flex items-center gap-2 px-6 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[9px] font-black uppercase tracking-widest border border-emerald-100">
                                         <FiTag /> {tag}
                                     </span>
                                 ))}
@@ -210,18 +204,17 @@ const ArticleDetail = () => {
                 </article>
 
                 {/* Footer Action */}
-                <div className="mt-24 p-12 rounded-[3rem] bg-[#2C3E3A]/40 backdrop-blur-sm border border-[#4A6741]/30 flex flex-col md:flex-row justify-between items-center gap-8 shadow-[0_20px_60px_rgba(0,0,0,0.4)] overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#4A6741]/10 blur-[100px] -z-10 rounded-full" />
-                    <div>
-                        <h4 className="text-[#F5F1E8] text-2xl font-serif font-black italic uppercase mb-2">Share this article</h4>
-                        <p className="text-[#8B7355] font-light italic">Help a brother or sister find their way today.</p>
+                <div className="mt-24 zeni-card p-12 bg-white flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h4 className="text-[#00211F] text-2xl font-black italic uppercase mb-2">Share this word</h4>
+                        <p className="text-[#00211F] opacity-40 font-medium italic">Help a brother or sister find their way today.</p>
                     </div>
                     <button
                         onClick={() => {
                             navigator.clipboard.writeText(window.location.href);
-                            alert("Article link copied to clipboard!");
+                            alert("Link copied!");
                         }}
-                        className="px-12 py-5 bg-[#4A6741] text-white rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-[0_20px_40px_rgba(74,103,65,0.3)] hover:bg-[#8B7355] transition-all whitespace-nowrap"
+                        className="px-12 py-5 bg-[#00211F] text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-emerald-600 transition-all whitespace-nowrap"
                     >
                         Copy Link
                     </button>

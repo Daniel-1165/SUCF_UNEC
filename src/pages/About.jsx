@@ -25,7 +25,7 @@ const About = () => {
                         Our Story
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
+                    <h1 className="text-5xl md:text-8xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
                         Upholding <br />
                         <span className="text-emerald-600 italic">Standards.</span>
                     </h1>
@@ -146,7 +146,7 @@ const About = () => {
                             <div className="relative mb-8 pt-4">
                                 <div className="absolute inset-0 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700" />
                                 <div className="w-40 h-40 rounded-full overflow-hidden border-8 border-[#F5F9F7] shadow-xl relative z-10 group-hover:border-emerald-50 transition-all">
-                                    <img src={exec.img} alt={exec.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                                    <img src={exec.img} alt={exec.name} className="w-full h-full object-cover transition-all duration-700" />
                                 </div>
                             </div>
 

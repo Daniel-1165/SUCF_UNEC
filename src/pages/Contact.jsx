@@ -16,7 +16,7 @@ const Contact = () => {
                         Get in touch
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-8xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
+                    <h1 className="text-5xl md:text-8xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
                         Connect with <br />
                         <span className="text-emerald-600 italic">The Den.</span>
                     </h1>

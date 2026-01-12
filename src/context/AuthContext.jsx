@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
                 console.warn("Auth: Safety timeout triggered!");
                 setLoading(false);
             }
-        }, 15000); // Increased to 15i  seconds for slower connections
+        }, 5000); // Reduced to 5 seconds for snappier experience
 
         const fetchAdminStatus = async (userId) => {
             if (!userId) return false;
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };
