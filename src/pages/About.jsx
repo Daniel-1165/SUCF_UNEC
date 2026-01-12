@@ -1,5 +1,6 @@
 import React from 'react';
-import { FiUsers, FiAward, FiTarget } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { FiUsers, FiAward, FiTarget, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const About = () => {

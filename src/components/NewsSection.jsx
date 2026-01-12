@@ -82,8 +82,7 @@ const NewsSection = () => {
         fetchNews();
     }, []);
 
-    // If no news and not loading, show nothing or empty state
-    if (!loading && news.length === 0) return null;
+    // if (!loading && news.length === 0) return null;
 
     return (
         <section className="py-24 bg-white/30 backdrop-blur-md">
@@ -103,11 +102,17 @@ const NewsSection = () => {
                             <div key={i} className="aspect-[4/5] bg-emerald-50/50 animate-pulse rounded-[2.5rem] border border-[#E8F3EF]"></div>
                         ))}
                     </div>
-                ) : (
+                ) : news.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {news.map((item) => (
                             <NewsCard key={item.id} item={item} />
                         ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-20 bg-emerald-50/50 rounded-[3rem] border border-emerald-100 border-dashed">
+                        <FiFileText className="text-6xl text-emerald-200 mx-auto mb-4" />
+                        <h3 className="text-xl font-bold text-emerald-900 mb-2">No Updates Yet</h3>
+                        <p className="text-emerald-900/40">Check back later for the latest news and announcements.</p>
                     </div>
                 )}
             </div>

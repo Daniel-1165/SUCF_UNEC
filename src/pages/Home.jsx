@@ -8,9 +8,11 @@ import NewsSection from '../components/NewsSection';
 
 // Use the assets we have
 const heroImages = [
+    '/assets/carousel/group_photo.jpg',
     '/assets/main_flyer.jpg',
+    '/assets/carousel/weekly_prayers.jpg',
+    '/assets/carousel/bible_study.jpg',
     '/assets/freshers_flyer.jpg',
-    '/assets/style_ref.jpg',
 ];
 
 const articles = [
