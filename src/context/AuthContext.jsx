@@ -59,16 +59,21 @@ export const AuthProvider = ({ children }) => {
 
             console.log("Auth: Session found, verifying identity...");
 
-            // Fetch admin status BEFORE clearing loading flag
             try {
-                const isAdmin = await fetchAdminStatus(session.user.id);
+                // Fetch admin status, but don't block the user from logging in if it fails
+                const isAdmin = await fetchAdminStatus(session.user.id).catch(e => {
+                    console.error("Auth: Admin check error (non-fatal):", e);
+                    return false;
+                });
+
                 if (mounted) {
+                    // Always set the user, even if admin check had issues
                     setUser({ ...session.user, isAdmin });
-                    console.log(`Auth: Verification complete. Admin: ${isAdmin}`);
                     setLoading(false);
                 }
             } catch (err) {
-                console.error("Auth: Verification failed:", err);
+                console.error("Auth: Critical verification failure:", err);
+                // Fallback: allow login as normal user
                 if (mounted) {
                     setUser(session.user);
                     setLoading(false);

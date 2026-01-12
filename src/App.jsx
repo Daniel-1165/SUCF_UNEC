@@ -14,6 +14,7 @@ import ArticleDetail from './pages/ArticleDetail';
 import Library from './pages/Library';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import Debug from './pages/Debug';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/debug" element={<Debug />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
