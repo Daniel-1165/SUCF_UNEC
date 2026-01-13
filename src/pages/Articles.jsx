@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiClock, FiUser, FiArrowRight, FiTrash2 } from 'react-icons/fi';
+import { FiClock, FiUser, FiArrowRight, FiTrash2, FiSearch, FiFilter } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
@@ -11,19 +11,19 @@ const staticArticles = [
         id: 's1',
         title: "Walking in Divine Purpose",
         excerpt: "Discovering God's plan for your life is the beginning of true fulfillment. Learn how to align your steps with His will.",
-        author_name: "President",
+        author_name: "Anonymous",
         created_at: "2024-12-12",
         category: "Spiritual Growth",
-        image_url: "https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop"
+        image_url: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2670&auto=format&fit=crop"
     },
     {
         id: 's2',
         title: "Balancing Academics and Faith",
         excerpt: "How do you maintain a 5.0 GPA while serving in the fellowship? Practical tips from successful students.",
-        author_name: "Sister Grace",
+        author_name: "Anonymous",
         created_at: "2024-11-28",
         category: "Academic",
-        image_url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2670&auto=format&fit=crop"
+        image_url: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2673&auto=format&fit=crop"
     },
     {
         id: 's3',
@@ -32,7 +32,7 @@ const staticArticles = [
         author_name: "Prayer Secretary",
         created_at: "2024-11-15",
         category: "Prayer",
-        image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2670&auto=format&fit=crop"
+        image_url: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=2574&auto=format&fit=crop"
     }
 ];
 
@@ -40,6 +40,10 @@ const Articles = () => {
     const { user } = useAuth();
     const [dbArticles, setDbArticles] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    const categories = ['All', 'Spiritual Growth', 'Academic', 'Prayer', 'Testimony'];
 
     useEffect(() => {
         fetchArticles();
@@ -75,7 +79,16 @@ const Articles = () => {
         }
     };
 
+    // Filter and search logic
     const allArticles = [...dbArticles, ...staticArticles];
+    const filteredArticles = allArticles.filter(article => {
+        const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            article.content?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
+
     return (
         <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
             <div className="container mx-auto px-6 max-w-7xl">
@@ -96,8 +109,45 @@ const Articles = () => {
                     </p>
                 </header>
 
+                {/* Search and Filter Section */}
+                <div className="mb-12 space-y-6">
+                    {/* Search Bar */}
+                    <div className="relative max-w-2xl mx-auto">
+                        <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-emerald-600/40" />
+                        <input
+                            type="text"
+                            placeholder="Search articles by title or content..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-white border-2 border-gray-200 focus:border-emerald-600 outline-none transition-all text-[#00211F] font-medium placeholder:text-gray-400"
+                        />
+                    </div>
+
+                    {/* Category Filter */}
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                        <FiFilter className="text-emerald-600/60" />
+                        {categories.map(category => (
+                            <button
+                                key={category}
+                                onClick={() => setSelectedCategory(category)}
+                                className={`px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all ${selectedCategory === category
+                                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                                        : 'bg-white text-gray-600 border border-gray-200 hover:border-emerald-600 hover:text-emerald-600'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Results Count */}
+                    <p className="text-center text-sm font-medium text-gray-500">
+                        Showing <span className="font-black text-emerald-600">{filteredArticles.length}</span> {filteredArticles.length === 1 ? 'article' : 'articles'}
+                    </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {allArticles.map((article, index) => (
+                    {filteredArticles.map((article, index) => (
                         <motion.div
                             key={article.id}
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -151,6 +201,17 @@ const Articles = () => {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* No Results Message */}
+                {filteredArticles.length === 0 && (
+                    <div className="text-center py-20">
+                        <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FiSearch className="text-4xl text-emerald-600/40" />
+                        </div>
+                        <h3 className="text-2xl font-black text-[#00211F] mb-3">No Articles Found</h3>
+                        <p className="text-gray-500 font-medium">Try adjusting your search or filter criteria</p>
+                    </div>
+                )}
             </div>
         </div>
     );

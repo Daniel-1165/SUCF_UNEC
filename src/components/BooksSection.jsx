@@ -130,7 +130,7 @@ const BooksSection = () => {
                             Spiritual Growth
                         </motion.div>
                         <h2 className="text-5xl md:text-6xl font-black text-[#00211F] leading-none tracking-tighter mb-6">
-                            Deepen your <span className="text-emerald-600 italic">Walk.</span>
+                            Books for the Session to Deepen your <span className="text-emerald-600 italic">Walk.</span>
                         </h2>
                         <p className="text-[#00211F] text-lg font-medium opacity-40 max-w-sm leading-relaxed">Curated resources to nourish your spirit and sharpen your mind.</p>
                     </div>

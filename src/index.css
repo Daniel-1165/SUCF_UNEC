@@ -1,38 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Brand Colors - Standardized on Emerald */
+  /* Brand Colors - Standardized on Emerald but muted for new theme */
   --emerald-900: #064e3b;
   --emerald-600: #059669;
   --emerald-500: #10b981;
   --emerald-50: #ecfdf5;
 
-  /* Zeni Design Tokens */
-  --zeni-dark: #00211F;
-  --zeni-mint: #E8F3EF;
-  --zeni-cream: #F5F9F7;
-  --zeni-emerald: #10b981;
-  --zeni-accent: #D1E8E0;
-
-  /* Background Vars */
-  --bg-subtle: #f9fafb;
+  /* Inspired Design Tokens */
+  --bg-main: #E5E5E5;
+  /* Sophisticated Gray from image */
+  --text-main: #111111;
+  /* Sharp black */
 
   /* Typography */
-  --font-main: 'Nunito Sans', system-ui, sans-serif;
-  --font-heading: 'Raleway', sans-serif;
+  --font-main: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 overflow-x-hidden;
-    background-image:
-      radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(6, 78, 59, 0.05) 0px, transparent 50%);
-    background-attachment: fixed;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
     font-family: var(--font-main);
   }
 
@@ -63,28 +57,31 @@
     @apply inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 mb-6 text-[10px] font-bold text-emerald-900 tracking-widest uppercase;
   }
 
-  /* Zeni Specific Components */
+  /* Zeni Specific Components - Adapted for Gray/Inter Theme */
   .zeni-card {
-    @apply bg-white rounded-[2.5rem] md:rounded-[3rem] border border-[#E8F3EF] shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.05)] transition-all duration-700;
+    @apply bg-white rounded-[2.5rem] md:rounded-[3rem] border border-gray-200 shadow-zeni hover:shadow-zeni-hover transition-all duration-700;
   }
 
   .zeni-card-dark {
-    @apply bg-[#00211F] text-white rounded-[3rem] shadow-[0_20px_60px_rgba(0,33,31,0.2)] transition-all duration-700;
+    @apply bg-[#111111] text-white rounded-[3rem] shadow-zeni-dark transition-all duration-700;
   }
 }
 
 /* Custom Utilities */
 .text-gradient {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-emerald-900 to-emerald-500;
+  /* Keeping a subtle gradient or making it monochrome based on 'font' inspiration which is solid black. 
+     Let's make it a rich dark gradient or keep branding? 
+     I'll make it a steep dark gray to black to fit the 'Approven' punchiness. */
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600;
 }
 
 .zeni-mesh-gradient {
-  background-color: #F5F9F7;
+  background-color: var(--bg-main);
+  /* Match the body gray */
   background-image:
-    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(209, 232, 224, 0.4) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(232, 243, 239, 0.3) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(200, 200, 200, 0.2) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(255, 255, 255, 0.4) 0px, transparent 50%);
 }
 
 .bw-mode {

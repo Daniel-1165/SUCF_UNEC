@@ -13,9 +13,14 @@ export default {
                 'mustard-gold': '#f59e0b',
             },
             fontFamily: {
-                'sans': ['"Nunito Sans"', 'system-ui', 'sans-serif'],
-                'serif': ['Raleway', 'sans-serif'], // Replacing serif with Raleway for headings mostly
-                'heading': ['Raleway', 'sans-serif'],
+                'sans': ['Inter', 'system-ui', 'sans-serif'],
+                'serif': ['"Space Grotesk"', 'sans-serif'], // Using Space Grotesk for headings/serif slots
+                'heading': ['"Space Grotesk"', 'sans-serif'],
+            },
+            boxShadow: {
+                'zeni': '0 8px 30px rgba(0, 0, 0, 0.04)',
+                'zeni-hover': '0 20px 60px rgba(0, 0, 0, 0.08)',
+                'zeni-dark': '0 20px 60px rgba(0, 0, 0, 0.2)',
             }
         },
     },

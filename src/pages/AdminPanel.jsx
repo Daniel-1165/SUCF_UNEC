@@ -4,9 +4,29 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const galleryCategories = ['Events', 'Worship', 'Fellowship', 'Outreach'];
 const articleCategories = ['Spiritual Growth', 'Academic', 'Prayer', 'Testimony'];
+
+// Quill editor configuration
+const quillModules = {
+    toolbar: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        ['link', 'blockquote', 'code-block'],
+        [{ 'align': [] }],
+        ['clean']
+    ]
+};
+
+const quillFormats = [
+    'header', 'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet', 'indent', 'link', 'blockquote', 'code-block', 'align'
+];
 
 const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
@@ -25,11 +45,13 @@ const AdminPanel = () => {
     const [articleForm, setArticleForm] = useState({
         title: '',
         content: '',
+        excerpt: '',
         image_url: '',
         author_name: 'Admin',
         category: 'Spiritual Growth',
         imageFile: null
     });
+    const [editingArticleId, setEditingArticleId] = useState(null);
 
     // Books State
     const [books, setBooks] = useState([]);
@@ -162,7 +184,7 @@ const AdminPanel = () => {
             const { imageFile, ...submitData } = articleForm;
             const { error } = await supabase.from('articles').insert([{ ...submitData, image_url: finalImageUrl }]);
             if (error) throw error;
-            setArticleForm({ title: '', content: '', image_url: '', author_name: 'Admin', category: 'Spiritual Growth', imageFile: null });
+            setArticleForm({ title: '', content: '', excerpt: '', image_url: '', author_name: 'Admin', category: 'Spiritual Growth', imageFile: null });
             fetchArticles();
             alert("Article published!");
         } catch (error) {
@@ -326,6 +348,10 @@ const AdminPanel = () => {
                                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Or Image URL</label>
                                             <input type="text" value={articleForm.image_url} onChange={(e) => setArticleForm({ ...articleForm, image_url: e.target.value })} placeholder="https://..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" />
                                         </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Excerpt (Short Summary)</label>
+                                        <textarea rows="2" value={articleForm.excerpt} onChange={(e) => setArticleForm({ ...articleForm, excerpt: e.target.value })} placeholder="A brief summary that appears on the articles page..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea>
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Content</label>

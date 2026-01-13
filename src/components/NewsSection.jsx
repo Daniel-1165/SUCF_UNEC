@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiArrowRight, FiFileText } from 'react-icons/fi';
+import { FiCalendar, FiArrowRight, FiFileText, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 const NewsCard = ({ item }) => {
@@ -13,7 +13,9 @@ const NewsCard = ({ item }) => {
 
     return (
         <motion.div
-            initial={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             whileHover={{ y: -10 }}
             className="zeni-card overflow-hidden flex flex-col group h-full bg-white border-[#E8F3EF]"
         >
@@ -60,29 +62,43 @@ const NewsCard = ({ item }) => {
 const NewsSection = () => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const itemsPerPage = 3;
 
     useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('news')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error) throw error;
-                setNews(data || []);
-            } catch (error) {
-                console.error('Error fetching news:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchNews();
-    }, []);
+    }, [currentPage]);
 
-    // if (!loading && news.length === 0) return null;
+    const fetchNews = async () => {
+        setLoading(true);
+        try {
+            // Get total count
+            const { count } = await supabase
+                .from('news')
+                .select('*', { count: 'exact', head: true });
+
+            setTotalCount(count || 0);
+
+            // Get paginated data
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
+
+            if (error) throw error;
+            setNews(data || []);
+        } catch (error) {
+            console.error('Error fetching news:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const canGoPrev = currentPage > 1;
+    const canGoNext = currentPage < totalPages;
 
     return (
         <section className="py-24 bg-white/30 backdrop-blur-md">
@@ -103,11 +119,55 @@ const NewsSection = () => {
                         ))}
                     </div>
                 ) : news.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {news.map((item) => (
-                            <NewsCard key={item.id} item={item} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                            {news.map((item) => (
+                                <NewsCard key={item.id} item={item} />
+                            ))}
+                        </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-4">
+                                <button
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                    disabled={!canGoPrev}
+                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${canGoPrev
+                                            ? 'bg-white border border-gray-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
+                                            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                        }`}
+                                >
+                                    <FiChevronLeft className="text-xl" />
+                                </button>
+
+                                <div className="flex items-center gap-2">
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <button
+                                            key={page}
+                                            onClick={() => setCurrentPage(page)}
+                                            className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === page
+                                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                                                    : 'bg-white border border-gray-200 text-gray-600 hover:border-emerald-600 hover:text-emerald-600'
+                                                }`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                    disabled={!canGoNext}
+                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${canGoNext
+                                            ? 'bg-white border border-gray-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
+                                            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                        }`}
+                                >
+                                    <FiChevronRight className="text-xl" />
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="text-center py-20 bg-emerald-50/50 rounded-[3rem] border border-emerald-100 border-dashed">
                         <FiFileText className="text-6xl text-emerald-200 mx-auto mb-4" />

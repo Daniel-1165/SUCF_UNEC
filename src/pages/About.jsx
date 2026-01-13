@@ -131,7 +131,7 @@ const About = () => {
                         Standard Bearers
                     </motion.div>
                     <h2 className="text-5xl md:text-6xl font-black text-[#00211F] mb-8 leading-none tracking-tighter">The <span className="text-emerald-600 italic">Leadership.</span></h2>
-                    <p className="text-[#00211F] text-lg font-medium opacity-40">The dedicated team serving "The Den" for the 2024/2025 academic session.</p>
+                    <p className="text-[#00211F] text-lg font-medium opacity-40">The Leadership for the 2025/2026 academic session.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

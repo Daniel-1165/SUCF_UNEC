@@ -43,6 +43,37 @@ const Activities = () => {
         }
     ];
 
+    const units = [
+        {
+            name: 'Evangelism Unit',
+            description: 'Spreading the gospel and reaching out with the love of Christ',
+            image: '/assets/evangelism_unit.jpg',
+            icon: '📢',
+            color: 'from-emerald-600 to-teal-600'
+        },
+        {
+            name: 'Choral Unit',
+            description: 'Lifting voices in worship and praise to glorify God',
+            image: '/assets/choral_unit.jpg',
+            icon: '🎵',
+            color: 'from-purple-600 to-pink-600'
+        },
+        {
+            name: 'Drama & Creativity',
+            description: 'Expressing faith through creative arts and dramatic presentations',
+            image: '/assets/drama_unit.jpg',
+            icon: '🎭',
+            color: 'from-orange-600 to-red-600'
+        },
+        {
+            name: 'Media & Publicity',
+            description: 'Capturing moments and sharing the fellowship story',
+            image: '/assets/media_unit.jpg',
+            icon: '📸',
+            color: 'from-blue-600 to-cyan-600'
+        }
+    ];
+
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
             <header className="container mx-auto px-6 mb-24 max-w-7xl">
@@ -130,6 +161,76 @@ const Activities = () => {
                         </div>
                     </motion.div>
                 ))}
+            </div>
+
+            {/* Units Section */}
+            <div className="container mx-auto px-6 mb-32 max-w-7xl">
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="section-tag mb-8"
+                >
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Fellowship Units
+                </motion.div>
+
+                <h2 className="text-4xl md:text-6xl font-black text-[#00211F] mb-6 leading-none tracking-tighter">
+                    Serve in <span className="text-emerald-600 italic">Unity.</span>
+                </h2>
+
+                <p className="text-[#00211F] text-lg font-medium opacity-40 leading-relaxed mb-16 max-w-2xl">
+                    Join one of our dynamic units and use your gifts to advance the Kingdom on campus.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {units.map((unit, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{
+                                delay: index * 0.15,
+                                duration: 0.6,
+                                ease: "easeOut"
+                            }}
+                            className="group relative"
+                        >
+                            <div className="zeni-card h-full flex flex-col overflow-hidden">
+                                {/* Image Section */}
+                                <div className="relative aspect-[4/3] overflow-hidden bg-[#F5F9F7]">
+                                    <img
+                                        src={unit.image}
+                                        alt={unit.name}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+                                    {/* Icon Badge */}
+                                    <div className="absolute top-4 left-4">
+                                        <div className="w-12 h-12 rounded-2xl bg-white shadow-xl flex items-center justify-center text-2xl">
+                                            {unit.icon}
+                                        </div>
+                                    </div>
+
+                                    {/* Gradient Overlay on Hover */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${unit.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
+                                </div>
+
+                                {/* Content Section */}
+                                <div className="p-6 flex-grow flex flex-col">
+                                    <h3 className="text-xl font-black text-[#00211F] mb-3 group-hover:text-emerald-600 transition-colors">
+                                        {unit.name}
+                                    </h3>
+                                    <p className="text-[#00211F] opacity-40 text-sm leading-relaxed font-medium">
+                                        {unit.description}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
 
             <motion.div
