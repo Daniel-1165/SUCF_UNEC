@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell } from 'react-icons/fi';
+import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -182,16 +182,46 @@ const AdminPanel = () => {
                 finalImageUrl = await uploadFile(articleForm.imageFile, 'content-images', 'articles');
             }
             const { imageFile, ...submitData } = articleForm;
-            const { error } = await supabase.from('articles').insert([{ ...submitData, image_url: finalImageUrl }]);
-            if (error) throw error;
-            setArticleForm({ title: '', content: '', excerpt: '', image_url: '', author_name: 'Admin', category: 'Spiritual Growth', imageFile: null });
+
+            if (editingArticleId) {
+                const { error } = await supabase
+                    .from('articles')
+                    .update({ ...submitData, image_url: finalImageUrl })
+                    .eq('id', editingArticleId);
+                if (error) throw error;
+                alert("Article updated!");
+            } else {
+                const { error } = await supabase.from('articles').insert([{ ...submitData, image_url: finalImageUrl }]);
+                if (error) throw error;
+                alert("Article published!");
+            }
+
+            resetArticleForm();
             fetchArticles();
-            alert("Article published!");
         } catch (error) {
             alert(error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const resetArticleForm = () => {
+        setArticleForm({ title: '', content: '', excerpt: '', image_url: '', author_name: 'Admin', category: 'Spiritual Growth', imageFile: null });
+        setEditingArticleId(null);
+    };
+
+    const handleEditArticle = (article) => {
+        setArticleForm({
+            title: article.title,
+            content: article.content,
+            excerpt: article.excerpt,
+            image_url: article.image_url,
+            author_name: article.author_name || 'Admin',
+            category: article.category || 'Spiritual Growth',
+            imageFile: null
+        });
+        setEditingArticleId(article.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteArticle = async (id) => {
@@ -327,7 +357,10 @@ const AdminPanel = () => {
                     ) : activeTab === 'articles' ? (
                         <motion.div key="articles" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiPlus className="text-emerald-500" /> Write New Article</h3>
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2">
+                                    {editingArticleId ? <FiEdit className="text-emerald-500" /> : <FiPlus className="text-emerald-500" />}
+                                    {editingArticleId ? 'Edit Article' : 'Write New Article'}
+                                </h3>
                                 <form onSubmit={handleArticleSubmit} className="space-y-6">
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
@@ -355,16 +388,41 @@ const AdminPanel = () => {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Content</label>
-                                        <textarea required rows="6" value={articleForm.content} onChange={(e) => setArticleForm({ ...articleForm, content: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea>
+                                        <div className="bg-gray-50 rounded-xl overflow-hidden border border-transparent focus-within:bg-white focus-within:border-emerald-500 transition-all">
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={articleForm.content}
+                                                onChange={(value) => setArticleForm({ ...articleForm, content: value })}
+                                                modules={quillModules}
+                                                formats={quillFormats}
+                                                className="h-64 mb-12"
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="flex justify-end"><button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2"><FiSave /> Publish Article</button></div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingArticleId && (
+                                            <button
+                                                type="button"
+                                                onClick={resetArticleForm}
+                                                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                                            <FiSave /> {editingArticleId ? 'Update Article' : 'Publish Article'}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                             <div className="space-y-4">
                                 {articles.map((article) => (
                                     <div key={article.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex justify-between items-center group hover:shadow-md transition-all">
                                         <div><h4 className="font-bold text-lg text-emerald-900">{article.title}</h4><p className="text-sm text-gray-400">By {article.author_name} • {new Date(article.created_at).toLocaleDateString()}</p></div>
-                                        <button onClick={() => handleDeleteArticle(article.id)} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><FiTrash2 /></button>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleEditArticle(article)} className="p-3 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-all"><FiEdit /></button>
+                                            <button onClick={() => handleDeleteArticle(article.id)} className="p-3 text-red-400 bg-red-50 hover:bg-red-100 hover:text-red-500 rounded-xl transition-all"><FiTrash2 /></button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

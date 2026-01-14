@@ -1,0 +1,13 @@
+[0] (71,66)<a class='flex items-center gap-4 group shrink-0' href='/' />
+	[1] (71,66)<img  />
+[2] (925,66)<button class='md:hidden p-2 rounded-xl transition-colors text-emerald-900 hover:bg-emerald-50' />
+Welcome to the Den
+Empowering
+Your Destiny.
+A royal family of believers, upholding righteous standards as the unique fellowship on campus.
+[3] (226,793)<a class='group bg-[#00211F] text-white px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:bg-emerald-600 transition-all shadow-2xl shadow-emerald-900/10 active:scale-95' href='/signup'>Join The Family />
+[4] (637,793)<a class='zeni-card bg-white px-10 py-5 flex items-center gap-3 group' href='/about' />
+	[5] (607,793)<span >Discover More />
+	[6] (741,793)<div  />
+Our Mission
+One Family
