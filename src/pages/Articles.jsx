@@ -131,8 +131,8 @@ const Articles = () => {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all ${selectedCategory === category
-                                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                                        : 'bg-white text-gray-600 border border-gray-200 hover:border-emerald-600 hover:text-emerald-600'
+                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                                    : 'bg-white text-gray-600 border border-gray-200 hover:border-emerald-600 hover:text-emerald-600'
                                     }`}
                             >
                                 {category}
@@ -150,22 +150,23 @@ const Articles = () => {
                     {filteredArticles.map((article, index) => (
                         <motion.div
                             key={article.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: index * 0.1 }}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
                             className="relative group"
                         >
                             {user?.isAdmin && !article.id.toString().startsWith('s') && (
                                 <button
                                     onClick={(e) => handleDelete(e, article.id)}
-                                    className="absolute top-6 right-6 z-20 p-3 bg-red-600 text-white rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-all"
+                                    className="absolute top-6 right-6 z-20 p-3 bg-red-600/90 backdrop-blur-md text-white rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:scale-110"
                                 >
                                     <FiTrash2 size={18} />
                                 </button>
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="zeni-card flex flex-col h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden"
+                                className="zeni-card flex flex-col h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
                             >
                                 <div className="h-64 overflow-hidden relative">
                                     <img
@@ -173,28 +174,27 @@ const Articles = () => {
                                         alt={article.title}
                                         className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
-                                    <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[9px] font-black text-[#00211F] uppercase tracking-widest shadow-sm">
+                                    <div className="absolute top-6 left-6 bg-emerald-500/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-widest shadow-lg">
                                         {article.category || 'Word'}
                                     </div>
                                 </div>
 
                                 <div className="p-10 flex-grow flex flex-col">
                                     <div className="flex items-center gap-4 text-[9px] font-black text-emerald-600 mb-6 uppercase tracking-widest opacity-60">
-                                        <span className="flex items-center gap-2"><FiUser /> {article.author_name || 'Admin'}</span>
-                                        <span className="w-1 h-1 bg-emerald-500 rounded-full opacity-30"></span>
-                                        <span className="flex items-center gap-2"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                        <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiUser /> {article.author_name || 'Admin'}</span>
+                                        <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                     </div>
 
                                     <h2 className="text-2xl md:text-3xl font-black text-[#00211F] mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter">
                                         {article.title}
                                     </h2>
 
-                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-2 leading-relaxed font-medium">
-                                        {article.excerpt || article.content?.substring(0, 100) + '...'}
+                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-3 leading-relaxed font-medium">
+                                        {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 150) + '...'}
                                     </p>
 
-                                    <div className="mt-auto pt-6 border-t border-[#F5F9F7] flex items-center gap-3 text-emerald-700 font-black text-[10px] uppercase tracking-[0.2em] group-hover:gap-5 transition-all">
-                                        Read Fully <FiArrowRight className="text-lg" />
+                                    <div className="mt-auto pt-6 border-t border-[#F5F9F7] flex items-center gap-3 text-emerald-700 font-black text-[10px] uppercase tracking-[0.3em] group-hover:gap-5 transition-all">
+                                        Read Deeply <FiArrowRight className="text-lg" />
                                     </div>
                                 </div>
                             </Link>

@@ -112,54 +112,9 @@ const Home = () => {
         <div className="min-h-screen zeni-mesh-gradient">
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden">
-                <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-                    {/* Text Content */}
-                    <motion.div
-                        initial="hidden"
-                        animate="visible"
-                        variants={stagger}
-                        className="space-y-10"
-                    >
-                        <motion.div variants={fadeIn} className="section-tag">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            Welcome to the Den
-                        </motion.div>
-
-                        <h1
-                            className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.9] tracking-tighter"
-                        >
-                            Empowering <br />
-                            <span className="text-emerald-600 italic">
-                                Your Destiny.
-                            </span>
-                        </h1>
-
-                        <motion.p variants={fadeIn} className="text-xl text-[#00211F] opacity-40 max-w-lg leading-relaxed font-medium">
-                            A royal family of believers, upholding righteous standards as the unique fellowship on campus.
-                        </motion.p>
-
-                        <motion.div variants={fadeIn} className="flex flex-wrap gap-5 pt-4">
-                            <Link
-                                to="/signup"
-                                className="group bg-[#00211F] text-white px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:bg-emerald-600 transition-all shadow-2xl shadow-emerald-900/10 active:scale-95"
-                            >
-                                Join The Family
-                                <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <Link
-                                to="/about"
-                                className="zeni-card bg-white px-10 py-5 flex items-center gap-3 group"
-                            >
-                                <span className="text-xs font-black uppercase tracking-widest text-[#00211F]">Discover More</span>
-                                <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                                    <FiArrowRight className="text-xs" />
-                                </div>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Image Slider Section */}
-                    <div className="relative h-[450px] md:h-[650px] group">
+                <div className="container mx-auto px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-16 items-center">
+                    {/* Image Slider Section - Now first on mobile */}
+                    <div className="relative h-[450px] md:h-[650px] group w-full lg:order-2">
                         <div className="absolute inset-0 bg-emerald-500/5 rounded-[4rem] -rotate-3 transition-transform group-hover:rotate-0 duration-1000"></div>
 
                         <div className="relative h-full w-full rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.1)] border-[12px] border-white/80 backdrop-blur-sm bg-gray-100">
@@ -236,6 +191,51 @@ const Home = () => {
                             </div>
                         </motion.div>
                     </div>
+
+                    {/* Text Content - Now second on mobile */}
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={stagger}
+                        className="space-y-10 lg:order-1"
+                    >
+                        <motion.div variants={fadeIn} className="section-tag">
+                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                            Welcome to the Den
+                        </motion.div>
+
+                        <h1
+                            className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.9] tracking-tighter"
+                        >
+                            Empowering <br />
+                            <span className="text-emerald-600 italic">
+                                Your Destiny.
+                            </span>
+                        </h1>
+
+                        <motion.p variants={fadeIn} className="text-xl text-[#00211F] opacity-40 max-w-lg leading-relaxed font-medium">
+                            A royal family of believers, upholding righteous standards as the unique fellowship on campus.
+                        </motion.p>
+
+                        <motion.div variants={fadeIn} className="flex flex-wrap gap-5 pt-4">
+                            <Link
+                                to="/signup"
+                                className="group bg-[#00211F] text-white px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:bg-emerald-600 transition-all shadow-2xl shadow-emerald-900/10 active:scale-95"
+                            >
+                                Join The Family
+                                <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link
+                                to="/about"
+                                className="zeni-card bg-white px-10 py-5 flex items-center gap-3 group"
+                            >
+                                <span className="text-xs font-black uppercase tracking-widest text-[#00211F]">Discover More</span>
+                                <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                                    <FiArrowRight className="text-xs" />
+                                </div>
+                            </Link>
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -329,12 +329,12 @@ const Home = () => {
             <BooksSection />
 
             {/* Gallery Sneak Peek */}
-            <section className="py-40 overflow-hidden">
-                <div className="container mx-auto px-6 mb-24 max-w-7xl">
+            <section className="py-24 overflow-hidden bg-emerald-50/30">
+                <div className="container mx-auto px-6 mb-20 max-w-7xl">
                     <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
                         <div className="max-w-2xl">
-                            <div className="section-tag mb-8">Memories</div>
-                            <h2 className="text-6xl md:text-7xl font-black text-[#00211F] leading-none tracking-tighter uppercase italic">
+                            <div className="section-tag mb-8 bg-emerald-100/50 border-emerald-200 text-emerald-700">Memories</div>
+                            <h2 className="text-5xl md:text-7xl font-black text-[#00211F] leading-none tracking-tighter uppercase italic">
                                 Captured <br />
                                 <span className="text-emerald-600">Moments.</span>
                             </h2>
@@ -344,18 +344,18 @@ const Home = () => {
                             <button
                                 onClick={() => {
                                     const el = document.getElementById('home-gallery-slider');
-                                    el.scrollBy({ left: -500, behavior: 'smooth' });
+                                    el.scrollBy({ left: -400, behavior: 'smooth' });
                                 }}
-                                className="w-16 h-16 zeni-card flex items-center justify-center text-2xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
+                                className="w-14 h-14 zeni-card flex items-center justify-center text-xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
                             >
                                 <FiArrowRight className="rotate-180" />
                             </button>
                             <button
                                 onClick={() => {
                                     const el = document.getElementById('home-gallery-slider');
-                                    el.scrollBy({ left: 500, behavior: 'smooth' });
+                                    el.scrollBy({ left: 400, behavior: 'smooth' });
                                 }}
-                                className="w-16 h-16 zeni-card flex items-center justify-center text-2xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
+                                className="w-14 h-14 zeni-card flex items-center justify-center text-xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
                             >
                                 <FiArrowRight />
                             </button>
@@ -365,13 +365,13 @@ const Home = () => {
 
                 <div
                     id="home-gallery-slider"
-                    className="flex gap-8 px-20 overflow-x-auto no-scrollbar scroll-smooth pb-20"
+                    className="flex gap-6 px-10 md:px-20 overflow-x-auto no-scrollbar scroll-smooth pb-20"
                 >
                     {homeGallery.map((img, i) => (
                         <motion.div
                             key={i}
-                            whileHover={{ y: -20 }}
-                            className="min-w-[350px] md:min-w-[500px] h-[600px] zeni-card overflow-hidden !rounded-[3.5rem] !p-0 border-[12px] border-white relative group"
+                            whileHover={{ y: -10 }}
+                            className="min-w-[280px] md:min-w-[320px] aspect-square zeni-card overflow-hidden !rounded-[2.5rem] !p-0 border-8 border-white relative group shrink-0"
                         >
                             <img src={img} alt="Gallery" className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -379,13 +379,13 @@ const Home = () => {
                     ))}
                     <Link
                         to="/gallery"
-                        className="min-w-[350px] md:min-w-[500px] h-[600px] zeni-card-dark !bg-[#00211F] flex flex-col items-center justify-center group p-20 text-center transition-all hover:bg-emerald-950"
+                        className="min-w-[280px] md:min-w-[320px] aspect-square zeni-card-dark !bg-[#00211F] flex flex-col items-center justify-center group p-10 text-center transition-all hover:bg-emerald-950 !rounded-[2.5rem] shrink-0"
                     >
-                        <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-10 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-transparent transition-all duration-700 shadow-2xl">
-                            <FiArrowRight className="text-4xl" />
+                        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-transparent transition-all duration-700 shadow-2xl">
+                            <FiArrowRight className="text-2xl" />
                         </div>
-                        <h3 className="text-4xl font-black uppercase italic mb-6 leading-none">The Full <br /><span className="text-emerald-500">Archive.</span></h3>
-                        <p className="text-emerald-100/30 text-lg font-medium tracking-tight">Step into the visual story of our royal family.</p>
+                        <h3 className="text-2xl font-black uppercase italic mb-4 leading-none text-white">The Full <br /><span className="text-emerald-500">Archive.</span></h3>
+                        <p className="text-emerald-100/30 text-sm font-medium tracking-tight">Step into the visual story of our royal family.</p>
                     </Link>
                 </div>
             </section>
