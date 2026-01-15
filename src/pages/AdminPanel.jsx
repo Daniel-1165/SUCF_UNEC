@@ -88,7 +88,7 @@ const AdminPanel = () => {
                 navigate('/');
                 return;
             }
-            // Verified Admin
+            // Verified Admin - load data
             fetchGallery();
             fetchArticles();
             fetchBooks();
@@ -99,6 +99,22 @@ const AdminPanel = () => {
             }
         }
     }, [user, authLoading, navigate]);
+
+    // Warning when leaving while uploading
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (uploading) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [uploading]);
+
+    // Use a ref to track if we've successfully auth'd once
+    const hasAuthorized = React.useRef(false);
+    if (user?.isAdmin === true) hasAuthorized.current = true;
 
     // --- FETCH DATA ---
     const fetchGallery = async () => {
@@ -238,7 +254,7 @@ const AdminPanel = () => {
         try {
             let finalFileUrl = bookForm.file_url;
             let finalImageUrl = bookForm.image_url;
-            if (bookForm.bookFile) finalFileUrl = await uploadFile(bookForm.bookFile, 'content-files', 'books');
+            if (bookForm.bookFile) finalFileUrl = await uploadFile(bookForm.bookFile, 'content-images', 'books');
             if (bookForm.imageFile) finalImageUrl = await uploadFile(bookForm.imageFile, 'content-images', 'book-covers');
 
             const { bookFile, imageFile, ...submitData } = bookForm;
@@ -288,7 +304,7 @@ const AdminPanel = () => {
         if (!error) fetchNews();
     };
 
-    if (authLoading || (user && user.isAdmin === undefined)) {
+    if (!hasAuthorized.current && (authLoading || (user && user.isAdmin === undefined))) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
                 <div className="w-12 h-12 border-4 border-emerald-900 border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -341,7 +357,13 @@ const AdminPanel = () => {
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Caption</label>
                                         <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Descriptive caption..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" />
                                     </div>
-                                    <button disabled={uploading} className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50">{uploading ? '...' : 'Upload'}</button>
+                                    <button
+                                        type="submit"
+                                        disabled={uploading}
+                                        className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50 min-w-[120px]"
+                                    >
+                                        {uploading ? 'UPLOADING...' : 'Upload'}
+                                    </button>
                                 </form>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -440,7 +462,15 @@ const AdminPanel = () => {
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Cover Image (Optional)</label><input type="file" accept="image/*" onChange={(e) => setBookForm({ ...bookForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
                                     </div>
                                     <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Description</label><textarea rows="4" value={bookForm.description} onChange={(e) => setBookForm({ ...bookForm, description: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
-                                    <div className="flex justify-end"><button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">{uploading ? '...' : <><FiSave /> Upload Book</>}</button></div>
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="submit"
+                                            disabled={uploading}
+                                            className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 disabled:opacity-50"
+                                        >
+                                            {uploading ? 'PROCESSING...' : <><FiSave /> Upload Book</>}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
