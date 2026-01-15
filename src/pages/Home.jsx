@@ -371,7 +371,7 @@ const Home = () => {
                         <motion.div
                             key={i}
                             whileHover={{ y: -10 }}
-                            className="min-w-[280px] md:min-w-[320px] aspect-square zeni-card overflow-hidden !rounded-[2.5rem] !p-0 border-8 border-white relative group shrink-0"
+                            className="w-[200px] md:w-[260px] aspect-square zeni-card overflow-hidden !rounded-[2.5rem] !p-0 border-8 border-white relative group shrink-0"
                         >
                             <img src={img} alt="Gallery" className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -379,7 +379,7 @@ const Home = () => {
                     ))}
                     <Link
                         to="/gallery"
-                        className="min-w-[280px] md:min-w-[320px] aspect-square zeni-card-dark !bg-[#00211F] flex flex-col items-center justify-center group p-10 text-center transition-all hover:bg-emerald-950 !rounded-[2.5rem] shrink-0"
+                        className="w-[200px] md:w-[260px] aspect-square zeni-card-dark !bg-[#00211F] flex flex-col items-center justify-center group p-8 text-center transition-all hover:bg-emerald-950 !rounded-[2.5rem] shrink-0"
                     >
                         <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-transparent transition-all duration-700 shadow-2xl">
                             <FiArrowRight className="text-2xl" />

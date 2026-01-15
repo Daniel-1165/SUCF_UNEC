@@ -4,8 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const galleryCategories = ['Events', 'Worship', 'Fellowship', 'Outreach'];
 const articleCategories = ['Spiritual Growth', 'Academic', 'Prayer', 'Testimony'];
