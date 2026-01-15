@@ -115,12 +115,6 @@ const Activities = () => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
 
-                                <div className="absolute top-6 left-6">
-                                    <div className={`w-14 h-14 rounded-2xl bg-white shadow-xl flex items-center justify-center text-3xl`}>
-                                        {event.icon}
-                                    </div>
-                                </div>
-
                                 <div className="absolute top-6 right-6">
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full bg-white/90 backdrop-blur-md text-[#00211F] border border-white/20">
                                         {event.tag}
@@ -206,13 +200,6 @@ const Activities = () => {
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-                                    {/* Icon Badge */}
-                                    <div className="absolute top-4 left-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-white shadow-xl flex items-center justify-center text-2xl">
-                                            {unit.icon}
-                                        </div>
-                                    </div>
 
                                     {/* Gradient Overlay on Hover */}
                                     <div className={`absolute inset-0 bg-gradient-to-br ${unit.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />

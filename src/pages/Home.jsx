@@ -112,7 +112,7 @@ const Home = () => {
         <div className="min-h-screen zeni-mesh-gradient">
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden">
-                <div className="container mx-auto px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-16 items-center">
+                <div className="container mx-auto px-6 flex flex-col lg:grid lg:grid-cols-2 gap-16 items-center">
                     {/* Image Slider Section - Now first on mobile */}
                     <div className="relative h-[450px] md:h-[650px] group w-full lg:order-2">
                         <div className="absolute inset-0 bg-emerald-500/5 rounded-[4rem] -rotate-3 transition-transform group-hover:rotate-0 duration-1000"></div>
