@@ -113,8 +113,6 @@ const BooksSection = () => {
         }
     };
 
-    if (!loading && books.length === 0 && !user?.isAdmin) return null;
-
     return (
         <section className="py-32 zeni-mesh-gradient relative overflow-hidden">
             <div className="container mx-auto px-6 max-w-7xl">
@@ -154,22 +152,32 @@ const BooksSection = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {books.map((book, index) => (
-                                <BookCard
-                                    key={book.id}
-                                    book={book}
-                                    isAdmin={user?.isAdmin}
-                                    onDelete={handleDelete}
-                                    isFeatured={index === 1} // Feature the middle card
-                                />
-                            ))}
-                        </div>
-                        {books.length === 0 && user?.isAdmin && (
-                            <div className="text-center py-24 zeni-card border-dashed border-2 border-emerald-500/20 mt-12">
+                        {books.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {books.map((book, index) => (
+                                    <BookCard
+                                        key={book.id}
+                                        book={book}
+                                        isAdmin={user?.isAdmin}
+                                        onDelete={handleDelete}
+                                        isFeatured={index === 1} // Feature the middle card
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-24 zeni-card border-dashed border-2 border-emerald-500/20">
                                 <FiBook className="text-6xl text-emerald-500/20 mx-auto mb-6" />
-                                <p className="text-[#00211F] font-bold uppercase tracking-widest text-xs opacity-40">The library is empty.</p>
-                                <Link to="/admin" className="mt-6 inline-flex p-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 transition-all">Add First Resource</Link>
+                                {user?.isAdmin ? (
+                                    <>
+                                        <p className="text-[#00211F] font-bold uppercase tracking-widest text-xs opacity-40 mb-6">The library is empty.</p>
+                                        <Link to="/admin" className="inline-flex p-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 transition-all">Add First Resource</Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="text-[#00211F] font-bold uppercase tracking-widest text-xs opacity-40 mb-2">Library Coming Soon</p>
+                                        <p className="text-[#00211F] text-sm opacity-30 max-w-md mx-auto">Our leadership is curating spiritual resources for this semester. Check back soon!</p>
+                                    </>
+                                )}
                             </div>
                         )}
                     </>

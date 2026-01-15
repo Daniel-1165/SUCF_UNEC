@@ -76,8 +76,14 @@ const AdminPanel = () => {
         imageFile: null
     });
 
+    // Use a ref to track if we've successfully auth'd once
+    const hasAuthorized = React.useRef(false);
+
     // Initial Load & Auth Check
     useEffect(() => {
+        // If already authorized once, don't re-check navigation
+        if (hasAuthorized.current) return;
+
         if (!authLoading) {
             if (!user) {
                 navigate('/signin');
@@ -88,7 +94,8 @@ const AdminPanel = () => {
                 navigate('/');
                 return;
             }
-            // Verified Admin - load data
+            // Verified Admin - load data and lock authorization
+            hasAuthorized.current = true;
             fetchGallery();
             fetchArticles();
             fetchBooks();
@@ -111,10 +118,6 @@ const AdminPanel = () => {
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [uploading]);
-
-    // Use a ref to track if we've successfully auth'd once
-    const hasAuthorized = React.useRef(false);
-    if (user?.isAdmin === true) hasAuthorized.current = true;
 
     // --- FETCH DATA ---
     const fetchGallery = async () => {
