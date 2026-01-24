@@ -5,7 +5,7 @@ import { FiDownload, FiBook, FiArrowRight, FiTrash2, FiPlus } from 'react-icons/
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const BookCard = ({ book, isAdmin, onDelete, isFeatured, index }) => {
+const BookCard = ({ book, isAdmin, onDelete, index }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 100 }}
@@ -16,69 +16,77 @@ const BookCard = ({ book, isAdmin, onDelete, isFeatured, index }) => {
                 delay: index * 0.15,
                 ease: [0.22, 1, 0.36, 1]
             }}
-            whileHover={{ y: -10 }}
-            className={`${isFeatured ? 'zeni-card-dark' : 'zeni-card'} overflow-hidden flex flex-col group relative h-full`}
+            className="flex flex-col gap-6 group"
         >
             {/* Admin Controls */}
             {isAdmin && (
-                <div className="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
+                <div className="absolute top-4 right-4 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
                     <button
                         onClick={(e) => { e.preventDefault(); onDelete(book.id); }}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all ${isFeatured ? 'bg-white/10 text-white hover:bg-red-500' : 'bg-white text-red-500 hover:bg-red-500 hover:text-white'}`}
+                        className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center shadow-lg transition-all"
                     >
                         <FiTrash2 />
                     </button>
                     <Link
                         to="/admin"
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all ${isFeatured ? 'bg-white/10 text-white hover:bg-emerald-500' : 'bg-white text-emerald-900 hover:bg-emerald-900 hover:text-white'}`}
+                        className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center shadow-lg transition-all"
                     >
                         <FiPlus />
                     </Link>
                 </div>
             )}
 
-            {/* Cover Image Section */}
-            <div className={`relative aspect-[4/5] overflow-hidden ${isFeatured ? 'bg-white/5' : 'bg-[#F5F9F7]'}`}>
+            {/* Book Cover with Overlay Button */}
+            <motion.div
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl"
+            >
                 {book.image_url ? (
                     <img
                         src={book.image_url}
                         alt={book.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover"
                     />
                 ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center opacity-20">
-                        <FiBook className="text-7xl mb-4" />
+                    <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
+                        <FiBook className="text-8xl text-white/30" />
                     </div>
                 )}
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent" />
-            </div>
 
-            {/* Info Section */}
-            <div className="p-8 flex-grow flex flex-col">
-                <div className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 ${isFeatured ? 'text-emerald-400' : 'text-emerald-600'}`}>
-                    {book.semester || "Semester Read"}
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+                {/* Semester Badge */}
+                <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full border border-white/30">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-white">
+                        {book.semester || "2026/1"}
+                    </span>
                 </div>
-                <h3 className={`text-2xl font-bold leading-tight mb-2 line-clamp-2 ${isFeatured ? 'text-white' : 'text-[#00211F]'}`}>
+
+                {/* Download Button Overlay */}
+                <a
+                    href={book.file_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 px-8 py-3 bg-white/95 backdrop-blur-md rounded-full font-bold text-sm text-[#00211F] hover:bg-white hover:scale-105 transition-all shadow-xl flex items-center gap-2"
+                >
+                    <FiDownload className="text-base" />
+                    Read
+                </a>
+            </motion.div>
+
+            {/* Glassmorphic Info Card */}
+            <div className="bg-white/40 backdrop-blur-xl rounded-[1.5rem] p-6 border border-white/60 shadow-lg">
+                <p className="text-xs font-bold text-emerald-600/70 uppercase tracking-wider mb-2">
+                    {book.semester || "Semester Read"}
+                </p>
+                <h3 className="text-xl font-bold text-[#00211F] mb-1 line-clamp-1">
                     {book.title}
                 </h3>
-                <p className={`text-sm mb-8 line-clamp-2 font-medium opacity-60 ${isFeatured ? 'text-white' : 'text-[#00211F]'}`}>
-                    By {book.author || "SUCF UNEC"}
+                <p className="text-sm text-[#00211F]/60 font-medium">
+                    {book.author || "SUCF UNEC"}
                 </p>
-
-                <div className="mt-auto">
-                    <a
-                        href={book.file_url}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`w-full py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${isFeatured
-                            ? 'bg-white text-[#00211F] hover:bg-emerald-400'
-                            : 'bg-[#00211F] text-white hover:bg-emerald-800 shadow-xl shadow-emerald-900/10'
-                            }`}
-                    >
-                        <FiDownload /> Download Word
-                    </a>
-                </div>
             </div>
         </motion.div>
     );
@@ -168,7 +176,6 @@ const BooksSection = () => {
                                         book={book}
                                         isAdmin={user?.isAdmin}
                                         onDelete={handleDelete}
-                                        isFeatured={index === 1} // Feature the middle card
                                         index={index}
                                     />
                                 ))}

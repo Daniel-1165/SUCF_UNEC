@@ -147,15 +147,6 @@ const Home = () => {
                                         className="w-full h-full object-cover pointer-events-none transition-all duration-1000"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent pointer-events-none" />
-
-                                    {/* Slide Content Overlay */}
-                                    <div className="absolute bottom-16 left-16 text-white pointer-events-none">
-                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-4 flex items-center gap-4">
-                                            <span className="w-12 h-px bg-emerald-500/30"></span>
-                                            Moment 0{currentSlide + 1}
-                                        </p>
-                                        <p className="text-4xl font-black uppercase italic tracking-tighter leading-none">The SUCF <span className="text-emerald-500">Legacy.</span></p>
-                                    </div>
                                 </motion.div>
                             </AnimatePresence>
 
@@ -175,21 +166,7 @@ const Home = () => {
                             </div>
                         </div>
 
-                        {/* Floating Badge */}
-                        <motion.div
-                            initial={{ scale: 0, rotate: -20 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ delay: 0.8, type: "spring" }}
-                            className="absolute -top-10 -left-10 zeni-card p-6 md:p-8 flex items-center gap-6 z-40 bg-white/90 backdrop-blur-xl border-emerald-50"
-                        >
-                            <div className="w-14 h-14 bg-emerald-500/10 text-emerald-600 rounded-[1.2rem] flex items-center justify-center text-3xl">
-                                <FiUsers />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-emerald-600/40 uppercase tracking-[0.2em] mb-1">Our Mission</p>
-                                <p className="text-lg font-black text-[#00211F] uppercase leading-none">One Family</p>
-                            </div>
-                        </motion.div>
+
                     </div>
 
                     {/* Text Content - Now second on mobile */}
