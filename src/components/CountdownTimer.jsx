@@ -115,21 +115,6 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                 <div className="absolute bottom-[-20%] right-[-10%] w-64 h-64 bg-emerald-900/5 rounded-full blur-3xl" />
             </div>
 
-            {/* Sliding Text Message */}
-            <div className="w-full overflow-hidden bg-emerald-900/5 py-4 mb-20 border-y border-emerald-900/10">
-                <motion.div
-                    animate={{ x: [1000, -1500] }}
-                    transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-                    className="whitespace-nowrap flex gap-20 items-center"
-                >
-                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
-                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                    </span>
-                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
-                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                    </span>
-                </motion.div>
-            </div>
 
             <div className="container mx-auto px-6 flex flex-col items-center">
                 <motion.div
@@ -251,6 +236,22 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                         </div>
                     </motion.div>
                 </div>
+            </div>
+
+            {/* Sliding Text Message - Now at the bottom */}
+            <div className="w-full overflow-hidden bg-emerald-900/5 py-6 mt-20 border-y border-emerald-900/10">
+                <motion.div
+                    animate={{ x: [1000, -1500] }}
+                    transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+                    className="whitespace-nowrap flex gap-20 items-center"
+                >
+                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
+                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                    </span>
+                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
+                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                    </span>
+                </motion.div>
             </div>
         </div>
     );

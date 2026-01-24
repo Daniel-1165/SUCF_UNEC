@@ -110,8 +110,8 @@ const Home = () => {
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden">
                 <div className="container mx-auto px-6 flex flex-col lg:grid lg:grid-cols-2 gap-16 items-center">
-                    {/* Image Slider Section - Now first on mobile */}
-                    <div className="relative h-[450px] md:h-[650px] group w-full lg:order-2">
+                    {/* Image Slider Section - Dominant Landing on Mobile */}
+                    <div className="relative h-[80vh] md:h-[650px] lg:h-[750px] group w-full lg:order-2">
                         <div className="absolute inset-0 bg-emerald-500/5 rounded-[4rem] -rotate-3 transition-transform group-hover:rotate-0 duration-1000"></div>
 
                         <div className="relative h-full w-full rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.1)] border-2 border-white/80 backdrop-blur-sm bg-gray-100 scale-105">
