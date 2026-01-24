@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit } from 'react-icons/fi';
+import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -31,7 +31,7 @@ const quillFormats = [
 const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news'
+    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news', 'events'
 
     // Gallery State
     const [galleryImages, setGalleryImages] = useState([]);
@@ -76,6 +76,17 @@ const AdminPanel = () => {
         imageFile: null
     });
 
+    // Fellowship Events State
+    const [fellowshipEvents, setFellowshipEvents] = useState([]);
+    const [eventForm, setEventForm] = useState({
+        title: '',
+        event_date: '',
+        event_time: '',
+        location: '',
+        flyer_url: '',
+        imageFile: null
+    });
+
     // Use a ref to track if we've successfully auth'd once
     const hasAuthorized = React.useRef(false);
 
@@ -100,6 +111,7 @@ const AdminPanel = () => {
             fetchArticles();
             fetchBooks();
             fetchNews();
+            fetchFellowshipEvents();
 
             if (user?.user_metadata?.full_name && articleForm.author_name === 'Admin') {
                 setArticleForm(prev => ({ ...prev, author_name: user.user_metadata.full_name }));
@@ -138,6 +150,14 @@ const AdminPanel = () => {
     const fetchNews = async () => {
         const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
         if (!error) setNews(data);
+    };
+
+    const fetchFellowshipEvents = async () => {
+        const { data, error } = await supabase
+            .from('fellowship_events')
+            .select('*')
+            .order('event_date', { ascending: false });
+        if (!error) setFellowshipEvents(data);
     };
 
     // --- UTILS ---
@@ -307,6 +327,38 @@ const AdminPanel = () => {
         if (!error) fetchNews();
     };
 
+    // --- FELLOWSHIP EVENT ACTIONS ---
+    const handleEventSubmit = async (e) => {
+        e.preventDefault();
+        setUploading(true);
+        try {
+            let finalImageUrl = eventForm.flyer_url;
+            if (eventForm.imageFile) {
+                finalImageUrl = await uploadFile(eventForm.imageFile, 'content-images', 'events');
+            }
+
+            const { imageFile, ...submitData } = eventForm;
+            const { error } = await supabase.from('fellowship_events').insert([
+                { ...submitData, flyer_url: finalImageUrl, created_by: user.id }
+            ]);
+
+            if (error) throw error;
+            setEventForm({ title: '', event_date: '', event_time: '', location: '', flyer_url: '', imageFile: null });
+            fetchFellowshipEvents();
+            alert("Fellowship event published!");
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleDeleteEvent = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this event?")) return;
+        const { error } = await supabase.from('fellowship_events').delete().eq('id', id);
+        if (!error) fetchFellowshipEvents();
+    };
+
     if (!hasAuthorized.current && (authLoading || (user && user.isAdmin === undefined))) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -336,6 +388,9 @@ const AdminPanel = () => {
                         </button>
                         <button onClick={() => setActiveTab('news')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'news' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
                             <FiBell /> News
+                        </button>
+                        <button onClick={() => setActiveTab('events')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'events' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
+                            <FiCalendar /> Fellowship Events
                         </button>
                     </div>
                 </div>
@@ -486,6 +541,53 @@ const AdminPanel = () => {
                                         <div className="p-6"><h4 className="font-bold text-emerald-900 truncate">{book.title}</h4><p className="text-xs text-gray-400 mt-1">{book.author || 'Unknown Author'}</p></div>
                                     </div>
                                 ))}
+                            </div>
+                        </motion.div>
+                    ) : activeTab === 'events' ? (
+                        <motion.div key="events" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+                            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiCalendar className="text-emerald-500" /> Manage Fellowship Flyer</h3>
+                                <form onSubmit={handleEventSubmit} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Title</label><input type="text" required value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} placeholder="e.g. Sunday Fellowship, Special Praise Night" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Date</label><input type="datetime-local" required value={eventForm.event_date} onChange={(e) => setEventForm({ ...eventForm, event_date: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Display Time</label><input type="text" required value={eventForm.event_time} onChange={(e) => setEventForm({ ...eventForm, event_time: e.target.value })} placeholder="e.g. 3:00 PM PROMPT" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Location</label><input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} placeholder="e.g. Architecture Auditorium" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Flyer Flyer (Upload)</label>
+                                            <input type="file" accept="image/*" required onChange={(e) => setEventForm({ ...eventForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end"><button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">{uploading ? 'PROCESSING...' : <><FiSave /> Publish Event Flyer</>}</button></div>
+                                </form>
+                            </div>
+
+                            <div className="space-y-6">
+                                <h4 className="text-lg font-bold text-emerald-900 flex items-center gap-2">Published Flyers</h4>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {fellowshipEvents.map((event) => {
+                                        const isPast = new Date(event.event_date) < new Date();
+                                        return (
+                                            <div key={event.id} className={`bg-white rounded-2xl border border-gray-100 overflow-hidden group hover:shadow-xl transition-all flex flex-col ${isPast ? 'opacity-60' : ''}`}>
+                                                <div className="aspect-[4/5] bg-gray-50 relative">
+                                                    <img src={event.flyer_url} alt={event.title} className="w-full h-full object-cover" />
+                                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all"></div>
+                                                    <div className="absolute top-4 left-4">
+                                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isPast ? 'bg-gray-500 text-white' : 'bg-emerald-500 text-white'}`}>
+                                                            {isPast ? 'Past Event' : 'Upcoming'}
+                                                        </span>
+                                                    </div>
+                                                    <button onClick={() => handleDeleteEvent(event.id)} className="absolute top-4 right-4 p-3 bg-white/90 text-red-500 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"><FiTrash2 /></button>
+                                                </div>
+                                                <div className="p-6">
+                                                    <h4 className="font-bold text-emerald-900 truncate">{event.title}</h4>
+                                                    <p className="text-xs text-gray-400 mt-1">{new Date(event.event_date).toLocaleDateString()} • {event.event_time}</p>
+                                                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">{event.location}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </motion.div>
                     ) : (

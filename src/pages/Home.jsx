@@ -80,28 +80,6 @@ const Home = () => {
         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
     };
 
-    const stagger = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2
-            }
-        }
-    };
-
-    // Calculate next Sunday
-    const getNextSunday = () => {
-        const now = new Date();
-        const nextSunday = new Date();
-        nextSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
-        if (now.getDay() === 0 && now.getHours() >= 15) {
-            nextSunday.setDate(nextSunday.getDate() + 7);
-        }
-        nextSunday.setHours(15, 0, 0, 0);
-        return nextSunday;
-    };
-
     const [currentSlide, setCurrentSlide] = React.useState(0);
     const [direction, setDirection] = React.useState(0);
     const heroImageCount = heroImages.length;
@@ -248,7 +226,7 @@ const Home = () => {
             </section>
 
             {/* Countdown Timer */}
-            <CountdownTimer targetDate={getNextSunday()} />
+            <CountdownTimer />
 
             {/* Why Join Us */}
             <section className="py-40">
