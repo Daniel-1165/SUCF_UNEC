@@ -5,36 +5,6 @@ import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 
-// Static fallback articles
-const staticArticles = [
-    {
-        id: 's1',
-        title: "Walking in Divine Purpose",
-        excerpt: "Discovering God's plan for your life is the beginning of true fulfillment. Learn how to align your steps with His will.",
-        author_name: "Anonymous",
-        created_at: "2024-12-12",
-        category: "Spiritual Growth",
-        image_url: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2670&auto=format&fit=crop"
-    },
-    {
-        id: 's2',
-        title: "Balancing Academics and Faith",
-        excerpt: "How do you maintain a 5.0 GPA while serving in the fellowship? Practical tips from successful students.",
-        author_name: "Anonymous",
-        created_at: "2024-11-28",
-        category: "Academic",
-        image_url: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2673&auto=format&fit=crop"
-    },
-    {
-        id: 's3',
-        title: "The Power of Corporate Prayer",
-        excerpt: "When believers gather in unity, mountains move. Discover the transformative power of praying together.",
-        author_name: "Prayer Secretary",
-        created_at: "2024-11-15",
-        category: "Prayer",
-        image_url: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=2574&auto=format&fit=crop"
-    }
-];
 
 const Articles = () => {
     const { user } = useAuth();
@@ -80,7 +50,7 @@ const Articles = () => {
     };
 
     // Filter and search logic
-    const allArticles = [...dbArticles, ...staticArticles];
+    const allArticles = dbArticles;
     const filteredArticles = allArticles.filter(article => {
         const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||

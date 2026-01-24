@@ -4,63 +4,6 @@ import { FiArrowLeft, FiClock, FiUser, FiShare2, FiTag } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 
-// Static fallback articles data
-const staticArticles = {
-    's1': {
-        id: 's1',
-        title: "Walking in Divine Purpose",
-        content: `<p>Discovering God's plan for your life is the beginning of true fulfillment. When we align our steps with His divine will, we experience peace, joy, and purpose that transcends our understanding.</p>
-        
-        <h2>Understanding God's Call</h2>
-        <p>Every believer has a unique calling and purpose. It's not about what we can achieve in our own strength, but about surrendering to His perfect plan for our lives.</p>
-        
-        <h2>Steps to Discovery</h2>
-        <p>Through prayer, studying the Word, and fellowship with other believers, we can discern God's voice and direction for our lives. The journey may not always be easy, but it is always worth it.</p>
-        
-        <p>Remember, God's plans for you are plans for good and not for evil, to give you a future and a hope (Jeremiah 29:11).</p>`,
-        author_name: "President",
-        created_at: "2024-12-12",
-        category: "Spiritual Growth",
-        image_url: "https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop",
-        tags: ["Purpose", "Faith", "Guidance"]
-    },
-    's2': {
-        id: 's2',
-        title: "Balancing Academics and Faith",
-        content: `<p>As students, we face the constant challenge of balancing our academic pursuits with our spiritual growth. But these two aspects of our lives don't have to be in conflict.</p>
-        
-        <h2>Practical Tips</h2>
-        <p>Start your day with prayer and devotion. This sets the tone for everything else. Remember that God cares about every aspect of your life, including your studies.</p>
-        
-        <h2>Time Management</h2>
-        <p>Create a schedule that includes time for studies, fellowship activities, and personal devotion. Discipline is key to maintaining balance.</p>
-        
-        <p>Trust that when you seek first the kingdom of God, all other things will be added unto you (Matthew 6:33).</p>`,
-        author_name: "Sister Grace",
-        created_at: "2024-11-28",
-        category: "Academic",
-        image_url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2670&auto=format&fit=crop",
-        tags: ["Academic", "Balance", "Time Management"]
-    },
-    's3': {
-        id: 's3',
-        title: "The Power of Corporate Prayer",
-        content: `<p>When believers gather together in prayer, something supernatural happens. The Bible tells us that where two or three are gathered in His name, He is there in the midst of them.</p>
-        
-        <h2>Unity in Prayer</h2>
-        <p>Corporate prayer creates a powerful atmosphere of faith and unity. It's not just about individual requests, but about coming together with one heart and one mind.</p>
-        
-        <h2>Testimonies</h2>
-        <p>We've seen countless testimonies of answered prayers during our Wednesday prayer meetings. From academic breakthroughs to healing and deliverance, God moves when His people pray together.</p>
-        
-        <p>Join us every Wednesday at 6:00 PM for our prayer meeting and experience the power of corporate prayer.</p>`,
-        author_name: "Prayer Secretary",
-        created_at: "2024-11-15",
-        category: "Prayer",
-        image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2670&auto=format&fit=crop",
-        tags: ["Prayer", "Unity", "Fellowship"]
-    }
-};
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -69,13 +12,6 @@ const ArticleDetail = () => {
 
     useEffect(() => {
         const fetchArticle = async () => {
-            // Check static first
-            if (staticArticles[id]) {
-                setArticle(staticArticles[id]);
-                setLoading(false);
-                return;
-            }
-
             // Fetch from Supabase
             try {
                 const { data, error } = await supabase

@@ -36,7 +36,7 @@ const BookCard = ({ book, isAdmin, onDelete, index }) => {
                 </div>
             )}
 
-            {/* Book Cover with Overlay Button */}
+            {/* Book Cover */}
             <motion.div
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl bg-emerald-950"
@@ -55,33 +55,33 @@ const BookCard = ({ book, isAdmin, onDelete, index }) => {
 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/90 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
-
-                {/* Download Button Overlay */}
-                <a
-                    href={book.file_url}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute bottom-6 left-1/2 -translate-x-1/2 px-8 py-3 bg-emerald-600 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 hover:scale-105 transition-all shadow-xl flex items-center gap-3 backdrop-blur-md border border-white/10"
-                >
-                    <FiDownload className="text-sm" />
-                    Download
-                </a>
             </motion.div>
 
             {/* Information Section */}
-            <div className="px-4">
-                <h3 className="text-xl font-black text-[#00211F] mb-1 line-clamp-1 uppercase tracking-tight italic">
+            <div className="px-4 flex flex-col items-start h-full">
+                <h3 className="text-xl font-black text-[#00211F] mb-1 uppercase tracking-tight italic">
                     {book.title}
                 </h3>
                 <p className="text-xs text-emerald-600 font-black uppercase tracking-[0.2em] mb-4">
                     {book.author || "SUCF UNEC"}
                 </p>
                 {book.description && (
-                    <p className="text-sm text-[#00211F]/40 font-medium line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-[#00211F]/40 font-medium line-clamp-3 leading-relaxed mb-6">
                         {book.description}
                     </p>
                 )}
+
+                {/* Download Button Below */}
+                <a
+                    href={book.file_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto inline-flex items-center gap-3 px-6 py-3 bg-emerald-600 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 hover:scale-105 transition-all shadow-xl"
+                >
+                    <FiDownload className="text-sm" />
+                    Download PDF
+                </a>
             </div>
         </motion.div>
     );

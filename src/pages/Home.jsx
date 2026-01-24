@@ -17,27 +17,6 @@ const heroImages = [
     '/assets/freshers_flyer.jpg',
 ];
 
-// Fallback articles if database is empty
-const fallbackArticles = [
-    {
-        id: 'fallback-1',
-        title: "Walking in Divine Purpose",
-        excerpt: "Discovering God's plan for your life is the beginning of true fulfillment...",
-        author_name: "SUCF Leadership",
-        created_at: new Date().toISOString(),
-        category: "Spiritual Growth",
-        image_url: "https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop"
-    },
-    {
-        id: 'fallback-2',
-        title: "Balancing Academics and Faith",
-        excerpt: "How do you maintain excellence in your studies while serving in the fellowship?",
-        author_name: "SUCF Leadership",
-        created_at: new Date().toISOString(),
-        category: "Academic",
-        image_url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2670&auto=format&fit=crop"
-    }
-];
 
 const homeGallery = [
     '/assets/gallery/img1.jpg',
@@ -50,7 +29,6 @@ const Home = () => {
     const [articles, setArticles] = useState([]);
     const [loadingArticles, setLoadingArticles] = useState(true);
 
-    // Fetch latest articles
     useEffect(() => {
         const fetchArticles = async () => {
             try {
@@ -65,25 +43,18 @@ const Home = () => {
 
                 if (data && data.length > 0) {
                     console.log("Successfully fetched articles:", data.length);
-                    // Ensure each article has a valid image_url before setting it
                     const dbData = data.map(article => ({
                         ...article,
                         image_url: article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'
                     }));
-
-                    // If we have fewer than 2 articles, fill with fallbacks
-                    if (dbData.length < 2) {
-                        setArticles([...dbData, ...fallbackArticles.slice(0, 2 - dbData.length)]);
-                    } else {
-                        setArticles(dbData);
-                    }
+                    setArticles(dbData);
                 } else {
-                    console.log("No articles found in DB, using fallbacks.");
-                    setArticles(fallbackArticles);
+                    console.log("No articles found in DB.");
+                    setArticles([]);
                 }
             } catch (error) {
                 console.error('Error fetching articles:', error);
-                setArticles(fallbackArticles);
+                setArticles([]);
             } finally {
                 setLoadingArticles(false);
             }
@@ -143,7 +114,7 @@ const Home = () => {
                     <div className="relative h-[450px] md:h-[650px] group w-full lg:order-2">
                         <div className="absolute inset-0 bg-emerald-500/5 rounded-[4rem] -rotate-3 transition-transform group-hover:rotate-0 duration-1000"></div>
 
-                        <div className="relative h-full w-full rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.1)] border-[12px] border-white/80 backdrop-blur-sm bg-gray-100">
+                        <div className="relative h-full w-full rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.1)] border-2 border-white/80 backdrop-blur-sm bg-gray-100 scale-105">
                             <AnimatePresence initial={false} custom={direction}>
                                 <motion.div
                                     key={currentSlide}

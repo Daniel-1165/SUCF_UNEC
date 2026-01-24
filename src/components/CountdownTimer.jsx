@@ -110,10 +110,25 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
 
     return (
         <div className="py-24 bg-emerald-50/50 backdrop-blur-sm relative overflow-hidden">
-            {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full -z-10">
                 <div className="absolute top-[-20%] left-[-10%] w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-64 h-64 bg-emerald-900/5 rounded-full blur-3xl" />
+            </div>
+
+            {/* Sliding Text Message */}
+            <div className="w-full overflow-hidden bg-emerald-900/5 py-4 mb-20 border-y border-emerald-900/10">
+                <motion.div
+                    animate={{ x: [1000, -1500] }}
+                    transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+                    className="whitespace-nowrap flex gap-20 items-center"
+                >
+                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
+                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                    </span>
+                    <span className="text-xl md:text-2xl font-black text-emerald-900 uppercase italic tracking-tighter opacity-80">
+                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                    </span>
+                </motion.div>
             </div>
 
             <div className="container mx-auto px-6 flex flex-col items-center">
@@ -137,13 +152,16 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                             className="w-full lg:w-1/2"
                         >
                             <div className="relative group">
-                                <div className="absolute -inset-2 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                                <div className="relative zeni-card p-0 bg-white overflow-hidden rounded-2xl shadow-2xl border-white border-2 aspect-square">
+                                <div className="absolute -inset-2 bg-emerald-500/10 rounded-2xl blur-xl opacity-80 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div className="relative zeni-card p-0 bg-white overflow-hidden rounded-2xl shadow-2xl border-white border-2 aspect-square group-hover:shadow-emerald-900/20 transition-all duration-700">
                                     <img
                                         src={event.flyer_url}
                                         alt={event.title}
                                         className="w-full h-full object-cover transform group-hover:scale-[1.05] transition-transform duration-700 font-black text-emerald-900"
                                     />
+
+                                    {/* Subtle Blend Overlay */}
+                                    <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-2xl" />
 
                                     {/* Admin Controls Overlay */}
                                     {user?.isAdmin && (
