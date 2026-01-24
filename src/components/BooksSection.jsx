@@ -39,29 +39,22 @@ const BookCard = ({ book, isAdmin, onDelete, index }) => {
             {/* Book Cover with Overlay Button */}
             <motion.div
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl"
+                className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl bg-emerald-950"
             >
                 {book.image_url ? (
                     <img
                         src={book.image_url}
                         alt={book.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
                     />
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-                        <FiBook className="text-8xl text-white/30" />
+                    <div className="w-full h-full bg-gradient-to-br from-emerald-800 to-[#00211F] flex items-center justify-center">
+                        <FiBook className="text-8xl text-white/10" />
                     </div>
                 )}
 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-                {/* Semester Badge */}
-                <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full border border-white/30">
-                    <span className="text-[9px] font-black uppercase tracking-wider text-white">
-                        {book.semester || "2026/1"}
-                    </span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/90 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
 
                 {/* Download Button Overlay */}
                 <a
@@ -69,24 +62,26 @@ const BookCard = ({ book, isAdmin, onDelete, index }) => {
                     download
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute bottom-6 left-1/2 -translate-x-1/2 px-8 py-3 bg-white/95 backdrop-blur-md rounded-full font-bold text-sm text-[#00211F] hover:bg-white hover:scale-105 transition-all shadow-xl flex items-center gap-2"
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 px-8 py-3 bg-emerald-600 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 hover:scale-105 transition-all shadow-xl flex items-center gap-3 backdrop-blur-md border border-white/10"
                 >
-                    <FiDownload className="text-base" />
-                    Read
+                    <FiDownload className="text-sm" />
+                    Download
                 </a>
             </motion.div>
 
-            {/* Glassmorphic Info Card */}
-            <div className="bg-white/40 backdrop-blur-xl rounded-[1.5rem] p-6 border border-white/60 shadow-lg">
-                <p className="text-xs font-bold text-emerald-600/70 uppercase tracking-wider mb-2">
-                    {book.semester || "Semester Read"}
-                </p>
-                <h3 className="text-xl font-bold text-[#00211F] mb-1 line-clamp-1">
+            {/* Information Section */}
+            <div className="px-4">
+                <h3 className="text-xl font-black text-[#00211F] mb-1 line-clamp-1 uppercase tracking-tight italic">
                     {book.title}
                 </h3>
-                <p className="text-sm text-[#00211F]/60 font-medium">
+                <p className="text-xs text-emerald-600 font-black uppercase tracking-[0.2em] mb-4">
                     {book.author || "SUCF UNEC"}
                 </p>
+                {book.description && (
+                    <p className="text-sm text-[#00211F]/40 font-medium line-clamp-2 leading-relaxed">
+                        {book.description}
+                    </p>
+                )}
             </div>
         </motion.div>
     );
@@ -135,18 +130,18 @@ const BooksSection = () => {
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div className="max-w-xl">
                         <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] mb-6"
+                            className="section-tag mb-8 bg-emerald-100/50 border-emerald-200 text-emerald-700"
                         >
-                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                            Spiritual Growth
+                            Curated Knowledge
                         </motion.div>
-                        <h2 className="text-5xl md:text-6xl font-black text-[#00211F] leading-none tracking-tighter mb-6">
-                            Books for the Session to Deepen your <span className="text-emerald-600 italic">Walk.</span>
+                        <h2 className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.85] tracking-tight mb-10 uppercase italic">
+                            Wisdom <br />
+                            <span className="text-emerald-600">Archived.</span>
                         </h2>
-                        <p className="text-[#00211F] text-lg font-medium opacity-40 max-w-sm leading-relaxed">Curated resources to nourish your spirit and sharpen your mind.</p>
+                        <p className="text-[#00211F] text-xl font-medium opacity-40 max-w-sm leading-relaxed">Spiritual nourishment through literature, handpicked for your growth.</p>
                     </div>
 
                     <Link to="/library" className="group flex items-center gap-4">

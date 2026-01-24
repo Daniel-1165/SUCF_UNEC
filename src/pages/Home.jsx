@@ -54,6 +54,7 @@ const Home = () => {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
+                console.log("Fetching articles from Supabase...");
                 const { data, error } = await supabase
                     .from('articles')
                     .select('*')
@@ -62,8 +63,18 @@ const Home = () => {
 
                 if (error) throw error;
 
-                // Use real articles if available, otherwise use fallbacks
-                setArticles(data && data.length > 0 ? data : fallbackArticles);
+                if (data && data.length > 0) {
+                    console.log("Successfully fetched articles:", data.length);
+                    // Ensure each article has a valid image_url before setting it
+                    const processedData = data.map(article => ({
+                        ...article,
+                        image_url: article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'
+                    }));
+                    setArticles(processedData);
+                } else {
+                    console.log("No articles found in DB, using fallbacks.");
+                    setArticles(fallbackArticles);
+                }
             } catch (error) {
                 console.error('Error fetching articles:', error);
                 setArticles(fallbackArticles);
@@ -182,7 +193,7 @@ const Home = () => {
                     <motion.div
                         initial="hidden"
                         animate="visible"
-                        variants={stagger}
+                        variants={staggerContainer}
                         className="space-y-10 lg:order-1"
                     >
                         <motion.div variants={fadeIn} className="section-tag">
