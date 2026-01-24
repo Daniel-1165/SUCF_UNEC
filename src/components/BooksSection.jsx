@@ -5,9 +5,17 @@ import { FiDownload, FiBook, FiArrowRight, FiTrash2, FiPlus } from 'react-icons/
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const BookCard = ({ book, isAdmin, onDelete, isFeatured }) => {
+const BookCard = ({ book, isAdmin, onDelete, isFeatured, index }) => {
     return (
         <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{
+                duration: 0.8,
+                delay: index * 0.15,
+                ease: [0.22, 1, 0.36, 1]
+            }}
             whileHover={{ y: -10 }}
             className={`${isFeatured ? 'zeni-card-dark' : 'zeni-card'} overflow-hidden flex flex-col group relative h-full`}
         >
@@ -145,7 +153,7 @@ const BooksSection = () => {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-3 gap-8">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="aspect-[3/5] bg-white/50 animate-pulse rounded-[3rem] border border-[#E8F3EF]"></div>
                         ))}
@@ -153,7 +161,7 @@ const BooksSection = () => {
                 ) : (
                     <>
                         {books.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-3 gap-8">
                                 {books.map((book, index) => (
                                     <BookCard
                                         key={book.id}
@@ -161,6 +169,7 @@ const BooksSection = () => {
                                         isAdmin={user?.isAdmin}
                                         onDelete={handleDelete}
                                         isFeatured={index === 1} // Feature the middle card
+                                        index={index}
                                     />
                                 ))}
                             </div>
