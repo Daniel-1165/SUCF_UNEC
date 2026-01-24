@@ -59,18 +59,24 @@ const Home = () => {
                     .from('articles')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(2);
+                    .limit(3);
 
                 if (error) throw error;
 
                 if (data && data.length > 0) {
                     console.log("Successfully fetched articles:", data.length);
                     // Ensure each article has a valid image_url before setting it
-                    const processedData = data.map(article => ({
+                    const dbData = data.map(article => ({
                         ...article,
                         image_url: article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'
                     }));
-                    setArticles(processedData);
+
+                    // If we have fewer than 2 articles, fill with fallbacks
+                    if (dbData.length < 2) {
+                        setArticles([...dbData, ...fallbackArticles.slice(0, 2 - dbData.length)]);
+                    } else {
+                        setArticles(dbData);
+                    }
                 } else {
                     console.log("No articles found in DB, using fallbacks.");
                     setArticles(fallbackArticles);
@@ -323,13 +329,13 @@ const Home = () => {
                     </motion.div>
 
                     {loadingArticles ? (
-                        <div className="grid lg:grid-cols-2 gap-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                             {[1, 2].map(i => (
                                 <div key={i} className="h-80 bg-white/5 rounded-[3rem] animate-pulse" />
                             ))}
                         </div>
                     ) : (
-                        <div className="grid lg:grid-cols-2 gap-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                             {articles.map((article, index) => {
                                 const formattedDate = new Date(article.created_at).toLocaleDateString('en-US', {
                                     month: 'short',
@@ -353,16 +359,16 @@ const Home = () => {
                                             to={`/articles/${article.id}`}
                                             className="zeni-card !bg-white/5 !border-white/10 overflow-hidden group/item flex flex-col h-full transition-all hover:!bg-white/10 hover:scale-[1.02] hover:shadow-2xl hover:shadow-emerald-500/10"
                                         >
-                                            <div className="h-64 overflow-hidden relative">
+                                            <div className="h-72 md:h-80 overflow-hidden relative">
                                                 <img
                                                     src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
                                                     alt={article.title}
-                                                    className="w-full h-full object-cover transition-all duration-1000 group-hover/item:scale-110"
+                                                    className="w-full h-full object-cover object-center transition-all duration-1000 group-hover/item:scale-110"
                                                     onError={(e) => {
                                                         e.target.src = 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop';
                                                     }}
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                             </div>
                                             <div className="p-10 flex flex-col flex-grow">
                                                 <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">{article.category || 'Spiritual Growth'}</span>

@@ -129,14 +129,14 @@ const ArticleDetail = () => {
                 <article className="relative">
                     {/* Featured Image */}
                     <motion.div
-                        initial={{ opacity: 1, scale: 1 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="aspect-[21/9] w-full relative zeni-card !p-0 overflow-hidden border-[10px] border-white mb-16 shadow-2xl"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="aspect-video w-full relative zeni-card !p-0 overflow-hidden border-2 border-white mb-16 shadow-2xl"
                     >
                         <img
                             src={article.image_url}
                             alt={article.title}
-                            className="w-full h-full object-cover transition-all duration-1000"
+                            className="w-full h-full object-cover object-center transition-all duration-1000"
                         />
                         <div className="absolute top-10 left-10">
                             <span className="bg-emerald-600 text-white px-6 py-2 rounded-full text-[9px] font-black shadow-lg uppercase tracking-[0.2em]">

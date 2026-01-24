@@ -158,4 +158,4 @@ Desktop:  [Article 1] [Article 2]
 
 ---
 
-**All animations are production-ready and follow 2024 best practices!** 🚀
+**All animations are production-ready and follow 2024 best practices!** 
