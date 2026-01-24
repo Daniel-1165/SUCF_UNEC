@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiArrowRight, FiUsers, FiHeart, FiBookOpen } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
 import NewsSection from '../components/NewsSection';
+import { supabase } from '../supabaseClient';
 
 // Use the assets we have
 const heroImages = [
@@ -15,24 +16,25 @@ const heroImages = [
     '/assets/freshers_flyer.jpg',
 ];
 
-const articles = [
+// Fallback articles if database is empty
+const fallbackArticles = [
     {
-        id: 1,
+        id: 'fallback-1',
         title: "Walking in Divine Purpose",
         excerpt: "Discovering God's plan for your life is the beginning of true fulfillment...",
-        author: "President",
-        date: "Dec 12, 2025",
+        author_name: "SUCF Leadership",
+        created_at: new Date().toISOString(),
         category: "Spiritual Growth",
-        image: "https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop"
+        image_url: "https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop"
     },
     {
-        id: 2,
+        id: 'fallback-2',
         title: "Balancing Academics and Faith",
-        excerpt: "How do you maintain a 5.0 GPA while serving in the fellowship?",
-        author: "Sister Grace",
-        date: "Nov 28, 2025",
+        excerpt: "How do you maintain excellence in your studies while serving in the fellowship?",
+        author_name: "SUCF Leadership",
+        created_at: new Date().toISOString(),
         category: "Academic",
-        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2670&auto=format&fit=crop"
+        image_url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2670&auto=format&fit=crop"
     }
 ];
 
@@ -44,6 +46,34 @@ const homeGallery = [
 ];
 
 const Home = () => {
+    const [articles, setArticles] = useState([]);
+    const [loadingArticles, setLoadingArticles] = useState(true);
+
+    // Fetch latest articles
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('articles')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(2);
+
+                if (error) throw error;
+
+                // Use real articles if available, otherwise use fallbacks
+                setArticles(data && data.length > 0 ? data : fallbackArticles);
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+                setArticles(fallbackArticles);
+            } finally {
+                setLoadingArticles(false);
+            }
+        };
+
+        fetchArticles();
+    }, []);
+
     const fadeIn = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -259,9 +289,23 @@ const Home = () => {
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-emerald-500/5 -skew-x-12 translate-x-1/2" />
 
                 <div className="container mx-auto px-10 relative z-10">
-                    <div className="flex flex-col lg:flex-row justify-between items-end mb-24 gap-12">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.6 }}
+                        className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-12"
+                    >
                         <div className="max-w-2xl">
-                            <div className="section-tag !bg-white/5 !border-white/10 !text-emerald-400 mb-8">Wisdom</div>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.2 }}
+                                className="section-tag !bg-white/5 !border-white/10 !text-emerald-400 mb-8"
+                            >
+                                Wisdom
+                            </motion.div>
                             <h2 className="text-5xl md:text-7xl font-black mb-8 leading-none tracking-tighter italic uppercase">Edifying <span className="text-emerald-500">Reads.</span></h2>
                             <p className="text-white/40 text-xl font-medium">Fresh insights and spiritual nourishment from our leaders and members.</p>
                         </div>
@@ -271,31 +315,68 @@ const Home = () => {
                                 <FiArrowRight />
                             </div>
                         </Link>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid lg:grid-cols-2 gap-12">
-                        {articles.map((article) => (
-                            <Link
-                                to={`/articles/${article.id}`}
-                                key={article.id}
-                                className="zeni-card !bg-white/5 !border-white/10 overflow-hidden group/item flex flex-col md:flex-row h-full transition-all hover:!bg-white/10"
-                            >
-                                <div className="md:w-2/5 h-64 md:h-auto overflow-hidden">
-                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover transition-all duration-700 group-hover/item:scale-110" />
-                                </div>
-                                <div className="p-10 md:w-3/5 flex flex-col">
-                                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">{article.category}</span>
-                                    <h3 className="text-2xl font-black text-white mb-4 leading-tight uppercase italic group-hover/item:text-emerald-400 transition-colors">{article.title}</h3>
-                                    <p className="text-white/30 text-sm mb-10 line-clamp-2 font-medium">{article.excerpt}</p>
-                                    <div className="mt-auto flex items-center gap-4 text-[10px] font-black text-white/20 uppercase tracking-widest">
-                                        <span>BY {article.author}</span>
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/20"></span>
-                                        <span>{article.date}</span>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                    {loadingArticles ? (
+                        <div className="grid lg:grid-cols-2 gap-12">
+                            {[1, 2].map(i => (
+                                <div key={i} className="h-80 bg-white/5 rounded-[3rem] animate-pulse" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="grid lg:grid-cols-2 gap-12">
+                            {articles.map((article, index) => {
+                                const formattedDate = new Date(article.created_at).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                });
+
+                                return (
+                                    <motion.div
+                                        key={article.id}
+                                        initial={{ opacity: 0, y: 50, rotateX: -10 }}
+                                        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{
+                                            duration: 0.7,
+                                            delay: index * 0.2,
+                                            ease: [0.25, 0.46, 0.45, 0.94]
+                                        }}
+                                    >
+                                        <Link
+                                            to={`/articles/${article.id}`}
+                                            className="zeni-card !bg-white/5 !border-white/10 overflow-hidden group/item flex flex-col h-full transition-all hover:!bg-white/10 hover:scale-[1.02] hover:shadow-2xl hover:shadow-emerald-500/10"
+                                        >
+                                            <div className="h-64 overflow-hidden relative">
+                                                <img
+                                                    src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
+                                                    alt={article.title}
+                                                    className="w-full h-full object-cover transition-all duration-1000 group-hover/item:scale-110"
+                                                    onError={(e) => {
+                                                        e.target.src = 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop';
+                                                    }}
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                            </div>
+                                            <div className="p-10 flex flex-col flex-grow">
+                                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">{article.category || 'Spiritual Growth'}</span>
+                                                <h3 className="text-2xl font-black text-white mb-4 leading-tight uppercase italic group-hover/item:text-emerald-400 transition-colors line-clamp-2">{article.title}</h3>
+                                                <p className="text-white/30 text-sm mb-10 line-clamp-3 font-medium leading-relaxed">
+                                                    {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 120) + '...'}
+                                                </p>
+                                                <div className="mt-auto flex items-center gap-4 text-[10px] font-black text-white/20 uppercase tracking-widest">
+                                                    <span>BY {article.author_name || 'SUCF'}</span>
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/20"></span>
+                                                    <span>{formattedDate}</span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </section>
 
