@@ -161,7 +161,7 @@ const BooksSection = () => {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="aspect-[3/5] bg-white/50 animate-pulse rounded-[3rem] border border-[#E8F3EF]"></div>
                         ))}
@@ -169,7 +169,7 @@ const BooksSection = () => {
                 ) : (
                     <>
                         {books.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            <div className="grid grid-cols-2 gap-8">
                                 {books.slice(0, 2).map((book, index) => (
                                     <BookCard
                                         key={book.id}
@@ -180,8 +180,8 @@ const BooksSection = () => {
                                     />
                                 ))}
                                 {books.length === 3 && (
-                                    <div className="md:col-span-2 flex justify-center">
-                                        <div className="w-full md:w-1/2">
+                                    <div className="col-span-2 flex justify-center">
+                                        <div className="w-full sm:w-1/2">
                                             <BookCard
                                                 book={books[2]}
                                                 isAdmin={user?.isAdmin}

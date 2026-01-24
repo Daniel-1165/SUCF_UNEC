@@ -6,6 +6,7 @@ import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
 import NewsSection from '../components/NewsSection';
 import { supabase } from '../supabaseClient';
+import { fadeInUp, staggerContainer, staggerItem, scaleIn, slideFromLeft, slideFromRight } from '../utils/animations';
 
 // Use the assets we have
 const heroImages = [
@@ -252,35 +253,50 @@ const Home = () => {
             {/* Why Join Us */}
             <section className="py-40">
                 <div className="container mx-auto px-6 max-w-7xl">
-                    <div className="max-w-4xl mb-24">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                        variants={fadeInUp}
+                        className="max-w-4xl mb-24"
+                    >
                         <div className="section-tag mb-8">Foundation</div>
                         <h2 className="text-6xl md:text-7xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
                             Why <span className="text-emerald-600 italic">SUCF UNEC?</span>
                         </h2>
                         <p className="text-[#00211F] text-xl font-medium opacity-40 max-w-xl">A community dedicated to spiritual growth and academic excellence.</p>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid md:grid-cols-3 gap-10">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={staggerContainer}
+                        className="grid md:grid-cols-3 gap-10"
+                    >
                         {[
                             { icon: <FiUsers />, title: "Family of Love", desc: "A supportive community that feels like home away from home." },
                             { icon: <FiBookOpen />, title: "Word Based", desc: "Deep dive into the scriptures to build a solid spiritual foundation." },
                             { icon: <FiHeart />, title: "Excellence", desc: "We believe in excelling in our studies as much as we serve God." }
                         ].map((feature, idx) => (
-                            <motion.div key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1 }}
-                                className="zeni-card p-12 hover:bg-white transition-all group"
+                            <motion.div
+                                key={idx}
+                                variants={staggerItem}
+                                whileHover={{
+                                    y: -10,
+                                    scale: 1.02,
+                                    transition: { duration: 0.3 }
+                                }}
+                                className="zeni-card p-12 hover:bg-white transition-all group cursor-pointer"
                             >
-                                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center text-3xl mb-10 group-hover:scale-110 transition-transform">
+                                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center text-3xl mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-2xl font-black text-[#00211F] mb-4 uppercase tracking-tight">{feature.title}</h3>
                                 <p className="text-[#00211F] opacity-40 font-medium leading-relaxed">{feature.desc}</p>
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
