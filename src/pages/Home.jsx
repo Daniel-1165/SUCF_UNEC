@@ -1,3 +1,4 @@
+import AnthemSection from '../components/AnthemSection';
 import React, { useState, useEffect } from 'react';
 import { FiArrowRight, FiUsers, FiHeart, FiBookOpen, FiPlay } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
@@ -70,7 +71,7 @@ const Home = () => {
                             initial="hidden"
                             animate="visible"
                             variants={staggerContainer}
-                            className="lg:col-span-6 flex flex-col items-start text-left space-y-8 z-10 w-full"
+                            className="lg:col-span-6 flex flex-col items-start text-left space-y-6 md:space-y-8 z-20 w-full"
                         >
                             {/* Chip / Tag - Tech Style */}
                             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">
@@ -80,7 +81,7 @@ const Home = () => {
 
                             <motion.h1
                                 variants={fadeInUp}
-                                className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] text-slate-900"
+                                className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-tight text-slate-900"
                             >
                                 The <span className="text-emerald-600 inline-block decoration-4 decoration-emerald-200 underline-offset-4">Unique</span> <br />
                                 Fellowship <br />
@@ -102,7 +103,7 @@ const Home = () => {
                         </motion.div>
 
                         {/* Image/Carousel Section - Futuristic Card Style */}
-                        <div className="lg:col-span-6 w-full relative h-[500px] lg:h-[700px]">
+                        <div className="lg:col-span-6 w-full relative h-[400px] md:h-[500px] lg:h-[700px] z-10">
                             {/* Abstract Deco Elements */}
                             <div className="absolute top-10 right-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-3xl" />
                             <div className="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl" />
@@ -155,6 +156,8 @@ const Home = () => {
             </section>
 
             <CountdownTimer />
+
+            <AnthemSection />
 
             {/* Why Join Us - Tech Grid Style */}
             <section className="py-24 bg-white relative">

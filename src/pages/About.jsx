@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiUsers, FiAward, FiTarget, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import AnthemSection from '../components/AnthemSection';
 
 const About = () => {
     const executives = [
@@ -36,6 +37,8 @@ const About = () => {
                     </p>
                 </div>
             </section>
+
+            <AnthemSection />
 
             {/* Vision / Mission / Values Section */}
             <section className="container mx-auto px-6 mb-40 max-w-7xl">

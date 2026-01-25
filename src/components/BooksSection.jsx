@@ -121,7 +121,7 @@ const BooksSection = () => {
                                     whileHover={{ y: -15, rotate: 2 }}
                                     className="w-full lg:w-[400px] shrink-0"
                                 >
-                                    <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/20 bg-[#001a14] border border-white/10 group-hover:border-emerald-500/30 transition-colors">
+                                    <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/10 bg-white border border-slate-100 group-hover:border-emerald-500/30 transition-colors">
                                         {book.image_url ? (
                                             <img
                                                 src={book.image_url}
@@ -129,40 +129,37 @@ const BooksSection = () => {
                                                 className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-emerald-900 to-[#00100f] flex items-center justify-center">
-                                                <FiBook className="text-9xl text-white/5" />
+                                            <div className="w-full h-full bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
+                                                <FiBook className="text-9xl text-emerald-100" />
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent pointer-events-none" />
-                                        {/* Grain & Noise */}
-                                        <div className="absolute inset-0 bg-noise opacity-20 mix-blend-overlay" />
                                     </div>
                                 </motion.div>
 
                                 {/* Content Section */}
-                                <div className="flex-grow space-y-8 max-w-2xl text-center lg:text-left">
+                                <div className="flex-grow space-y-4 md:space-y-8 max-w-2xl text-center lg:text-left">
                                     <div>
                                         <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
                                             <span className="h-[1px] w-8 bg-emerald-500 hidden lg:block"></span>
-                                            <p className="text-xs text-emerald-500 font-bold uppercase tracking-[0.3em]">
+                                            <p className="text-xs text-emerald-600 font-bold uppercase tracking-[0.3em]">
                                                 {book.author || "SUCF UNEC Publication"}
                                             </p>
                                         </div>
-                                        <h3 className="text-4xl md:text-6xl font-black text-white mb-6 leading-[0.9] uppercase italic tracking-tighter">
+                                        <h3 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 leading-[1.1] uppercase italic tracking-tighter">
                                             {book.title}
                                         </h3>
-                                        <p className="text-lg md:text-xl text-white/40 font-medium leading-relaxed">
+                                        <p className="text-sm md:text-xl text-slate-500 font-medium leading-relaxed">
                                             {book.description || "A transformative spiritual resource curated specifically for our fellowship members."}
                                         </p>
                                     </div>
 
-                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-6">
+                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-4">
                                         <a
                                             href={book.file_url}
                                             download
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="px-10 py-5 bg-white text-[#022c22] rounded-full font-black text-xs uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-xl shadow-white/5 flex items-center gap-4 group/btn active:scale-95"
+                                            className="px-10 py-5 bg-emerald-900 text-white rounded-full font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10 flex items-center gap-4 group/btn active:scale-95"
                                         >
                                             <FiDownload className="text-lg group-hover/btn:translate-y-1 transition-transform" />
                                             Acquire Resource
