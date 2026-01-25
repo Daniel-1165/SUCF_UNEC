@@ -74,8 +74,60 @@ const Activities = () => {
         }
     ];
 
+    // Add these imports at the top if not present, checking lines 1-4
+    // import { FiX } from 'react-icons/fi'; // Ensure this is imported
+
+    const [showMap, setShowMap] = React.useState(false);
+    const [mapUrl, setMapUrl] = React.useState('');
+
+    const handleDirection = (day) => {
+        let url = "";
+        // Directions from UNEC Gate to Architecture Dept for Sunday/Thursday
+        if (day === 'Sunday' || day === 'Thursday') {
+            url = "https://maps.google.com/maps?saddr=UNEC+Gate,+Enugu&daddr=Department+of+Architecture,+University+of+Nigeria,+Enugu+Campus&output=embed";
+        } else if (day === 'Wednesday') {
+            // Freedom Field - Approximating near Mariere
+            url = "https://maps.google.com/maps?q=Mariere+Hostel,+UNEC&output=embed";
+        }
+
+        if (url) {
+            setMapUrl(url);
+            setShowMap(true);
+        }
+    };
+
     return (
-        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient relative">
+            {/* Map Modal */}
+            {showMap && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setShowMap(false)}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-white rounded-3xl overflow-hidden w-full max-w-4xl h-[60vh] relative shadow-2xl"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <button
+                            onClick={() => setShowMap(false)}
+                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-lg hover:bg-emerald-500 hover:text-white transition-all"
+                        >
+                            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
+                            scrolling="no"
+                            marginHeight="0"
+                            marginWidth="0"
+                            src={mapUrl}
+                            className="w-full h-full"
+                            title="Directions Map"
+                        ></iframe>
+                    </motion.div>
+                </div>
+            )}
+
             <header className="container mx-auto px-6 mb-24 max-w-7xl">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -114,8 +166,6 @@ const Activities = () => {
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-
-                                {/* Tag Removed */}
                             </div>
 
                             <div className="p-10 flex-grow flex flex-col">
@@ -144,7 +194,10 @@ const Activities = () => {
                                     </div>
                                 </div>
 
-                                <button className="w-full py-5 rounded-[1.5rem] bg-[#00211F] text-white font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10">
+                                <button
+                                    onClick={() => handleDirection(event.day)}
+                                    className="w-full py-5 rounded-[1.5rem] bg-[#00211F] text-white font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10"
+                                >
                                     Get Directions <FiCompass className="text-lg" />
                                 </button>
                             </div>

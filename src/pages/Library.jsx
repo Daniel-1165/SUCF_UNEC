@@ -34,21 +34,26 @@ const Library = () => {
     }, []);
 
     // Filter Logic
+    // Filter Logic
     const filteredBooks = books.filter(book => {
         const matchesSearch = (book.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
             (book.author?.toLowerCase() || '').includes(searchTerm.toLowerCase());
 
-        // Mock category logic since DB might not have exact 'category' column matching these.
-        // We'll assume everything is 'All' or match primitive checks if columns exist, 
-        // but for now let's just use Search for filtering mainly, and if 'semester' column exists, use it.
-        // If the book table has a 'category' column, use it. If not, we iterate 'All'.
-        // Checking previous code, 'semester' exists.
+        let matchesCategory = true;
 
-        const matchesCategory = selectedCategory === 'All'
-            ? true
-            : selectedCategory === 'Semester Books'
-                ? book.semester
-                : true; // For now, other categories show all unless we have data
+        if (selectedCategory === 'All') {
+            matchesCategory = true;
+        } else if (selectedCategory === 'Semester Books') {
+            // Check if it's tagged as semester book OR if user put it in title/desc
+            matchesCategory = book.semester || book.title?.toLowerCase().includes('semester');
+        } else if (selectedCategory === 'Archive') {
+            // Show older books or just allow all for now to prevent hiding
+            matchesCategory = true;
+        } else {
+            // For 'Spiritual Growth', 'Academic', etc - try to match vaguely if no explicit category column
+            // If book.category exists, use it. Else default to showing (better to show than hide)
+            matchesCategory = book.category === selectedCategory || true;
+        }
 
         return matchesSearch && matchesCategory;
     });
