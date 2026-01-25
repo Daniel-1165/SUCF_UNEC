@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { FiArrowRight, FiUsers, FiHeart, FiBookOpen } from 'react-icons/fi';
+import { FiArrowRight, FiUsers, FiHeart, FiBookOpen, FiPlay } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
 import NewsSection from '../components/NewsSection';
 import { supabase } from '../supabaseClient';
-import { fadeInUp, staggerContainer, staggerItem, scaleIn, slideFromLeft, slideFromRight } from '../utils/animations';
+import { fadeInUp, staggerContainer, staggerItem } from '../utils/animations';
 
 // Use the assets we have
 const heroImages = [
@@ -16,7 +16,6 @@ const heroImages = [
     '/assets/carousel/bible_study.jpg',
     '/assets/freshers_flyer.jpg',
 ];
-
 
 const homeGallery = [
     '/assets/gallery/img1.jpg',
@@ -32,7 +31,6 @@ const Home = () => {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                console.log("Fetching articles from Supabase...");
                 const { data, error } = await supabase
                     .from('articles')
                     .select('*')
@@ -40,393 +38,209 @@ const Home = () => {
                     .limit(3);
 
                 if (error) throw error;
-
-                if (data && data.length > 0) {
-                    console.log("Successfully fetched articles:", data.length);
-                    const dbData = data.map(article => ({
-                        ...article,
-                        image_url: article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'
-                    }));
-                    setArticles(dbData);
-                } else {
-                    console.log("No articles found in DB.");
-                    setArticles([]);
-                }
+                if (data) setArticles(data);
             } catch (error) {
                 console.error('Error fetching articles:', error);
-                setArticles([]);
             } finally {
                 setLoadingArticles(false);
             }
         };
-
         fetchArticles();
     }, []);
 
-    const fadeIn = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-    };
-
     const [currentSlide, setCurrentSlide] = React.useState(0);
-    const [direction, setDirection] = React.useState(0);
     const heroImageCount = heroImages.length;
 
-    const slideVariants = {
-        enter: (direction) => ({
-            x: direction > 0 ? '100%' : '-100%',
-            opacity: 0,
-            scale: 0.9
-        }),
-        center: {
-            zIndex: 1,
-            x: 0,
-            opacity: 1,
-            scale: 1
-        },
-        exit: (direction) => ({
-            zIndex: 0,
-            x: direction < 0 ? '100%' : '-100%',
-            opacity: 0,
-            scale: 0.9
-        })
-    };
-
-    const paginate = (newDirection) => {
-        setDirection(newDirection);
-        setCurrentSlide((prev) => (prev + newDirection + heroImageCount) % heroImageCount);
-    };
-
-    // Auto-play
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setInterval(() => {
-            paginate(1);
-        }, 6000);
+            setCurrentSlide((prev) => (prev + 1) % heroImageCount);
+        }, 5000);
         return () => clearInterval(timer);
-    }, [currentSlide]);
+    }, [heroImageCount]);
 
     return (
-        <div className="min-h-screen zeni-mesh-gradient">
+        <div className="min-h-screen bg-[#F8FAFC] text-slate-900 bg-grid-pattern overflow-x-hidden font-sans">
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 overflow-hidden">
-                <div className="container mx-auto px-6 flex flex-col lg:grid lg:grid-cols-2 gap-16 items-center">
-                    {/* Image Slider Section - Dominant Landing on Mobile */}
-                    <div className="relative h-[80vh] md:h-[650px] lg:h-[750px] group w-full lg:order-2">
-                        <div className="absolute inset-0 bg-emerald-500/5 rounded-[4rem] -rotate-3 transition-transform group-hover:rotate-0 duration-1000"></div>
+            <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 items-center">
 
-                        <div className="relative h-full w-full rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.1)] border-2 border-white/80 backdrop-blur-sm bg-gray-100 scale-105">
-                            <AnimatePresence initial={false} custom={direction}>
-                                <motion.div
-                                    key={currentSlide}
-                                    custom={direction}
-                                    variants={slideVariants}
-                                    initial="center"
-                                    animate="center"
-                                    exit="exit"
-                                    transition={{
-                                        x: { type: "spring", stiffness: 300, damping: 30 },
-                                        opacity: { duration: 0.4 }
-                                    }}
-                                    drag="x"
-                                    dragConstraints={{ left: 0, right: 0 }}
-                                    dragElastic={1}
-                                    onDragEnd={(e, { offset, velocity }) => {
-                                        const swipe = Math.abs(offset.x) > 50;
-                                        if (swipe) {
-                                            paginate(offset.x > 0 ? -1 : 1);
-                                        }
-                                    }}
-                                    className="absolute inset-0 cursor-grab active:cursor-grabbing"
+                        {/* Content - Mobile First Priority */}
+                        <motion.div
+                            initial="hidden"
+                            animate="visible"
+                            variants={staggerContainer}
+                            className="lg:col-span-6 flex flex-col items-start text-left space-y-8 z-10 w-full"
+                        >
+                            {/* Chip / Tag - Tech Style */}
+                            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">
+                                <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>
+                                <span className="text-xs font-medium text-slate-500">Academic Session 2025</span>
+                            </motion.div>
+
+                            <motion.h1
+                                variants={fadeInUp}
+                                className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] text-slate-900"
+                            >
+                                The <span className="text-emerald-600 inline-block decoration-4 decoration-emerald-200 underline-offset-4">Unique</span> <br />
+                                Fellowship <br />
+                                on Campus.
+                            </motion.h1>
+
+                            <motion.p variants={fadeInUp} className="text-lg text-slate-500 max-w-md font-medium leading-relaxed border-l-4 border-emerald-500 pl-4">
+                                Experience a community where spiritual growth meets academic excellence. Welcome to the family.
+                            </motion.p>
+
+                            <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2 w-full">
+                                <Link
+                                    to="/signup"
+                                    className="flex-1 sm:flex-none justify-center px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm uppercase tracking-wide hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/10 flex items-center gap-3"
                                 >
-                                    <img
-                                        src={heroImages[currentSlide]}
-                                        alt={`Slide ${currentSlide + 1}`}
-                                        className="w-full h-full object-cover pointer-events-none transition-all duration-1000"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent pointer-events-none" />
-                                </motion.div>
-                            </AnimatePresence>
+                                    Get Started <FiArrowRight />
+                                </Link>
+                            </motion.div>
+                        </motion.div>
 
-                            {/* Indicators */}
-                            <div className="absolute bottom-12 right-16 flex gap-3 z-30">
-                                {heroImages.map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => {
-                                            setDirection(i > currentSlide ? 1 : -1);
-                                            setCurrentSlide(i);
-                                        }}
-                                        className={`h-1.5 transition-all duration-700 rounded-full ${currentSlide === i ? 'w-12 bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'w-4 bg-white/20 hover:bg-white/50'
-                                            }`}
+                        {/* Image/Carousel Section - Futuristic Card Style */}
+                        <div className="lg:col-span-6 w-full relative h-[500px] lg:h-[700px]">
+                            {/* Abstract Deco Elements */}
+                            <div className="absolute top-10 right-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-3xl" />
+                            <div className="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl" />
+
+                            <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-white">
+                                <AnimatePresence mode='wait'>
+                                    <motion.img
+                                        key={currentSlide}
+                                        src={heroImages[currentSlide]}
+                                        initial={{ opacity: 0, scale: 1.1 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                        alt="SUCF Moments"
                                     />
-                                ))}
+                                </AnimatePresence>
+
+                                {/* Overlay Interface UI */}
+                                <div className="absolute top-6 left-6 right-6 flex justify-between items-center text-white/90 z-10">
+                                    <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
+                                        Highlights
+                                    </div>
+                                    <div className="flex gap-1">
+                                        {heroImages.map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-emerald-400' : 'w-2 bg-white/40'}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Bottom Info Card overlay */}
+                                <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg border border-white/50">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Happening Now</p>
+                                            <h4 className="text-slate-900 font-bold text-lg leading-none">Fellowship Activities</h4>
+                                        </div>
+                                        <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center">
+                                            <FiArrowRight />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-
                     </div>
-
-                    {/* Text Content - Now second on mobile */}
-                    <motion.div
-                        initial="hidden"
-                        animate="visible"
-                        variants={staggerContainer}
-                        className="space-y-10 lg:order-1"
-                    >
-                        <motion.div variants={fadeIn} className="section-tag">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            Welcome to the Den
-                        </motion.div>
-
-                        <h1
-                            className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.9] tracking-tighter"
-                        >
-                            Empowering <br />
-                            <span className="text-emerald-600 italic">
-                                Your Destiny.
-                            </span>
-                        </h1>
-
-                        <motion.p variants={fadeIn} className="text-xl text-[#00211F] opacity-40 max-w-lg leading-relaxed font-medium">
-                            A royal family of believers, upholding righteous standards as the unique fellowship on campus.
-                        </motion.p>
-
-                        <motion.div variants={fadeIn} className="flex flex-wrap gap-5 pt-4">
-                            <Link
-                                to="/signup"
-                                className="group bg-[#00211F] text-white px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:bg-emerald-600 transition-all shadow-2xl shadow-emerald-900/10 active:scale-95"
-                            >
-                                Join The Family
-                                <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <Link
-                                to="/about"
-                                className="zeni-card bg-white px-10 py-5 flex items-center gap-3 group"
-                            >
-                                <span className="text-xs font-black uppercase tracking-widest text-[#00211F]">Discover More</span>
-                                <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                                    <FiArrowRight className="text-xs" />
-                                </div>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
                 </div>
             </section>
 
-            {/* Countdown Timer */}
             <CountdownTimer />
 
-            {/* Why Join Us */}
-            <section className="py-40">
-                <div className="container mx-auto px-6 max-w-7xl">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={fadeInUp}
-                        className="max-w-4xl mb-24"
-                    >
-                        <div className="section-tag mb-8">Foundation</div>
-                        <h2 className="text-6xl md:text-7xl font-black text-[#00211F] mb-10 leading-none tracking-tighter">
-                            Why <span className="text-emerald-600 italic">SUCF UNEC?</span>
-                        </h2>
-                        <p className="text-[#00211F] text-xl font-medium opacity-40 max-w-xl">A community dedicated to spiritual growth and academic excellence.</p>
-                    </motion.div>
+            {/* Why Join Us - Tech Grid Style */}
+            <section className="py-24 bg-white relative">
+                <div className="absolute inset-0 bg-grid-pattern opacity-50" />
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="text-center max-w-2xl mx-auto mb-20">
+                        <span className="text-emerald-600 font-bold tracking-widest uppercase text-xs mb-4 block">Core Values</span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Built on a Solid <br /><span className="text-emerald-600">Foundation.</span></h2>
+                        <p className="text-slate-500 text-lg">We are tailored to help you grow in every aspect of life.</p>
+                    </div>
 
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={staggerContainer}
-                        className="grid md:grid-cols-3 gap-10"
-                    >
+                    <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
                         {[
-                            { icon: <FiUsers />, title: "Family of Love", desc: "A supportive community that feels like home away from home." },
-                            { icon: <FiBookOpen />, title: "Word Based", desc: "Deep dive into the scriptures to build a solid spiritual foundation." },
-                            { icon: <FiHeart />, title: "Excellence", desc: "We believe in excelling in our studies as much as we serve God." }
+                            { icon: <FiUsers className="text-2xl" />, title: "Family", desc: "A home away from home." },
+                            { icon: <FiBookOpen className="text-2xl" />, title: "Word", desc: "Rooted in scripture daily." },
+                            { icon: <FiHeart className="text-2xl" />, title: "Love", desc: "Growing together in Christ." }
                         ].map((feature, idx) => (
                             <motion.div
                                 key={idx}
-                                variants={staggerItem}
-                                whileHover={{
-                                    y: -10,
-                                    scale: 1.02,
-                                    transition: { duration: 0.3 }
-                                }}
-                                className="zeni-card p-12 hover:bg-white transition-all group cursor-pointer"
+                                whileHover={{ y: -5 }}
+                                className="tech-card p-8 group hover:border-emerald-500/30 transition-all"
                             >
-                                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center text-3xl mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-2xl font-black text-[#00211F] mb-4 uppercase tracking-tight">{feature.title}</h3>
-                                <p className="text-[#00211F] opacity-40 font-medium leading-relaxed">{feature.desc}</p>
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                                <p className="text-slate-500 leading-relaxed text-sm">{feature.desc}</p>
                             </motion.div>
                         ))}
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Latest Articles Preview */}
-            <section className="py-24 bg-[#00211F] rounded-[4rem] mx-6 mb-24 text-white overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-emerald-500/5 -skew-x-12 translate-x-1/2" />
-
-                <div className="container mx-auto px-10 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.6 }}
-                        className="flex flex-col lg:flex-row justify-between items-end mb-16 gap-12"
-                    >
-                        <div className="max-w-2xl">
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.2 }}
-                                className="section-tag !bg-white/5 !border-white/10 !text-emerald-400 mb-8"
-                            >
-                                Wisdom
-                            </motion.div>
-                            <h2 className="text-5xl md:text-7xl font-black mb-8 leading-none tracking-tighter italic uppercase">Edifying <span className="text-emerald-500">Reads.</span></h2>
-                            <p className="text-white/40 text-xl font-medium">Fresh insights and spiritual nourishment from our leaders and members.</p>
-                        </div>
-                        <Link to="/articles" className="group flex items-center gap-6">
-                            <span className="text-xs font-black uppercase tracking-[0.3em] text-emerald-400">Expand Library</span>
-                            <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center text-2xl group-hover:bg-white group-hover:text-[#00211F] transition-all">
-                                <FiArrowRight />
-                            </div>
-                        </Link>
-                    </motion.div>
-
-                    {loadingArticles ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {[1, 2].map(i => (
-                                <div key={i} className="h-80 bg-white/5 rounded-[3rem] animate-pulse" />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {articles.map((article, index) => {
-                                const formattedDate = new Date(article.created_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                });
-
-                                return (
-                                    <motion.div
-                                        key={article.id}
-                                        initial={{ opacity: 0, y: 50, rotateX: -10 }}
-                                        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                                        viewport={{ once: true, margin: "-50px" }}
-                                        transition={{
-                                            duration: 0.7,
-                                            delay: index * 0.2,
-                                            ease: [0.25, 0.46, 0.45, 0.94]
-                                        }}
-                                    >
-                                        <Link
-                                            to={`/articles/${article.id}`}
-                                            className="zeni-card !bg-white/5 !border-white/10 overflow-hidden group/item flex flex-col h-full transition-all hover:!bg-white/10 hover:scale-[1.02] hover:shadow-2xl hover:shadow-emerald-500/10"
-                                        >
-                                            <div className="h-72 md:h-80 overflow-hidden relative">
-                                                <img
-                                                    src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
-                                                    alt={article.title}
-                                                    className="w-full h-full object-cover object-center transition-all duration-1000 group-hover/item:scale-110"
-                                                    onError={(e) => {
-                                                        e.target.src = 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop';
-                                                    }}
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                                            </div>
-                                            <div className="p-10 flex flex-col flex-grow">
-                                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">{article.category || 'Spiritual Growth'}</span>
-                                                <h3 className="text-2xl font-black text-white mb-4 leading-tight uppercase italic group-hover/item:text-emerald-400 transition-colors line-clamp-2">{article.title}</h3>
-                                                <p className="text-white/30 text-sm mb-10 line-clamp-3 font-medium leading-relaxed">
-                                                    {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 120) + '...'}
-                                                </p>
-                                                <div className="mt-auto flex items-center gap-4 text-[10px] font-black text-white/20 uppercase tracking-widest">
-                                                    <span>BY {article.author_name || 'SUCF'}</span>
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/20"></span>
-                                                    <span>{formattedDate}</span>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </motion.div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            </section>
-
-            {/* News Section */}
-            <NewsSection />
-
-            {/* Books Subsection */}
-            <BooksSection />
-
-            {/* Gallery Sneak Peek */}
-            <section className="py-24 overflow-hidden bg-emerald-50/30">
-                <div className="container mx-auto px-6 mb-20 max-w-7xl">
-                    <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
-                        <div className="max-w-2xl">
-                            <div className="section-tag mb-8 bg-emerald-100/50 border-emerald-200 text-emerald-700">Memories</div>
-                            <h2 className="text-5xl md:text-7xl font-black text-[#00211F] leading-none tracking-tighter uppercase italic">
-                                Captured <br />
-                                <span className="text-emerald-600">Moments.</span>
-                            </h2>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() => {
-                                    const el = document.getElementById('home-gallery-slider');
-                                    el.scrollBy({ left: -400, behavior: 'smooth' });
-                                }}
-                                className="w-14 h-14 zeni-card flex items-center justify-center text-xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
-                            >
-                                <FiArrowRight className="rotate-180" />
-                            </button>
-                            <button
-                                onClick={() => {
-                                    const el = document.getElementById('home-gallery-slider');
-                                    el.scrollBy({ left: 400, behavior: 'smooth' });
-                                }}
-                                className="w-14 h-14 zeni-card flex items-center justify-center text-xl hover:bg-[#00211F] hover:text-white transition-all shadow-xl"
-                            >
-                                <FiArrowRight />
-                            </button>
-                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div
-                    id="home-gallery-slider"
-                    className="flex gap-6 px-10 md:px-20 overflow-x-auto no-scrollbar scroll-smooth pb-20"
-                >
-                    {homeGallery.map((img, i) => (
-                        <motion.div
-                            key={i}
-                            whileHover={{ y: -10 }}
-                            className="w-[200px] md:w-[260px] aspect-square zeni-card overflow-hidden !rounded-[2.5rem] !p-0 border-8 border-white relative group shrink-0"
-                        >
-                            <img src={img} alt="Gallery" className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                        </motion.div>
-                    ))}
-                    <Link
-                        to="/gallery"
-                        className="w-[200px] md:w-[260px] aspect-square zeni-card-dark !bg-[#00211F] flex flex-col items-center justify-center group p-8 text-center transition-all hover:bg-emerald-950 !rounded-[2.5rem] shrink-0"
-                    >
-                        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-transparent transition-all duration-700 shadow-2xl">
-                            <FiArrowRight className="text-2xl" />
+            {/* Articles - Magazine Layout */}
+            <section className="py-24 bg-slate-50">
+                <div className="container mx-auto px-6">
+                    <div className="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Editorials</h2>
+                            <p className="text-slate-500">Latest from the fellowship.</p>
                         </div>
-                        <h3 className="text-2xl font-black uppercase italic mb-4 leading-none text-white">The Full <br /><span className="text-emerald-500">Archive.</span></h3>
-                        <p className="text-emerald-100/30 text-sm font-medium tracking-tight">Step into the visual story of our royal family.</p>
-                    </Link>
+                        <Link to="/articles" className="text-emerald-600 font-bold text-sm uppercase tracking-wider flex items-center gap-2 hover:gap-4 transition-all">
+                            Read All <FiArrowRight />
+                        </Link>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {loadingArticles ? (
+                            [1, 2, 3].map(i => <div key={i} className="h-96 bg-slate-200 rounded-3xl animate-pulse" />)
+                        ) : articles.map((article, i) => (
+                            <Link to={`/articles/${article.id}`} key={article.id} className="group">
+                                <div className="rounded-3xl overflow-hidden mb-6 relative aspect-[4/3]">
+                                    <img
+                                        src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
+                                        alt={article.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900">
+                                        {article.category || 'Article'}
+                                    </div>
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
+                                    {article.title}
+                                </h3>
+                                <p className="text-slate-500 text-sm line-clamp-2">{article.content?.replace(/<[^>]*>/g, '')}</p>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <NewsSection />
+            <BooksSection />
+
+            {/* Gallery Strip */}
+            <section className="py-20 overflow-hidden bg-white">
+                <div className="container mx-auto px-6 mb-10 flex justify-between items-center">
+                    <h2 className="text-3xl font-bold text-slate-900">Captured Moments</h2>
+                    <Link to="/gallery" className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all"><FiArrowRight /></Link>
+                </div>
+                <div className="flex gap-4 overflow-x-auto px-6 pb-10 no-scrollbar snap-x">
+                    {homeGallery.map((img, i) => (
+                        <div key={i} className="min-w-[280px] md:min-w-[350px] aspect-[4/3] rounded-3xl overflow-hidden snap-center">
+                            <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                        </div>
+                    ))}
                 </div>
             </section>
         </div>

@@ -18,41 +18,44 @@ const NewsCard = ({ item, index }) => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
             whileHover={{ y: -8 }}
-            className="zeni-card overflow-hidden flex flex-col group h-full bg-white border-[#E8F3EF] hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-500"
+            className="rounded-[2.5rem] overflow-hidden flex flex-col group h-full bg-white/5 border border-white/10 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500"
         >
-            <div className="relative aspect-[16/10] overflow-hidden">
+            <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5">
                 {item.image_url ? (
                     <img
                         src={item.image_url}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter brightness-90 group-hover:brightness-100"
                     />
                 ) : (
-                    <div className="w-full h-full bg-emerald-50 flex items-center justify-center">
-                        <FiFileText className="text-5xl text-emerald-200" />
+                    <div className="w-full h-full bg-[#001a14] flex items-center justify-center">
+                        <FiFileText className="text-5xl text-emerald-800" />
                     </div>
                 )}
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#022c22] via-transparent to-transparent opacity-60" />
+
                 <div className="absolute top-5 left-5">
-                    <span className="px-4 py-1.5 bg-emerald-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+                    <span className="px-4 py-1.5 bg-black/50 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
                         {item.category || 'Latest'}
                     </span>
                 </div>
             </div>
 
             <div className="p-8 flex-grow flex flex-col">
-                <div className="flex items-center gap-3 text-emerald-600/60 text-[10px] font-black uppercase tracking-widest mb-6">
+                <div className="flex items-center gap-3 text-emerald-500/60 text-[10px] font-bold uppercase tracking-widest mb-6">
                     <FiCalendar className="text-xs" />
                     <span>{formattedDate}</span>
                 </div>
-                <h3 className="text-2xl font-black text-[#00211F] mb-4 leading-tight group-hover:text-emerald-600 transition-colors uppercase tracking-tight">
+                <h3 className="text-2xl font-bold text-white mb-4 leading-tight group-hover:text-emerald-400 transition-colors uppercase tracking-tight line-clamp-2">
                     {item.title}
                 </h3>
-                <p className="text-[#00211F] opacity-40 text-sm font-medium mb-10 line-clamp-3 leading-relaxed">
-                    {item.content}
+                <p className="text-white/40 text-sm font-medium mb-10 line-clamp-3 leading-relaxed">
+                    {item.content?.replace(/<[^>]*>/g, '')}
                 </p>
-                <div className="mt-auto pt-6 border-t border-[#F5F9F7]">
-                    <button className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 flex items-center gap-3 group/btn hover:gap-5 transition-all">
-                        Read Full Story <FiArrowRight className="text-lg" />
+                <div className="mt-auto pt-6 border-t border-white/5">
+                    <button className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 flex items-center gap-3 group/btn hover:text-white transition-all">
+                        Read Full Story <FiArrowRight className="text-lg group-hover/btn:translate-x-1 transition-transform" />
                     </button>
                 </div>
             </div>
@@ -102,12 +105,12 @@ const NewsSection = () => {
     const canGoNext = currentPage < totalPages;
 
     return (
-        <section className="py-24 bg-white/30 backdrop-blur-md">
-            <div className="container mx-auto px-6 max-w-7xl">
+        <section className="py-24 bg-slate-50 relative border-t border-slate-200">
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                     <div className="max-w-xl">
-                        <div className="section-tag mb-6">Updates</div>
-                        <h2 className="text-5xl md:text-6xl font-black text-[#00211F] leading-none tracking-tighter">
+                        <div className="section-tag mb-6 !bg-white !border-slate-200 !text-slate-600">Updates</div>
+                        <h2 className="text-5xl md:text-6xl font-bold text-slate-900 leading-none tracking-tighter">
                             Fellowship <span className="text-emerald-600 italic">News.</span>
                         </h2>
                     </div>
@@ -116,7 +119,7 @@ const NewsSection = () => {
                 {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[1, 2, 3].map(i => (
-                            <div key={i} className="aspect-[4/5] bg-emerald-50/50 animate-pulse rounded-[2.5rem] border border-[#E8F3EF]"></div>
+                            <div key={i} className="aspect-[4/5] bg-white/5 animate-pulse rounded-[2.5rem] border border-white/5"></div>
                         ))}
                     </div>
                 ) : news.length > 0 ? (
@@ -133,9 +136,9 @@ const NewsSection = () => {
                                 <button
                                     onClick={() => setCurrentPage(prev => prev - 1)}
                                     disabled={!canGoPrev}
-                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${canGoPrev
-                                        ? 'bg-white border border-gray-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
-                                        : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${canGoPrev
+                                        ? 'bg-transparent border border-white/20 text-white hover:bg-emerald-600 hover:border-emerald-600'
+                                        : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
                                         }`}
                                 >
                                     <FiChevronLeft className="text-xl" />
@@ -146,9 +149,9 @@ const NewsSection = () => {
                                         <button
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
-                                            className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === page
-                                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                                                : 'bg-white border border-gray-200 text-gray-600 hover:border-emerald-600 hover:text-emerald-600'
+                                            className={`w-10 h-10 rounded-full font-bold text-sm transition-all ${currentPage === page
+                                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 scale-110'
+                                                : 'bg-transparent border border-white/20 text-white hover:border-emerald-600 hover:text-emerald-500'
                                                 }`}
                                         >
                                             {page}
@@ -159,9 +162,9 @@ const NewsSection = () => {
                                 <button
                                     onClick={() => setCurrentPage(prev => prev + 1)}
                                     disabled={!canGoNext}
-                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${canGoNext
-                                        ? 'bg-white border border-gray-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600'
-                                        : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${canGoNext
+                                        ? 'bg-transparent border border-white/20 text-white hover:bg-emerald-600 hover:border-emerald-600'
+                                        : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
                                         }`}
                                 >
                                     <FiChevronRight className="text-xl" />
@@ -170,10 +173,10 @@ const NewsSection = () => {
                         )}
                     </>
                 ) : (
-                    <div className="text-center py-20 bg-emerald-50/50 rounded-[3rem] border border-emerald-100 border-dashed">
-                        <FiFileText className="text-6xl text-emerald-200 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-emerald-900 mb-2">No Updates Yet</h3>
-                        <p className="text-emerald-900/40">Check back later for the latest news and announcements.</p>
+                    <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-white/10 border-dashed">
+                        <FiFileText className="text-6xl text-white/20 mx-auto mb-4" />
+                        <h3 className="text-xl font-bold text-white mb-2">No Updates Yet</h3>
+                        <p className="text-white/40">Check back later for the latest news and announcements.</p>
                     </div>
                 )}
             </div>

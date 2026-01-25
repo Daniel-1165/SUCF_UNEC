@@ -44,31 +44,34 @@ const BooksSection = () => {
     };
 
     return (
-        <section className="py-32 zeni-mesh-gradient relative overflow-hidden">
-            <div className="container mx-auto px-6 max-w-7xl">
+        <section className="py-32 relative overflow-hidden bg-white">
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div className="max-w-xl">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="section-tag mb-8 bg-emerald-100/50 border-emerald-200 text-emerald-700"
+                            className="section-tag mb-8 !bg-emerald-50 !border-emerald-100 !text-emerald-600"
                         >
                             Curated Knowledge
                         </motion.div>
-                        <h2 className="text-5xl md:text-8xl font-black text-[#00211F] leading-[0.85] tracking-tight mb-10 uppercase italic">
+                        <h2 className="text-5xl md:text-8xl font-black text-slate-900 leading-[0.85] tracking-tight mb-10 uppercase italic">
                             Wisdom <br />
                             <span className="text-emerald-600">Archived.</span>
                         </h2>
-                        <p className="text-[#00211F] text-xl font-medium opacity-40 max-w-sm leading-relaxed">Spiritual nourishment through literature, handpicked for your growth.</p>
+                        <p className="text-slate-500 text-xl font-medium max-w-sm leading-relaxed">Spiritual nourishment through literature, handpicked for your growth.</p>
                     </div>
 
                     <Link to="/library" className="group flex items-center gap-4">
                         <div className="text-right">
-                            <span className="block text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-1">Explore More</span>
-                            <span className="block text-sm font-bold text-[#00211F]">Full Library</span>
+                            <span className="block text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1">Explore More</span>
                         </div>
-                        <div className="w-14 h-14 zeni-card flex items-center justify-center text-xl group-hover:bg-[#00211F] group-hover:text-white transition-all transform group-hover:rotate-12">
+                        <div className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-xl text-white group-hover:bg-white group-hover:text-[#022c22] transition-all transform group-hover:rotate-12">
                             <FiArrowRight />
                         </div>
                     </Link>
@@ -77,7 +80,7 @@ const BooksSection = () => {
                 {loading ? (
                     <div className="grid grid-cols-1 gap-12">
                         {[1, 2].map(i => (
-                            <div key={i} className="h-[400px] bg-white/50 animate-pulse rounded-[3rem] border border-[#E8F3EF]"></div>
+                            <div key={i} className="h-[400px] bg-white/5 animate-pulse rounded-[3rem] border border-white/10"></div>
                         ))}
                     </div>
                 ) : (
@@ -100,13 +103,13 @@ const BooksSection = () => {
                                     <div className="absolute top-0 right-0 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all p-4">
                                         <button
                                             onClick={(e) => { e.preventDefault(); handleDelete(book.id); }}
-                                            className="w-12 h-12 rounded-2xl bg-white shadow-2xl text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"
+                                            className="w-12 h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"
                                         >
                                             <FiTrash2 />
                                         </button>
                                         <Link
                                             to="/admin"
-                                            className="w-12 h-12 rounded-2xl bg-white shadow-2xl text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-all"
+                                            className="w-12 h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-emerald-400 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition-all"
                                         >
                                             <FiPlus />
                                         </Link>
@@ -118,7 +121,7 @@ const BooksSection = () => {
                                     whileHover={{ y: -15, rotate: 2 }}
                                     className="w-full lg:w-[400px] shrink-0"
                                 >
-                                    <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_50px_100px_rgba(0,33,31,0.2)] bg-emerald-950 border-[6px] border-white">
+                                    <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/20 bg-[#001a14] border border-white/10 group-hover:border-emerald-500/30 transition-colors">
                                         {book.image_url ? (
                                             <img
                                                 src={book.image_url}
@@ -126,11 +129,13 @@ const BooksSection = () => {
                                                 className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
                                             />
                                         ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-emerald-800 to-[#00211F] flex items-center justify-center">
+                                            <div className="w-full h-full bg-gradient-to-br from-emerald-900 to-[#00100f] flex items-center justify-center">
                                                 <FiBook className="text-9xl text-white/5" />
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent pointer-events-none" />
+                                        {/* Grain & Noise */}
+                                        <div className="absolute inset-0 bg-noise opacity-20 mix-blend-overlay" />
                                     </div>
                                 </motion.div>
 
@@ -138,15 +143,15 @@ const BooksSection = () => {
                                 <div className="flex-grow space-y-8 max-w-2xl text-center lg:text-left">
                                     <div>
                                         <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
-                                            <span className="h-[2px] w-8 bg-emerald-500 hidden lg:block"></span>
-                                            <p className="text-xs text-emerald-600 font-black uppercase tracking-[0.3em]">
+                                            <span className="h-[1px] w-8 bg-emerald-500 hidden lg:block"></span>
+                                            <p className="text-xs text-emerald-500 font-bold uppercase tracking-[0.3em]">
                                                 {book.author || "SUCF UNEC Publication"}
                                             </p>
                                         </div>
-                                        <h3 className="text-4xl md:text-6xl font-black text-[#00211F] mb-6 leading-[0.9] uppercase italic tracking-tighter">
+                                        <h3 className="text-4xl md:text-6xl font-black text-white mb-6 leading-[0.9] uppercase italic tracking-tighter">
                                             {book.title}
                                         </h3>
-                                        <p className="text-lg md:text-xl text-[#00211F] opacity-40 font-medium leading-relaxed italic">
+                                        <p className="text-lg md:text-xl text-white/40 font-medium leading-relaxed">
                                             {book.description || "A transformative spiritual resource curated specifically for our fellowship members."}
                                         </p>
                                     </div>
@@ -157,14 +162,14 @@ const BooksSection = () => {
                                             download
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="px-10 py-5 bg-[#00211F] text-white rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-emerald-900/20 flex items-center gap-4 group/btn active:scale-95"
+                                            className="px-10 py-5 bg-white text-[#022c22] rounded-full font-black text-xs uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-xl shadow-white/5 flex items-center gap-4 group/btn active:scale-95"
                                         >
                                             <FiDownload className="text-lg group-hover/btn:translate-y-1 transition-transform" />
                                             Acquire Resource
                                         </a>
                                         <div className="flex flex-col items-center lg:items-start opacity-30">
-                                            <span className="text-[10px] font-black uppercase tracking-widest">Semester</span>
-                                            <span className="text-sm font-bold text-[#00211F]">Alpha Session</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Semester</span>
+                                            <span className="text-sm font-bold text-white">Alpha Session</span>
                                         </div>
                                     </div>
                                 </div>
