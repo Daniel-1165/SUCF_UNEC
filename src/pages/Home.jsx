@@ -137,18 +137,10 @@ const Home = () => {
                                     </div>
                                 </div>
 
-                                {/* Bottom Info Card overlay */}
-                                <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-lg border border-white/50">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Happening Now</p>
-                                            <h4 className="text-slate-900 font-bold text-lg leading-none">Fellowship Activities</h4>
-                                        </div>
-                                        <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center">
-                                            <FiArrowRight />
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* Arrow Link Only */}
+                                <Link to="/activities" className="absolute bottom-6 right-6 w-14 h-14 bg-white/90 backdrop-blur-xl rounded-full shadow-lg border border-white/50 flex items-center justify-center text-slate-900 hover:bg-emerald-600 hover:text-white transition-all z-20 group">
+                                    <FiArrowRight className="text-xl group-hover:scale-110 transition-transform" />
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -115,11 +115,7 @@ const Activities = () => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
 
-                                <div className="absolute top-6 right-6">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full bg-white/90 backdrop-blur-md text-[#00211F] border border-white/20">
-                                        {event.tag}
-                                    </span>
-                                </div>
+                                {/* Tag Removed */}
                             </div>
 
                             <div className="p-10 flex-grow flex flex-col">

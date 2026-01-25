@@ -52,9 +52,9 @@ const Articles = () => {
     // Filter and search logic
     const allArticles = dbArticles;
     const filteredArticles = allArticles.filter(article => {
-        const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            article.content?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = (article.title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (article.excerpt?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (article.content?.toLowerCase() || '').includes(searchQuery.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });

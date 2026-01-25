@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { motion } from 'framer-motion';
-import { FiDownload, FiBook, FiSearch } from 'react-icons/fi';
+import { FiDownload, FiBook, FiSearch, FiFilter, FiChevronRight } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
 const Library = () => {
@@ -9,6 +9,9 @@ const Library = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    const categories = ['All', 'Semester Books', 'Spiritual Growth', 'Academic', 'Archive'];
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -30,142 +33,211 @@ const Library = () => {
         fetchBooks();
     }, []);
 
-    const filteredBooks = books.filter(book =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (book.author && book.author.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    // Filter Logic
+    const filteredBooks = books.filter(book => {
+        const matchesSearch = (book.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+            (book.author?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+
+        // Mock category logic since DB might not have exact 'category' column matching these.
+        // We'll assume everything is 'All' or match primitive checks if columns exist, 
+        // but for now let's just use Search for filtering mainly, and if 'semester' column exists, use it.
+        // If the book table has a 'category' column, use it. If not, we iterate 'All'.
+        // Checking previous code, 'semester' exists.
+
+        const matchesCategory = selectedCategory === 'All'
+            ? true
+            : selectedCategory === 'Semester Books'
+                ? book.semester
+                : true; // For now, other categories show all unless we have data
+
+        return matchesSearch && matchesCategory;
+    });
+
+    const featuredBooks = books.slice(0, 3); // Top 3 newest
 
     return (
-        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+        <div className="min-h-screen pt-32 pb-20 bg-[#F8FAFC] font-sans selection:bg-emerald-500 selection:text-white">
             <div className="container mx-auto px-6 max-w-7xl">
-                {/* Header Section */}
-                <div className="max-w-4xl mx-auto text-center mb-24">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full mb-8"
-                    >
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                        <span className="text-[10px] font-black text-emerald-900 tracking-[0.2em] uppercase">Spiritual Archives</span>
-                    </motion.div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-8xl font-black text-[#00211F] mb-8 leading-none tracking-tighter"
-                    >
-                        The <span className="text-emerald-600 italic">Word.</span>
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-[#00211F] text-xl font-medium opacity-40 leading-relaxed mb-12 max-w-2xl mx-auto"
-                    >
-                        Explore our growing collection of spiritual resources, curated specifically for your growth and academic excellence.
-                    </motion.p>
-
-                    {/* Search Bar */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="relative max-w-2xl mx-auto"
-                    >
-                        <div className="zeni-card flex items-center p-2 bg-white/80 backdrop-blur-xl border-[#D1E8E0] shadow-2xl shadow-emerald-900/5">
-                            <div className="w-14 h-14 flex items-center justify-center text-[#00211F] opacity-30 text-2xl">
-                                <FiSearch />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Search by title or author..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="flex-grow bg-transparent border-none outline-none text-lg font-bold text-[#00211F] placeholder:opacity-20 px-2"
-                            />
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* Books Grid */}
-                {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                            <div key={i} className="aspect-[3/4] bg-white/50 rounded-[3rem] border border-[#E8F3EF] animate-pulse"></div>
-                        ))}
-                    </div>
-                ) : filteredBooks.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {filteredBooks.map((book) => (
+                {/* Header & Search Section */}
+                <header className="mb-12">
+                    <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
+                        <div>
                             <motion.div
-                                key={book.id}
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                whileHover={{ y: -10 }}
-                                className="zeni-card flex flex-col group h-full overflow-hidden"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3"
                             >
-                                {/* Cover Image Section */}
-                                <div className="relative aspect-[4/5] overflow-hidden bg-[#F5F9F7]">
-                                    {book.image_url ? (
-                                        <img
-                                            src={book.image_url}
-                                            alt={book.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center opacity-20">
-                                            <FiBook className="text-8xl mb-4" />
-                                        </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#00211F]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-                                        <a
-                                            href={book.file_url}
-                                            download
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-full bg-white text-[#00211F] py-4 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-400 transition-all scale-95 group-hover:scale-100"
-                                        >
-                                            <FiDownload /> Download Word
-                                        </a>
-                                    </div>
-                                </div>
-
-                                {/* Info Section */}
-                                <div className="p-8 flex-grow flex flex-col">
-                                    <div className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">
-                                        {book.semester || "Semester Read"}
-                                    </div>
-                                    <h3 className="text-xl font-bold text-[#00211F] mb-2 leading-tight line-clamp-2">
-                                        {book.title}
-                                    </h3>
-                                    <p className="text-sm font-medium text-[#00211F] opacity-40 mb-6">
-                                        By {book.author || "SUCF UNEC"}
-                                    </p>
-
-                                    <div className="mt-auto pt-6 border-t border-[#F5F9F7]">
-                                        <a
-                                            href={book.file_url}
-                                            download
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-emerald-700 font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 hover:gap-4 transition-all"
-                                        >
-                                            View Reader <FiDownload className="text-lg" />
-                                        </a>
-                                    </div>
-                                </div>
+                                Digital Library
                             </motion.div>
+                            <motion.h1
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight"
+                            >
+                                Discover <span className="text-emerald-600">Knowledge.</span>
+                            </motion.h1>
+                        </div>
+
+                        {/* Search Bar - Floating Style */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="w-full md:w-96 relative z-20"
+                        >
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <FiSearch className="text-slate-400 text-lg group-focus-within:text-emerald-500 transition-colors" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search title, author, isbn..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl shadow-sm focus:shadow-xl focus:border-emerald-500 outline-none transition-all duration-300 placeholder:text-slate-400 text-slate-900 font-medium"
+                                />
+                                <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
+                                    <button className="p-2 bg-slate-100 rounded-xl text-slate-500 hover:bg-emerald-500 hover:text-white transition-colors">
+                                        <FiFilter />
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Categories - Horizontal Scroll */}
+                    <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar mask-gradient">
+                        {categories.map((cat, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${selectedCategory === cat
+                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-600 ring-offset-2'
+                                    : 'bg-white text-slate-500 border border-slate-200 hover:border-emerald-500 hover:text-emerald-600'
+                                    }`}
+                            >
+                                {cat}
+                            </button>
                         ))}
                     </div>
-                ) : (
-                    <div className="text-center py-32 zeni-card border-dashed border-2 border-emerald-500/20">
-                        <FiBook className="text-7xl text-emerald-500/20 mx-auto mb-6" />
-                        <h3 className="text-xl font-bold text-[#00211F] opacity-40">No books found matching your search.</h3>
-                    </div>
+                </header>
+
+                {/* Featured Section (Visible only when no search) */}
+                {!searchTerm && selectedCategory === 'All' && !loading && books.length > 0 && (
+                    <motion.section
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-16"
+                    >
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-slate-900">Recommended For You</h2>
+                            <div className="flex gap-2">
+                                <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-emerald-600 hover:text-white hover:border-transparent transition-all">←</button>
+                                <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-emerald-600 hover:text-white hover:border-transparent transition-all">→</button>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {featuredBooks.map((book, i) => (
+                                <div key={book.id} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex gap-5 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    <div className="w-24 h-32 shrink-0 rounded-2xl overflow-hidden shadow-inner relative">
+                                        <img
+                                            src={book.image_url || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=2730&auto=format&fit=crop'}
+                                            alt={book.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col justify-between py-1">
+                                        <div>
+                                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">Trending</p>
+                                            <h3 className="font-bold text-slate-900 leading-tight mb-1 line-clamp-2">{book.title}</h3>
+                                            <p className="text-xs text-slate-500">{book.author || "Unknown Author"}</p>
+                                        </div>
+                                        <a href={book.file_url} target="_blank" rel="noopener noreferrer" className="text-xs font-black text-slate-900 flex items-center gap-1 group-hover:gap-2 transition-all">
+                                            Read Now <FiChevronRight className="text-emerald-500" />
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.section>
                 )}
+
+                {/* Main Grid */}
+                <section>
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-2xl font-bold text-slate-900">
+                            {searchTerm ? `Search Results (${filteredBooks.length})` :
+                                selectedCategory === 'All' ? 'Popular Books' : selectedCategory}
+                        </h2>
+                    </div>
+
+                    {loading ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                            {[1, 2, 3, 4, 5].map(i => (
+                                <div key={i} className="aspect-[2/3] bg-slate-200 rounded-3xl animate-pulse" />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+                            {filteredBooks.length > 0 ? filteredBooks.map((book) => (
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    key={book.id}
+                                    className="group flex flex-col"
+                                >
+                                    <div className="relative aspect-[2/3] mb-4 rounded-3xl overflow-hidden shadow-md group-hover:shadow-2xl group-hover:shadow-emerald-900/20 transition-all duration-500 bg-emerald-50">
+                                        {book.image_url ? (
+                                            <img
+                                                src={book.image_url}
+                                                alt={book.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
+                                                <FiBook className="text-4xl text-emerald-200 mb-2" />
+                                                <span className="text-[10px] text-emerald-800/40 font-bold uppercase">No Cover</span>
+                                            </div>
+                                        )}
+
+                                        {/* Overlay Actions */}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                            <a
+                                                href={book.file_url}
+                                                download
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full py-3 bg-white text-slate-900 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-emerald-500 hover:text-white transition-colors shadow-lg"
+                                            >
+                                                <FiDownload /> Download
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h3 className="font-bold text-slate-900 leading-tight line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                                            {book.title}
+                                        </h3>
+                                        <p className="text-xs font-medium text-slate-400 line-clamp-1">
+                                            {book.author || "SUCF UNEC"}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )) : (
+                                <div className="col-span-full py-20 text-center">
+                                    <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 text-3xl">
+                                        <FiBook />
+                                    </div>
+                                    <p className="text-slate-500 font-medium">No books found matching your criteria.</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </section>
             </div>
         </div>
     );
