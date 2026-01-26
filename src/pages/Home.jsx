@@ -1,6 +1,6 @@
 import AnthemSection from '../components/AnthemSection';
 import React, { useState, useEffect } from 'react';
-import { FiArrowRight, FiUsers, FiHeart, FiBookOpen, FiPlay } from 'react-icons/fi';
+import { FiArrowRight, FiUsers, FiHeart, FiBookOpen, FiPlay, FiGlobe, FiLifeBuoy } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
@@ -151,32 +151,36 @@ const Home = () => {
 
             <AnthemSection />
 
-            {/* Why Join Us - Tech Grid Style */}
+            {/* Mission Section (Based on User's Image 1) */}
             <section className="py-24 bg-white relative">
                 <div className="absolute inset-0 bg-grid-pattern opacity-50" />
                 <div className="container mx-auto px-6 relative z-10">
-                    <div className="text-center max-w-2xl mx-auto mb-20">
-                        <span className="text-emerald-600 font-bold tracking-widest uppercase text-xs mb-4 block">Core Values</span>
-                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Built on a Solid <br /><span className="text-emerald-600">Foundation.</span></h2>
-                        <p className="text-slate-500 text-lg">We are tailored to help you grow in every aspect of life.</p>
+                    <div className="text-center max-w-2xl mx-auto mb-16 relative">
+                        {/* Faded Background Text */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-9xl font-black text-slate-100 uppercase tracking-widest opacity-60 pointer-events-none select-none">
+                            Mission
+                        </div>
+
+                        <span className="text-emerald-600 font-bold tracking-widest uppercase text-xs mb-4 block relative z-10">Our Mandate</span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 relative z-10">The Four Pillars</h2>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {[
-                            { icon: <FiUsers className="text-2xl" />, title: "Family", desc: "A home away from home." },
-                            { icon: <FiBookOpen className="text-2xl" />, title: "Word", desc: "Rooted in scripture daily." },
-                            { icon: <FiHeart className="text-2xl" />, title: "Love", desc: "Growing together in Christ." }
-                        ].map((feature, idx) => (
+                            { icon: <FiBookOpen />, title: "Bible Study", color: "text-emerald-600" },
+                            { icon: <FiHeart />, title: "Prayer", color: "text-emerald-600" },
+                            { icon: <FiGlobe />, title: "Evangelism", color: "text-emerald-600" },
+                            { icon: <FiLifeBuoy />, title: "Righteousness", color: "text-emerald-600" }
+                        ].map((item, idx) => (
                             <motion.div
                                 key={idx}
                                 whileHover={{ y: -5 }}
-                                className="tech-card p-8 group hover:border-emerald-500/30 transition-all"
+                                className="bg-white rounded-[2rem] p-6 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group transition-all hover:border-emerald-500/30"
                             >
-                                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                                    {feature.icon}
+                                <div className={`text-4xl lg:text-5xl mb-6 ${item.color} group-hover:scale-110 transition-transform duration-500`}>
+                                    {item.icon}
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                                <p className="text-slate-500 leading-relaxed text-sm">{feature.desc}</p>
+                                <h3 className="text-lg lg:text-xl font-bold text-slate-800">{item.title}</h3>
                             </motion.div>
                         ))}
                     </div>

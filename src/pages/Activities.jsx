@@ -86,8 +86,8 @@ const Activities = () => {
         if (day === 'Sunday' || day === 'Thursday') {
             url = "https://maps.google.com/maps?saddr=UNEC+Gate,+Enugu&daddr=Department+of+Architecture,+University+of+Nigeria,+Enugu+Campus&output=embed";
         } else if (day === 'Wednesday') {
-            // Freedom Field - Approximating near Mariere
-            url = "https://maps.google.com/maps?q=Mariere+Hostel,+UNEC&output=embed";
+            // Freedom Field - Opposite Mariere
+            url = "https://maps.google.com/maps?q=Freedom+Field+UNEC&output=embed";
         }
 
         if (url) {

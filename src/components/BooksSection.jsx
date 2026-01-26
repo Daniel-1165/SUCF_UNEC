@@ -44,136 +44,92 @@ const BooksSection = () => {
     };
 
     return (
-        <section className="py-32 relative overflow-hidden bg-white">
-            {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
-
-            <div className="container mx-auto px-6 max-w-7xl relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-                    <div className="max-w-xl">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="section-tag mb-8 !bg-emerald-50 !border-emerald-100 !text-emerald-600"
-                        >
-                            Curated Knowledge
-                        </motion.div>
-                        <h2 className="text-5xl md:text-8xl font-black text-slate-900 leading-[0.85] tracking-tight mb-10 uppercase italic">
-                            Wisdom <br />
-                            <span className="text-emerald-600">Archived.</span>
-                        </h2>
-                        <p className="text-slate-500 text-xl font-medium max-w-sm leading-relaxed">Spiritual nourishment through literature, handpicked for your growth.</p>
+        <section className="py-20 bg-white relative">
+            <div className="container mx-auto px-6 max-w-5xl">
+                <div className="flex justify-between items-center mb-10">
+                    <div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Recommended For You</h2>
+                        <p className="text-slate-400 font-medium">Top picks for your spiritual growth.</p>
                     </div>
-
-                    <Link to="/library" className="group flex items-center gap-4">
-                        <div className="text-right">
-                            <span className="block text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1">Explore More</span>
-                        </div>
-                        <div className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-xl text-white group-hover:bg-white group-hover:text-[#022c22] transition-all transform group-hover:rotate-12">
+                    <div className="flex gap-2">
+                        <button className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 transition-all">
+                            <FiArrowRight className="rotate-180" />
+                        </button>
+                        <button className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 transition-all">
                             <FiArrowRight />
-                        </div>
-                    </Link>
+                        </button>
+                    </div>
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 gap-12">
-                        {[1, 2].map(i => (
-                            <div key={i} className="h-[400px] bg-white/5 animate-pulse rounded-[3rem] border border-white/10"></div>
+                    <div className="space-y-6">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="h-48 bg-slate-50 animate-pulse rounded-3xl border border-slate-100"></div>
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-16 lg:gap-24">
+                    <div className="flex flex-col gap-6">
                         {books.map((book, index) => (
                             <motion.div
                                 key={book.id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: index * 0.2,
-                                    ease: [0.22, 1, 0.36, 1]
-                                }}
-                                className="relative flex flex-col lg:flex-row items-center gap-10 lg:gap-20 group"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
+                                className="bg-white border border-slate-100 rounded-[2rem] p-4 flex flex-col sm:flex-row gap-6 hover:shadow-xl hover:shadow-emerald-900/5 hover:border-emerald-100 transition-all group"
                             >
-                                {/* Admin Controls - Repositioned */}
-                                {user?.isAdmin && (
-                                    <div className="absolute top-0 right-0 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all p-4">
-                                        <button
-                                            onClick={(e) => { e.preventDefault(); handleDelete(book.id); }}
-                                            className="w-12 h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all"
-                                        >
-                                            <FiTrash2 />
-                                        </button>
-                                        <Link
-                                            to="/admin"
-                                            className="w-12 h-12 rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-emerald-400 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition-all"
-                                        >
-                                            <FiPlus />
-                                        </Link>
-                                    </div>
-                                )}
-
-                                {/* Book Image Section - Now MUCH larger */}
-                                <motion.div
-                                    whileHover={{ y: -15, rotate: 2 }}
-                                    className="w-full lg:w-[400px] shrink-0"
-                                >
-                                    <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-900/10 bg-white border border-slate-100 group-hover:border-emerald-500/30 transition-colors">
-                                        {book.image_url ? (
-                                            <img
-                                                src={book.image_url}
-                                                alt={book.title}
-                                                className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
-                                                <FiBook className="text-9xl text-emerald-100" />
-                                            </div>
-                                        )}
-                                    </div>
-                                </motion.div>
-
-                                {/* Content Section */}
-                                <div className="flex-grow space-y-4 md:space-y-8 max-w-2xl text-center lg:text-left">
-                                    <div>
-                                        <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
-                                            <span className="h-[1px] w-8 bg-emerald-500 hidden lg:block"></span>
-                                            <p className="text-xs text-emerald-600 font-bold uppercase tracking-[0.3em]">
-                                                {book.author || "SUCF UNEC Publication"}
-                                            </p>
+                                {/* Book Image */}
+                                <div className="w-full sm:w-40 h-48 sm:h-auto shrink-0 rounded-2xl overflow-hidden bg-slate-100 relative">
+                                    {book.image_url ? (
+                                        <img
+                                            src={book.image_url}
+                                            alt={book.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-emerald-50 text-emerald-200">
+                                            <FiBook size={40} />
                                         </div>
-                                        <h3 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 leading-[1.1] uppercase italic tracking-tighter">
-                                            {book.title}
-                                        </h3>
-                                        <p className="text-sm md:text-xl text-slate-500 font-medium leading-relaxed">
-                                            {book.description || "A transformative spiritual resource curated specifically for our fellowship members."}
-                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Content */}
+                                <div className="flex-grow flex flex-col justify-center py-2 pr-4">
+                                    <div className="mb-auto">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-2 block">Trending</span>
+                                        <h3 className="text-2xl font-bold text-slate-900 mb-1 leading-tight">{book.title}</h3>
+                                        <p className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-4">{book.author || "SUCF UNEC"}</p>
                                     </div>
 
-                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-4">
+                                    <div className="flex items-center justify-between mt-4">
                                         <a
                                             href={book.file_url}
                                             download
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="px-10 py-5 bg-emerald-900 text-white rounded-full font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10 flex items-center gap-4 group/btn active:scale-95"
+                                            className="text-slate-900 font-bold text-sm flex items-center gap-2 group/link hover:text-emerald-600 transition-colors"
                                         >
-                                            <FiDownload className="text-lg group-hover/btn:translate-y-1 transition-transform" />
-                                            Acquire Resource
+                                            Read Now <FiArrowRight className="group-hover/link:translate-x-1 transition-transform" />
                                         </a>
-                                        <div className="flex flex-col items-center lg:items-start opacity-30">
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Semester</span>
-                                            <span className="text-sm font-bold text-white">Alpha Session</span>
-                                        </div>
+
+                                        {/* Admin Actions */}
+                                        {user?.isAdmin && (
+                                            <button
+                                                onClick={(e) => { e.preventDefault(); handleDelete(book.id); }}
+                                                className="text-red-400 hover:text-red-600 p-2"
+                                            >
+                                                <FiTrash2 />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>
                         ))}
                     </div>
                 )}
+
+                <div className="mt-20">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-6">Popular Books</h3>
+                    {/* Placeholder or further list */}
+                </div>
             </div>
         </section>
     );
