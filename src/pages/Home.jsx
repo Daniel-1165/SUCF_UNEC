@@ -139,7 +139,17 @@ const Home = () => {
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 0.5 }}
-                                        className="absolute inset-0 w-full h-full object-cover"
+                                        drag="x"
+                                        dragConstraints={{ left: 0, right: 0 }}
+                                        onDragEnd={(e, { offset, velocity }) => {
+                                            const swipeThreshold = 50;
+                                            if (offset.x > swipeThreshold) {
+                                                setCurrentSlide((prev) => (prev - 1 + heroImageCount) % heroImageCount);
+                                            } else if (offset.x < -swipeThreshold) {
+                                                setCurrentSlide((prev) => (prev + 1) % heroImageCount);
+                                            }
+                                        }}
+                                        className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
                                         alt="SUCF Moments"
                                     />
                                 </AnimatePresence>

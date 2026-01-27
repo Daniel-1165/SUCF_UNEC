@@ -130,25 +130,24 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                         className="w-full lg:w-1/2"
                     >
                         <div className="relative group">
-                            <div className="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
-                            {/* Decorative Background Glows */}
-                            <div className="absolute inset-0 bg-white/50 backdrop-blur-xl rounded-[2.5rem] border border-white/20 shadow-2xl"></div>
+                            {/* Subtly Integrated Glow */}
+                            <div className="absolute -inset-10 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-1000"></div>
 
-                            {/* Main Flyer Container */}
-                            <div className="relative z-10 zeni-card !p-3 !bg-white/40 !backdrop-blur-md !border-white/20 aspect-square overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700">
-                                <div className="w-full h-full rounded-[2rem] overflow-hidden bg-slate-100 flex items-center justify-center relative shadow-inner">
+                            {/* Main Flyer Container - Seamless & borderless */}
+                            <div className="relative z-10 p-4 bg-white/30 backdrop-blur-2xl rounded-[3rem] shadow-2xl shadow-emerald-900/5 transition-all duration-700">
+                                <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-slate-50 flex items-center justify-center relative">
                                     {event?.flyer_url ? (
                                         <img
                                             src={event.flyer_url}
                                             alt={event.title}
-                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000"
                                         />
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center text-slate-300">
-                                            <div className="w-20 h-20 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-4">
-                                                <span className="text-4xl">🖼️</span>
+                                        <div className="flex flex-col items-center justify-center text-slate-200">
+                                            <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-200 flex items-center justify-center mb-4">
+                                                <span className="text-4xl grayscale opacity-50">🖼️</span>
                                             </div>
-                                            <p className="text-xs font-bold uppercase tracking-widest">Post Ready</p>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Waiting for Flyer</p>
                                         </div>
                                     )}
                                 </div>
