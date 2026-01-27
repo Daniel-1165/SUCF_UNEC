@@ -161,9 +161,12 @@ const Navbar = () => {
                             {/* Header Section (Fixed height) */}
                             <div className="p-6 pb-2 shrink-0">
                                 <div className="flex justify-between items-center mb-6">
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
                                         <img src={logo} alt="Logo" className="h-8 w-auto" />
-                                        <FiMenu className="text-emerald-400" size={20} />
+                                        <div className="flex items-baseline">
+                                            <span className="text-sm font-black italic uppercase tracking-tighter leading-none font-heading text-white">SUCF</span>
+                                            <span className="text-sm font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-500 text-white px-1 ml-0.5 rounded-sm">UNEC</span>
+                                        </div>
                                     </div>
                                     <button
                                         onClick={() => setIsOpen(false)}
@@ -253,7 +256,7 @@ const Navbar = () => {
                                         </Link>
                                     </div>
                                 )}
-                                <p className="text-center text-[9px] text-white/20 mt-6 uppercase tracking-[0.2em]">SUCF UNEC &copy; 2024</p>
+                                <p className="text-center text-[9px] text-white/20 mt-6 uppercase tracking-[0.2em]">SUCF UNEC &copy; {new Date().getFullYear()}</p>
                             </div>
                         </motion.div>
                     </div>

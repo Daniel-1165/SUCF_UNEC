@@ -130,22 +130,28 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                         className="w-full lg:w-1/2"
                     >
                         <div className="relative group">
-                            <div className="absolute -inset-2 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
-                            <div className="relative tech-card p-0 aspect-square group-hover:shadow-xl transition-all duration-700 bg-slate-50 flex items-center justify-center overflow-hidden">
-                                {event?.flyer_url ? (
-                                    <img
-                                        src={event.flyer_url}
-                                        alt={event.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-[1.05] transition-transform duration-700"
-                                    />
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center text-slate-300">
-                                        <div className="w-20 h-20 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-4">
-                                            <span className="text-4xl">🖼️</span>
+                            <div className="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+                            {/* Decorative Background Glows */}
+                            <div className="absolute inset-0 bg-white/50 backdrop-blur-xl rounded-[2.5rem] border border-white/20 shadow-2xl"></div>
+
+                            {/* Main Flyer Container */}
+                            <div className="relative z-10 zeni-card !p-3 !bg-white/40 !backdrop-blur-md !border-white/20 aspect-square overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700">
+                                <div className="w-full h-full rounded-[2rem] overflow-hidden bg-slate-100 flex items-center justify-center relative shadow-inner">
+                                    {event?.flyer_url ? (
+                                        <img
+                                            src={event.flyer_url}
+                                            alt={event.title}
+                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center text-slate-300">
+                                            <div className="w-20 h-20 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-4">
+                                                <span className="text-4xl">🖼️</span>
+                                            </div>
+                                            <p className="text-xs font-bold uppercase tracking-widest">Post Ready</p>
                                         </div>
-                                        <p className="text-xs font-bold uppercase tracking-widest">No Flyer Available</p>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
 
                                 {/* Admin Controls Overlay */}
                                 {user?.isAdmin && (
