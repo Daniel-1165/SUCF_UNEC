@@ -1,159 +1,217 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FiArrowLeft, FiClock, FiUser, FiShare2, FiTag } from 'react-icons/fi';
+import { FiArrowLeft, FiClock, FiUser, FiShare2, FiTag, FiCalendar, FiChevronRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 
-
 const ArticleDetail = () => {
     const { id } = useParams();
-    const [article, setArticle] = useState(null);
+    const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [otherNews, setOtherNews] = useState([]);
+    const [isNews, setIsNews] = useState(false);
 
     useEffect(() => {
-        const fetchArticle = async () => {
-            // Fetch from Supabase
+        const fetchContent = async () => {
+            setLoading(true);
             try {
-                const { data, error } = await supabase
+                // Try fetching from articles first
+                let { data, error } = await supabase
                     .from('articles')
                     .select('*')
                     .eq('id', id)
                     .single();
 
-                if (error) throw error;
-                setArticle(data);
+                if (error || !data) {
+                    // Try fetching from news table
+                    const { data: newsData, error: newsError } = await supabase
+                        .from('news')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (newsData) {
+                        data = newsData;
+                        setIsNews(true);
+                    } else {
+                        throw newsError || new Error("Not found");
+                    }
+                }
+
+                setItem(data);
+
+                // Fetch other news/articles for "More News" section
+                const targetTable = isNews ? 'news' : 'articles';
+                const { data: moreData } = await supabase
+                    .from(targetTable)
+                    .select('*')
+                    .neq('id', id)
+                    .order('created_at', { ascending: false })
+                    .limit(4);
+
+                setOtherNews(moreData || []);
+
             } catch (error) {
-                console.error("Error fetching article:", error.message);
+                console.error("Error fetching content:", error.message);
+                setItem(null);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchArticle();
-    }, [id]);
+        fetchContent();
+        window.scrollTo(0, 0);
+    }, [id, isNews]);
 
     if (loading) {
         return (
-            <div className="pt-40 pb-20 min-h-screen bg-black text-center text-white flex flex-col items-center justify-center">
-                <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-gray-400 font-black uppercase tracking-[0.2em] text-xs">Loading Revelation...</p>
+            <div className="pt-40 pb-20 min-h-screen bg-[#F0F0F0] text-center text-black flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-black font-black uppercase tracking-[0.2em] text-xs">Loading Content...</p>
             </div>
         );
     }
 
-    if (!article) {
+    if (!item) {
         return (
-            <div className="pt-40 pb-20 min-h-screen bg-black text-center text-white flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-serif font-black italic uppercase mb-8">Article Not Found</h1>
-                <Link to="/articles" className="px-10 py-4 bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all">
-                    Back to Articles
+            <div className="pt-40 pb-20 min-h-screen bg-[#F0F0F0] text-center text-black flex flex-col items-center justify-center">
+                <h1 className="text-4xl font-serif font-black italic uppercase mb-8">Content Not Found</h1>
+                <Link to="/" className="px-10 py-4 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all">
+                    Back to Home
                 </Link>
             </div>
         );
     }
 
     return (
-        <div className="pt-40 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
-            <div className="container mx-auto px-6 max-w-5xl">
-                <Link
-                    to="/articles"
-                    className="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900 transition-all mb-12 font-black text-[10px] uppercase tracking-[0.2em] group"
-                >
-                    <FiArrowLeft className="group-hover:-translate-x-2 transition-transform" /> Back to Articles
-                </Link>
-
-                <article className="relative">
-                    {/* Featured Image */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="aspect-video w-full relative zeni-card !p-0 overflow-hidden border-2 border-white mb-16 shadow-2xl"
+        <div className="pt-32 pb-20 min-h-screen bg-[#F0F0F0] selection:bg-black selection:text-white">
+            <div className="container mx-auto px-6 max-w-6xl">
+                {/* Minimalist Navigation */}
+                <div className="flex justify-between items-center mb-12 py-4 border-b border-black/10">
+                    <Link
+                        to={isNews ? "/" : "/articles"}
+                        className="inline-flex items-center gap-2 text-black hover:text-emerald-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
                     >
-                        <img
-                            src={article.image_url}
-                            alt={article.title}
-                            className="w-full h-full object-cover object-center transition-all duration-1000"
-                        />
-                        <div className="absolute top-10 left-10">
-                            <span className="bg-emerald-600 text-white px-6 py-2 rounded-full text-[9px] font-black shadow-lg uppercase tracking-[0.2em]">
-                                {article.category}
-                            </span>
-                        </div>
-                    </motion.div>
+                        <FiArrowLeft className="group-hover:-translate-x-2 transition-transform" /> {isNews ? "Back to News" : "Back to Articles"}
+                    </Link>
+                    <div className="hidden md:flex items-center gap-4 text-[10px] font-black uppercase tracking-widest opacity-40">
+                        <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                        <span>•</span>
+                        <span>{item.category || (isNews ? 'News' : 'Article')}</span>
+                    </div>
+                </div>
 
-                    <div className="max-w-3xl mx-auto">
-                        {/* Meta Header */}
-                        <div className="flex flex-wrap items-center gap-8 mb-12 pb-12 border-b border-[#F5F9F7]">
-                            <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                                    <FiUser size={24} />
-                                </div>
-                                <div>
-                                    <p className="text-[#00211F] opacity-30 text-[9px] uppercase font-black tracking-widest mb-1">Author</p>
-                                    <p className="text-[#00211F] font-black italic text-lg leading-none">{article.author_name || 'Admin'}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                                    <FiClock size={24} />
-                                </div>
-                                <div>
-                                    <p className="text-[#00211F] opacity-30 text-[9px] uppercase font-black tracking-widest mb-1">Published</p>
-                                    <p className="text-[#00211F] font-black italic text-lg leading-none">
-                                        {new Date(article.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Content */}
+                <div className="grid lg:grid-cols-12 gap-16">
+                    {/* Main Content Area */}
+                    <article className="lg:col-span-8">
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-4xl md:text-7xl font-black text-[#00211F] italic uppercase leading-none mb-16 tracking-tighter"
+                            className="text-4xl md:text-6xl lg:text-7xl font-black text-black leading-none mb-10 tracking-tighter uppercase italic"
                         >
-                            {article.title}
+                            {item.title}
                         </motion.h1>
 
+                        {/* Metadata Strip */}
+                        <div className="flex flex-wrap items-center gap-6 mb-12 pb-8 border-b border-black/5">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white">
+                                    <FiUser size={14} />
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-widest">{item.author_name || 'SUCF UNEC'}</span>
+                            </div>
+                            <div className="flex items-center gap-3 opacity-60">
+                                <FiCalendar size={14} />
+                                <span className="text-[10px] font-black uppercase tracking-widest">{new Date(item.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <div className="ml-auto">
+                                <span className="px-3 py-1 bg-black text-white text-[9px] font-black uppercase tracking-widest rounded-sm">
+                                    {item.category || (isNews ? 'News' : 'Article')}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Featured Image */}
+                        {item.image_url && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="w-full relative overflow-hidden bg-white mb-16 shadow-xl grayscale hover:grayscale-0 transition-all duration-1000"
+                            >
+                                <img
+                                    src={item.image_url}
+                                    alt={item.title}
+                                    className="w-full h-auto object-cover"
+                                />
+                            </motion.div>
+                        )}
+
+                        {/* Rich Content */}
                         <div
-                            className="prose prose-lg max-w-none text-[#00211F] opacity-60 leading-relaxed font-medium"
-                            style={{
-                                '--tw-prose-headings': '#00211F',
-                                '--tw-prose-links': '#10b981',
-                                '--tw-prose-bold': '#00211F',
-                                '--tw-prose-quotes': '#10b981',
-                            }}
-                            dangerouslySetInnerHTML={{ __html: article.content }}
+                            className="prose prose-xl max-w-none text-black leading-relaxed font-sans prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600"
+                            dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 
-                        {/* Tags */}
-                        {article.tags && (
-                            <div className="mt-20 pt-12 border-t border-[#F5F9F7] flex flex-wrap gap-3">
-                                {article.tags.map(tag => (
-                                    <span key={tag} className="inline-flex items-center gap-2 px-6 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[9px] font-black uppercase tracking-widest border border-emerald-100">
-                                        <FiTag /> {tag}
+                        {/* Share & Tags */}
+                        <div className="mt-20 pt-12 border-t border-black/10 flex flex-col md:flex-row justify-between items-center gap-8">
+                            <div className="flex flex-wrap gap-2">
+                                {(item.tags || []).map(tag => (
+                                    <span key={tag} className="px-4 py-1 border border-black/10 text-[9px] font-black uppercase tracking-widest">
+                                        #{tag}
                                     </span>
                                 ))}
                             </div>
-                        )}
-                    </div>
-                </article>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(window.location.href);
+                                    alert("Link copied!");
+                                }}
+                                className="flex items-center gap-2 px-8 py-3 bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-emerald-600 transition-all rounded-full"
+                            >
+                                <FiShare2 /> Share Details
+                            </button>
+                        </div>
+                    </article>
 
-                {/* Footer Action */}
-                <div className="mt-24 zeni-card p-12 bg-white flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl relative overflow-hidden">
-                    <div className="relative z-10">
-                        <h4 className="text-[#00211F] text-2xl font-black italic uppercase mb-2">Share this word</h4>
-                        <p className="text-[#00211F] opacity-40 font-medium italic">Help a brother or sister find their way today.</p>
-                    </div>
-                    <button
-                        onClick={() => {
-                            navigator.clipboard.writeText(window.location.href);
-                            alert("Link copied!");
-                        }}
-                        className="px-12 py-5 bg-[#00211F] text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-emerald-600 transition-all whitespace-nowrap"
-                    >
-                        Copy Link
-                    </button>
+                    {/* Sidebar / More News Area */}
+                    <aside className="lg:col-span-4">
+                        <div className="sticky top-40 space-y-12">
+                            <div>
+                                <h3 className="text-xl font-black uppercase italic mb-8 flex items-center gap-3">
+                                    <span className="w-8 h-1 bg-black" />
+                                    More Stories
+                                </h3>
+                                <div className="space-y-8">
+                                    {otherNews.map((news) => (
+                                        <Link to={`/articles/${news.id}`} key={news.id} className="group block">
+                                            <div className="flex gap-4">
+                                                {news.image_url && (
+                                                    <div className="w-20 h-20 shrink-0 bg-white grayscale group-hover:grayscale-0 transition-all overflow-hidden rounded-lg">
+                                                        <img src={news.image_url} alt="" className="w-full h-full object-cover" />
+                                                    </div>
+                                                )}
+                                                <div className="flex flex-col justify-center">
+                                                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">{news.category || 'Update'}</span>
+                                                    <h4 className="text-sm font-black uppercase leading-tight group-hover:text-emerald-600 transition-colors line-clamp-2">
+                                                        {news.title}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Minimalist CTA */}
+                            <div className="bg-white border border-black/5 p-8 rounded-2xl shadow-sm">
+                                <h4 className="text-lg font-black uppercase italic mb-4">Stay Connected</h4>
+                                <p className="text-sm text-black/60 mb-6">Never miss a word from the unique fellowship.</p>
+                                <Link to="/contact" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:text-emerald-600 transition-all">
+                                    Join Our Community <FiChevronRight />
+                                </Link>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>

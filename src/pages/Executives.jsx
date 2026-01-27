@@ -28,7 +28,7 @@ const Executives = () => {
                 </h1>
 
                 <p className="text-[#00211F] text-xl font-medium opacity-40 leading-relaxed">
-                    Standard bearers and visionaries upholding righteous standards for the 2024/2025 academic session.
+                    Standard bearers and visionaries upholding righteous standards for the 2025/2026 academic session.
                 </p>
             </div>
 

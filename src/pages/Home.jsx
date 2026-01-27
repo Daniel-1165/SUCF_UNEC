@@ -28,6 +28,9 @@ const homeGallery = [
 const Home = () => {
     const [articles, setArticles] = useState([]);
     const [loadingArticles, setLoadingArticles] = useState(true);
+    const [previewGallery, setPreviewGallery] = useState([]);
+    const [loadingGallery, setLoadingGallery] = useState(true);
+    const currentYear = new Date().getFullYear();
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -46,7 +49,26 @@ const Home = () => {
                 setLoadingArticles(false);
             }
         };
+
+        const fetchGalleryPreview = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('gallery')
+                    .select('image_url')
+                    .order('created_at', { ascending: false })
+                    .limit(6);
+
+                if (error) throw error;
+                if (data) setPreviewGallery(data.map(item => item.image_url));
+            } catch (error) {
+                console.error('Error fetching gallery preview:', error);
+            } finally {
+                setLoadingGallery(false);
+            }
+        };
+
         fetchArticles();
+        fetchGalleryPreview();
     }, []);
 
     const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -76,7 +98,7 @@ const Home = () => {
                             {/* Chip / Tag - Tech Style */}
                             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">
                                 <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>
-                                <span className="text-xs font-medium text-slate-500">Academic Session 2025</span>
+                                <span className="text-xs font-medium text-slate-500">Academic Session {currentYear}</span>
                             </motion.div>
 
                             <motion.h1
@@ -165,7 +187,13 @@ const Home = () => {
                         <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 relative z-10">The Four Pillars</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="grid grid-cols-2 md:grid-cols-4 gap-6"
+                    >
                         {[
                             { icon: <FiBookOpen />, title: "Bible Study", color: "text-emerald-600" },
                             { icon: <FiHeart />, title: "Prayer", color: "text-emerald-600" },
@@ -174,6 +202,7 @@ const Home = () => {
                         ].map((item, idx) => (
                             <motion.div
                                 key={idx}
+                                variants={fadeInUp}
                                 whileHover={{ y: -5 }}
                                 className="bg-white rounded-[2rem] p-6 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group transition-all hover:border-emerald-500/30"
                             >
@@ -183,7 +212,7 @@ const Home = () => {
                                 <h3 className="text-lg lg:text-xl font-bold text-slate-800">{item.title}</h3>
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -235,11 +264,21 @@ const Home = () => {
                     <Link to="/gallery" className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all"><FiArrowRight /></Link>
                 </div>
                 <div className="flex gap-4 overflow-x-auto px-6 pb-10 no-scrollbar snap-x">
-                    {homeGallery.map((img, i) => (
-                        <div key={i} className="min-w-[280px] md:min-w-[350px] aspect-[4/3] rounded-3xl overflow-hidden snap-center">
-                            <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-                        </div>
-                    ))}
+                    {loadingGallery ? (
+                        [1, 2, 3, 4].map(i => <div key={i} className="min-w-[200px] aspect-square bg-slate-100 animate-pulse rounded-2xl" />)
+                    ) : previewGallery.length > 0 ? (
+                        previewGallery.map((img, i) => (
+                            <div key={i} className="min-w-[200px] md:min-w-[250px] aspect-square rounded-2xl overflow-hidden snap-center shadow-lg border-4 border-white">
+                                <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                            </div>
+                        ))
+                    ) : (
+                        homeGallery.map((img, i) => (
+                            <div key={i} className="min-w-[200px] md:min-w-[250px] aspect-square rounded-2xl overflow-hidden snap-center shadow-lg border-4 border-white">
+                                <img src={img} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                            </div>
+                        ))
+                    )}
                 </div>
             </section>
         </div>

@@ -31,17 +31,18 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/debug" element={<Debug />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/activities" element={<Activities />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/library" element={<Library />} />
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/articles/:id" element={<ArticleDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/executives" element={<Executives />} />
 
-        {/* Protected Routes */}
+        {/* Protected Routes (Empty for now as most are public, but keeping the structure) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/about" element={<About />} />
-          <Route path="/activities" element={<Activities />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/library" element={<Library />} />
-          <Route path="/articles" element={<Articles />} />
-          <Route path="/articles/:id" element={<ArticleDetail />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/executives" element={<Executives />} />
+          {/* Add truly private routes here if any */}
         </Route>
       </Routes>
       <Footer />

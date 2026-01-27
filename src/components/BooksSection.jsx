@@ -126,9 +126,13 @@ const BooksSection = () => {
                     </div>
                 )}
 
-                <div className="mt-20">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-6">Popular Books</h3>
-                    {/* Placeholder or further list */}
+                <div className="mt-20 text-center">
+                    <Link
+                        to="/library"
+                        className="inline-flex items-center gap-2 px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl"
+                    >
+                        View Full Library <FiArrowRight />
+                    </Link>
                 </div>
             </div>
         </section>

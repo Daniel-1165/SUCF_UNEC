@@ -58,11 +58,14 @@ const Navbar = () => {
         <nav className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-md ${navbarBg} ${scrolled ? 'py-2' : 'py-5'}`}>
             <div className="max-w-[1440px] mx-auto px-6 flex justify-between items-center gap-12">
                 {/* Logo */}
-                <Link to="/" className="flex items-center gap-4 group shrink-0">
-                    <img src={logo} alt="SUCF UNEC" className="h-10 md:h-12 w-auto transition-transform group-hover:scale-105" />
-                    <div className="hidden lg:block">
-                        <h1 className={`text-xl font-black italic uppercase tracking-tighter leading-none font-serif ${logoTitleColor}`}>SUCF UNEC</h1>
-                        <p className={`text-[9px] tracking-[0.3em] font-black uppercase ${logoSubColor}`}>Unique Fellowship</p>
+                <Link to="/" className="flex items-center gap-2 md:gap-4 group shrink-0">
+                    <img src={logo} alt="SUCF UNEC" className="h-9 md:h-12 w-auto transition-transform group-hover:scale-105" />
+                    <div className="flex flex-col">
+                        <div className="flex items-baseline">
+                            <span className={`text-lg md:text-xl font-black italic uppercase tracking-tighter leading-none font-heading ${logoTitleColor}`}>SUCF</span>
+                            <span className={`text-lg md:text-xl font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-600 text-white px-1 ml-0.5 rounded-sm`}>UNEC</span>
+                        </div>
+                        <p className={`hidden lg:block text-[9px] tracking-[0.3em] font-black uppercase ${logoSubColor}`}>Unique Fellowship</p>
                     </div>
                 </Link>
 

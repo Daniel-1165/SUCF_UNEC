@@ -250,18 +250,19 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
             </div>
 
             {/* Sliding Text Message - Transparent Background & Black Text */}
-            <div className="w-full overflow-hidden py-6 mt-20">
+            <div className="w-full overflow-hidden py-10 mt-20 bg-black/5 border-y border-black/5">
                 <motion.div
-                    animate={{ x: [1000, -1500] }}
-                    transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-                    className="whitespace-nowrap flex gap-20 items-center"
+                    animate={{ x: [1200, -2500] }}
+                    transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+                    className="whitespace-nowrap flex gap-40 items-center"
                 >
-                    <span className="text-2xl md:text-3xl font-serif italic text-black/60 tracking-tight font-medium">
-                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                    </span>
-                    <span className="text-2xl md:text-3xl font-serif italic text-black/60 tracking-tight font-medium">
-                        Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                    </span>
+                    {[1, 2].map((i) => (
+                        <span key={i} className="text-2xl md:text-3xl font-mono text-black leading-none tracking-tight flex items-center">
+                            <span className="text-emerald-600 mr-4">{" >>> "}</span>
+                            Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                            <span className="w-3 h-8 bg-black/20 ml-4 animate-pulse">|</span>
+                        </span>
+                    ))}
                 </motion.div>
             </div>
         </div>
