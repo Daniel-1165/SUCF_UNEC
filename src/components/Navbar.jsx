@@ -163,7 +163,7 @@ const Navbar = () => {
                                 <div className="flex justify-between items-center mb-6">
                                     <div className="flex items-center gap-3">
                                         <img src={logo} alt="Logo" className="h-8 w-auto" />
-                                        <h2 className="text-sm font-black uppercase tracking-widest text-emerald-400">Navigation</h2>
+                                        <FiMenu className="text-emerald-400" size={20} />
                                     </div>
                                     <button
                                         onClick={() => setIsOpen(false)}
