@@ -24,24 +24,15 @@ const Articles = () => {
 
     const fetchArticles = async () => {
         try {
-            // Fetch from both tables
-            const [articlesRes, newsRes] = await Promise.all([
-                supabase.from('articles').select('*').order('created_at', { ascending: false }),
-                supabase.from('news').select('*').order('created_at', { ascending: false })
-            ]);
+            const { data, error } = await supabase
+                .from('articles')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-            if (articlesRes.error) throw articlesRes.error;
-            if (newsRes.error) throw newsRes.error;
-
-            // Mark news items so we can identify them if needed
-            const combined = [
-                ...(articlesRes.data || []),
-                ...(newsRes.data || []).map(item => ({ ...item, isNewsItem: true }))
-            ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-            setDbArticles(combined);
+            if (error) throw error;
+            setDbArticles(data || []);
         } catch (error) {
-            console.error("Error fetching content:", error.message);
+            console.error("Error fetching articles:", error.message);
         } finally {
             setLoading(false);
         }
