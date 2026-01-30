@@ -1,6 +1,11 @@
 {
+  "name": "SUCF UNEC",
   "short_name": "SUCF UNEC",
-  "name": "SUCF UNEC - The Unique Fellowship",
+  "description": "Scripture Union Campus Fellowship, UNEC. The Unique Fellowship.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
   "icons": [
     {
       "src": "/assets/logo.png",
@@ -12,9 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#065f46",
-  "background_color": "#ffffff"
+  ]
 }
