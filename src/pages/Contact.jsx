@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiYoutube, FiSend, FiMessageSquare } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,8 +20,31 @@ const Contact = () => {
         const message = e.target.elements.message.value;
 
         try {
-            // 1. Save to Supabase (The "Site Mail")
-            const { error: dbError } = await supabase
+            // 1. Send Email via EmailJS
+            // PLEASE REPLACE THESE WITH YOUR ACTUAL IDs FROM EMAILJS DASHBOARD
+            const serviceId = 'service_3qenwym';
+            const templateId = 'template_44k79yv';
+            const publicKey = 'Yagrso_PMcXzTWSKW';
+
+            const templateParams = {
+                firstName,
+                lastName,
+                email,
+                message,
+                to_email: 'sucfunec01@gmail.com'
+            };
+
+            const emailResponse = await emailjs.send(
+                serviceId,
+                templateId,
+                templateParams,
+                publicKey
+            );
+
+            if (emailResponse.status !== 200) throw new Error('Email delivery failed');
+
+            // 2. Save to Supabase (Site Mail Backup)
+            await supabase
                 .from('contact_messages')
                 .insert([
                     {
@@ -32,19 +56,9 @@ const Contact = () => {
                     }
                 ]);
 
-            if (dbError) throw dbError;
-
-            // 2. Success State
+            // 3. Success State
             setIsSent(true);
             setIsSubmitting(false);
-
-            // 3. Fallback: Open mailto as well (optional, but good for user records)
-            // Uncomment if you want both
-            /*
-            const subject = encodeURIComponent(`Inquiry from ${firstName} ${lastName} via Website`);
-            const body = encodeURIComponent(`From: ${firstName} ${lastName}\nSender Email: ${email}\n\nMessage:\n${message}`);
-            window.location.href = `mailto:sucfunec01@gmail.com?subject=${subject}&body=${body}`;
-            */
 
         } catch (err) {
             console.error('Submission error:', err);
