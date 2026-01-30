@@ -1,18 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiYoutube, FiSend, FiMessageSquare } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '../supabaseClient';
 
 const Contact = () => {
-    const handleSubmit = (e) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSent, setIsSent] = useState(false);
+    const [error, setError] = useState(null);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
+
         const firstName = e.target.elements.firstName.value;
         const lastName = e.target.elements.lastName.value;
         const email = e.target.elements.email.value;
         const message = e.target.elements.message.value;
 
-        const subject = encodeURIComponent(`Inquiry from ${firstName} ${lastName} via Website`);
-        const body = encodeURIComponent(`From: ${firstName} ${lastName}\nSender Email: ${email}\n\nMessage:\n${message}`);
-        window.location.href = `mailto:sucfunec01@gmail.com?subject=${subject}&body=${body}`;
+        try {
+            // 1. Save to Supabase (The "Site Mail")
+            const { error: dbError } = await supabase
+                .from('contact_messages')
+                .insert([
+                    {
+                        first_name: firstName,
+                        last_name: lastName,
+                        email: email,
+                        message: message,
+                        status: 'unread'
+                    }
+                ]);
+
+            if (dbError) throw dbError;
+
+            // 2. Success State
+            setIsSent(true);
+            setIsSubmitting(false);
+
+            // 3. Fallback: Open mailto as well (optional, but good for user records)
+            // Uncomment if you want both
+            /*
+            const subject = encodeURIComponent(`Inquiry from ${firstName} ${lastName} via Website`);
+            const body = encodeURIComponent(`From: ${firstName} ${lastName}\nSender Email: ${email}\n\nMessage:\n${message}`);
+            window.location.href = `mailto:sucfunec01@gmail.com?subject=${subject}&body=${body}`;
+            */
+
+        } catch (err) {
+            console.error('Submission error:', err);
+            setError('Failed to send message. Please try again or use the links below.');
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -111,40 +149,81 @@ const Contact = () => {
                         transition={{ delay: 0.2 }}
                         className="lg:col-span-7"
                     >
-                        <div className="zeni-card p-6 sm:p-10 md:p-16 bg-white shadow-2xl shadow-emerald-900/5">
-                            <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
-                                <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-500/10 text-emerald-600 rounded-2xl md:rounded-[1.2rem] flex items-center justify-center text-2xl md:text-3xl">
-                                    <FiMessageSquare />
-                                </div>
-                                <h2 className="text-2xl md:text-3xl font-black text-[#00211F] tracking-tight">Drop a Message</h2>
-                            </div>
+                        <div className="zeni-card p-6 sm:p-10 md:p-16 bg-white shadow-2xl shadow-emerald-900/5 relative overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                {isSent ? (
+                                    <motion.div
+                                        key="success"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        className="flex flex-col items-center justify-center py-20 text-center"
+                                    >
+                                        <div className="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-5xl mb-8 animate-bounce">
+                                            <FiSend />
+                                        </div>
+                                        <h2 className="text-4xl font-black text-[#00211F] mb-4">Message Sent!</h2>
+                                        <p className="text-[#00211F] opacity-40 font-medium max-w-md mx-auto mb-10">
+                                            Thank you for reaching out. Your message has been sent to our site mail and we will get back to you shortly.
+                                        </p>
+                                        <button
+                                            onClick={() => setIsSent(false)}
+                                            className="px-10 py-4 rounded-full bg-emerald-600 text-white font-black uppercase tracking-widest text-[10px] hover:bg-[#00211F] transition-all"
+                                        >
+                                            Send Another Message
+                                        </button>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="form"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                    >
+                                        <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
+                                            <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-500/10 text-emerald-600 rounded-2xl md:rounded-[1.2rem] flex items-center justify-center text-2xl md:text-3xl">
+                                                <FiMessageSquare />
+                                            </div>
+                                            <h2 className="text-2xl md:text-3xl font-black text-[#00211F] tracking-tight">Drop a Message</h2>
+                                        </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-10">
-                                <div className="grid md:grid-cols-2 gap-10">
-                                    <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">First Name</label>
-                                        <input type="text" name="firstName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Daniel" />
-                                    </div>
-                                    <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Last Name</label>
-                                        <input type="text" name="lastName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Chime" />
-                                    </div>
-                                </div>
+                                        <form onSubmit={handleSubmit} className="space-y-10">
+                                            <div className="grid md:grid-cols-2 gap-10">
+                                                <div className="space-y-4">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">First Name</label>
+                                                    <input type="text" name="firstName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Daniel" />
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Last Name</label>
+                                                    <input type="text" name="lastName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Chime" />
+                                                </div>
+                                            </div>
 
-                                <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Email Address</label>
-                                    <input type="email" name="email" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="your@email.com" />
-                                </div>
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Email Address</label>
+                                                <input type="email" name="email" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="your@email.com" />
+                                            </div>
 
-                                <div className="space-y-4">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Your Message</label>
-                                    <textarea name="message" required rows="6" className="w-full px-8 py-5 rounded-[2rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20 resize-none" placeholder="I would like to enquire about..."></textarea>
-                                </div>
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Your Message</label>
+                                                <textarea name="message" required rows="6" className="w-full px-8 py-5 rounded-[2rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20 resize-none" placeholder="I would like to enquire about..."></textarea>
+                                            </div>
 
-                                <button type="submit" className="w-full py-6 rounded-[2rem] bg-[#00211F] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-emerald-600 hover:scale-[1.02] transition-all shadow-2xl shadow-emerald-900/20 active:scale-95">
-                                    Send Message <FiSend className="text-lg" />
-                                </button>
-                            </form>
+                                            {error && (
+                                                <p className="text-red-500 text-xs font-bold px-2">{error}</p>
+                                            )}
+
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className={`w-full py-6 rounded-[2rem] bg-[#00211F] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 transition-all shadow-2xl shadow-emerald-900/20 active:scale-95 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-600 hover:scale-[1.02]'}`}
+                                            >
+                                                {isSubmitting ? 'Sending...' : 'Send Message'} <FiSend className="text-lg" />
+                                            </button>
+                                        </form>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </motion.div>
                 </div>

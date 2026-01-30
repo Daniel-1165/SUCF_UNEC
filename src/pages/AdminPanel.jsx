@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar } from 'react-icons/fi';
+import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -38,7 +38,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
-        if (tab && ['gallery', 'articles', 'books', 'news', 'events'].includes(tab)) {
+        if (tab && ['gallery', 'articles', 'books', 'news', 'events', 'messages'].includes(tab)) {
             setActiveTab(tab);
         }
     }, [location]);
@@ -98,6 +98,7 @@ const AdminPanel = () => {
         imageFile: null
     });
     const [editingEventId, setEditingEventId] = useState(null);
+    const [contactMessages, setContactMessages] = useState([]);
 
     // Use a ref to track if we've successfully auth'd once
     const hasAuthorized = React.useRef(false);
@@ -124,6 +125,7 @@ const AdminPanel = () => {
             fetchBooks();
             fetchNews();
             fetchFellowshipEvents();
+            fetchContactMessages();
 
             if (user?.user_metadata?.full_name && articleForm.author_name === 'Admin') {
                 setArticleForm(prev => ({ ...prev, author_name: user.user_metadata.full_name }));
@@ -168,8 +170,30 @@ const AdminPanel = () => {
         const { data, error } = await supabase
             .from('fellowship_events')
             .select('*')
-            .order('event_date', { ascending: false });
+            .order('event_date', { ascending: true });
         if (!error) setFellowshipEvents(data);
+    };
+
+    const fetchContactMessages = async () => {
+        const { data, error } = await supabase
+            .from('contact_messages')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (!error) setContactMessages(data);
+    };
+
+    const handleMarkAsRead = async (id) => {
+        const { error } = await supabase
+            .from('contact_messages')
+            .update({ status: 'read' })
+            .eq('id', id);
+        if (!error) fetchContactMessages();
+    };
+
+    const handleDeleteMessage = async (id) => {
+        if (!window.confirm("Delete this message?")) return;
+        const { error } = await supabase.from('contact_messages').delete().eq('id', id);
+        if (!error) fetchContactMessages();
     };
 
     // --- UTILS ---
@@ -491,6 +515,12 @@ const AdminPanel = () => {
                         <button onClick={() => setActiveTab('events')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'events' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
                             <FiCalendar /> Fellowship Events
                         </button>
+                        <button onClick={() => setActiveTab('messages')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'messages' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'} relative`}>
+                            <FiMessageSquare /> Messages
+                            {contactMessages.some(m => m.status === 'unread') && (
+                                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+                            )}
+                        </button>
                     </div>
                 </div>
 
@@ -717,7 +747,7 @@ const AdminPanel = () => {
                                 </div>
                             </div>
                         </motion.div>
-                    ) : (
+                    ) : activeTab === 'news' ? (
                         <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
                                 <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiBell className="text-emerald-500" /> Post News / Update</h3>
@@ -740,7 +770,7 @@ const AdminPanel = () => {
                                             </button>
                                         )}
                                         <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
-                                            <FiSave /> {editingNewsId ? 'Update Update' : 'Post Update'}
+                                            <FiSave /> {editingNewsId ? 'Update News' : 'Post Update'}
                                         </button>
                                     </div>
                                 </form>
@@ -752,6 +782,52 @@ const AdminPanel = () => {
                                         <div className="flex gap-2">
                                             <button onClick={() => handleEditNews(item)} className="p-3 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-all"><FiEdit /></button>
                                             <button onClick={() => handleDeleteNews(item.id)} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><FiTrash2 /></button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div key="messages" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-2xl font-black text-emerald-900">Inbound Inquiries</h3>
+                                <div className="bg-emerald-100 text-emerald-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+                                    {contactMessages.filter(m => m.status === 'unread').length} Unread
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                {contactMessages.length === 0 ? (
+                                    <div className="bg-white p-20 rounded-[2.5rem] text-center border border-gray-100">
+                                        <div className="text-5xl mb-6 opacity-20">📭</div>
+                                        <p className="font-bold text-gray-400 uppercase tracking-widest text-xs">No messages yet</p>
+                                    </div>
+                                ) : contactMessages.map((msg) => (
+                                    <div key={msg.id} className={`bg-white p-8 rounded-[2rem] border transition-all ${msg.status === 'unread' ? 'border-emerald-500 shadow-lg shadow-emerald-500/5' : 'border-gray-100 opacity-80'}`}>
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${msg.status === 'unread' ? 'bg-emerald-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                                    <FiMessageSquare />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-black text-emerald-900">{msg.first_name} {msg.last_name}</h4>
+                                                    <p className="text-xs text-gray-400 font-bold">{msg.email} • {new Date(msg.created_at).toLocaleString()}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                {msg.status === 'unread' && (
+                                                    <button onClick={() => handleMarkAsRead(msg.id)} className="p-3 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Mark as Read"><FiCheckCircle /></button>
+                                                )}
+                                                <button onClick={() => handleDeleteMessage(msg.id)} className="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm" title="Delete"><FiTrash2 /></button>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gray-50 p-6 rounded-2xl">
+                                            <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{msg.message}</p>
+                                        </div>
+                                        <div className="mt-6 flex justify-end">
+                                            <a href={`mailto:${msg.email}`} className="text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-800 flex items-center gap-2">
+                                                Reply via Email <FiSend />
+                                            </a>
                                         </div>
                                     </div>
                                 ))}
