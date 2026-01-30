@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 
 const Articles = () => {
@@ -70,6 +71,10 @@ const Articles = () => {
 
     return (
         <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
+            <SEO
+                title="Edifying Reads"
+                description="Explore deep spiritual insights, testimonies, and academic exhortations from the SUCF UNEC community."
+            />
             <div className="container mx-auto px-6 max-w-7xl">
                 <header className="text-center mb-16 md:mb-24 max-w-3xl mx-auto relative">
                     <motion.div
@@ -181,39 +186,45 @@ const Articles = () => {
                     ))}
                 </div>
 
-                {/* Sleek Pagination */}
+                {/* Ultra-Sleek Pagination */}
                 {totalPages > 1 && (
-                    <div className="mt-20 flex flex-col items-center gap-8">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                disabled={currentPage === 1}
-                                className="w-14 h-14 rounded-2xl border-2 border-gray-100 flex items-center justify-center text-slate-400 hover:border-emerald-500 hover:text-emerald-500 disabled:opacity-30 disabled:hover:border-gray-100 disabled:hover:text-slate-400 transition-all"
-                            >
-                                <FiArrowRight className="rotate-180 text-xl" />
-                            </button>
+                    <div className="mt-24 flex items-center justify-center gap-12">
+                        <button
+                            onClick={() => {
+                                setCurrentPage(p => Math.max(1, p - 1));
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            disabled={currentPage === 1}
+                            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
+                        >
+                            <FiArrowRight className="rotate-180 text-xl group-hover:-translate-x-2 transition-transform" />
+                            Prev
+                        </button>
 
-                            <div className="flex gap-2">
-                                {[...Array(totalPages)].map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        className={`h-1.5 transition-all duration-500 rounded-full ${currentPage === i + 1 ? 'w-8 bg-emerald-600' : 'w-2 bg-gray-200 hover:bg-emerald-200'}`}
-                                    />
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                disabled={currentPage === totalPages}
-                                className="w-14 h-14 rounded-2xl border-2 border-gray-100 flex items-center justify-center text-slate-400 hover:border-emerald-500 hover:text-emerald-500 disabled:opacity-30 disabled:hover:border-gray-100 disabled:hover:text-slate-400 transition-all"
-                            >
-                                <FiArrowRight className="text-xl" />
-                            </button>
+                        <div className="flex gap-3">
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => {
+                                        setCurrentPage(i + 1);
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                    className={`h-1 rounded-full transition-all duration-700 ${currentPage === i + 1 ? 'w-12 bg-emerald-600 shadow-lg shadow-emerald-500/20' : 'w-3 bg-slate-200 hover:bg-emerald-200'}`}
+                                />
+                            ))}
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
-                            Page <span className="text-emerald-600">{currentPage}</span> of {totalPages}
-                        </p>
+
+                        <button
+                            onClick={() => {
+                                setCurrentPage(p => Math.min(totalPages, p + 1));
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            disabled={currentPage === totalPages}
+                            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
+                        >
+                            Next
+                            <FiArrowRight className="text-xl group-hover:translate-x-2 transition-transform" />
+                        </button>
                     </div>
                 )}
 

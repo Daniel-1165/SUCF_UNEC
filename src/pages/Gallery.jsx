@@ -3,6 +3,7 @@ import { FiX, FiZoomIn, FiTrash2, FiFilter, FiImage } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 const galleryCategories = ['All', 'Events', 'Worship', 'Fellowship', 'Outreach'];
 
@@ -84,6 +85,10 @@ const Gallery = () => {
 
     return (
         <div className="min-h-screen bg-black text-white pt-32 pb-20 relative selection:bg-emerald-500 selection:text-white">
+            <SEO
+                title="Captured Moments"
+                description="Explore our visual journey of worship, fellowship, and outreach at the University of Nigeria, Enugu Campus."
+            />
             {/* Ambient Background */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-emerald-900/10 rounded-full blur-[120px]" />
@@ -117,8 +122,8 @@ const Gallery = () => {
                                 key={cat}
                                 onClick={() => setFilter(cat)}
                                 className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${filter === cat
-                                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                                        : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20 hover:text-white'
+                                    ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20 hover:text-white'
                                     }`}
                             >
                                 {cat}

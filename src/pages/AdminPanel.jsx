@@ -49,6 +49,7 @@ const AdminPanel = () => {
     const [newImage, setNewImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [category, setCategory] = useState('Events');
+    const [editingImageId, setEditingImageId] = useState(null);
 
     // Article State
     const [articles, setArticles] = useState([]);
@@ -218,27 +219,57 @@ const AdminPanel = () => {
     // --- GALLERY ACTIONS ---
     const handleImageUpload = async (e) => {
         e.preventDefault();
-        if (!newImage) return alert("Please select an image");
 
         setUploading(true);
         try {
-            const publicUrl = await uploadFile(newImage, 'content-images', 'gallery');
-            const { error: dbError } = await supabase.from('gallery').insert([
-                { image_url: publicUrl, caption: caption, category: category }
-            ]);
+            let publicUrl = '';
+            if (newImage) {
+                publicUrl = await uploadFile(newImage, 'content-images', 'gallery');
+            }
 
-            if (dbError) throw dbError;
-            setNewImage(null);
-            setCaption('');
-            setCategory('Events');
+            if (editingImageId) {
+                const updateData = { caption: caption, category: category };
+                if (publicUrl) updateData.image_url = publicUrl;
+
+                const { error: dbError } = await supabase
+                    .from('gallery')
+                    .update(updateData)
+                    .eq('id', editingImageId);
+
+                if (dbError) throw dbError;
+                alert("Image updated successfully!");
+            } else {
+                if (!newImage) return alert("Please select an image");
+                const { error: dbError } = await supabase.from('gallery').insert([
+                    { image_url: publicUrl, caption: caption, category: category }
+                ]);
+
+                if (dbError) throw dbError;
+                alert("Image uploaded successfully!");
+            }
+
+            resetGalleryForm();
             fetchGallery();
-            alert("Image uploaded successfully!");
         } catch (error) {
             console.error('Upload error:', error);
             alert(error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const resetGalleryForm = () => {
+        setNewImage(null);
+        setCaption('');
+        setCategory('Events');
+        setEditingImageId(null);
+    };
+
+    const handleEditImage = (img) => {
+        setCaption(img.caption || '');
+        setCategory(img.category || 'Events');
+        setEditingImageId(img.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteImage = async (id) => {
@@ -513,7 +544,7 @@ const AdminPanel = () => {
                             <FiBell /> News
                         </button>
                         <button onClick={() => setActiveTab('events')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'events' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
-                            <FiCalendar /> Fellowship Events
+                            <FiCalendar /> Fellowship
                         </button>
                         <button onClick={() => setActiveTab('messages')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'messages' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'} relative`}>
                             <FiMessageSquare /> Messages
@@ -528,10 +559,13 @@ const AdminPanel = () => {
                     {activeTab === 'gallery' ? (
                         <motion.div key="gallery" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiUpload className="text-emerald-500" /> Upload New Image</h3>
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2">
+                                    {editingImageId ? <FiEdit className="text-emerald-500" /> : <FiUpload className="text-emerald-500" />}
+                                    {editingImageId ? 'Edit Image Detail' : 'Upload New Image'}
+                                </h3>
                                 <form onSubmit={handleImageUpload} className="flex flex-col md:flex-row gap-6 items-end">
                                     <div className="w-full md:w-1/3">
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Image File</label>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Image File {editingImageId && '(Optional)'}</label>
                                         <input type="file" accept="image/*" onChange={(e) => setNewImage(e.target.files[0])} className="w-full text-sm text-gray-500 py-3 px-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer" />
                                     </div>
                                     <div className="w-full md:w-1/4">
@@ -544,13 +578,24 @@ const AdminPanel = () => {
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Caption</label>
                                         <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Descriptive caption..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" />
                                     </div>
-                                    <button
-                                        type="submit"
-                                        disabled={uploading}
-                                        className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50 min-w-[120px]"
-                                    >
-                                        {uploading ? 'UPLOADING...' : 'Upload'}
-                                    </button>
+                                    <div className="flex gap-2">
+                                        {editingImageId && (
+                                            <button
+                                                type="button"
+                                                onClick={resetGalleryForm}
+                                                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button
+                                            type="submit"
+                                            disabled={uploading}
+                                            className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50 min-w-[120px]"
+                                        >
+                                            {uploading ? 'PROCESSING...' : (editingImageId ? 'Update' : 'Upload')}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -558,7 +603,10 @@ const AdminPanel = () => {
                                     <div key={img.id} className="group relative aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
                                         <img src={img.image_url} alt={img.caption} className="w-full h-full object-cover" />
                                         <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent"><p className="text-white text-xs truncate">{img.caption || 'No Caption'}</p></div>
-                                        <button onClick={() => handleDeleteImage(img.id)} className="absolute top-3 right-3 bg-white/90 text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"><FiTrash2 /></button>
+                                        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                            <button onClick={() => handleEditImage(img)} className="bg-white/90 text-emerald-600 p-2 rounded-full shadow-sm hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button>
+                                            <button onClick={() => handleDeleteImage(img.id)} className="bg-white/90 text-red-500 p-2 rounded-full shadow-sm hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

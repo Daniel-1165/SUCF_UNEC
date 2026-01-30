@@ -254,18 +254,18 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                 </div>
             </div>
 
-            {/* Sliding Text Message - Transparent Background & Black Text */}
-            <div className="w-full overflow-hidden py-6 mt-10">
+            {/* Sleek Sliding Text Message - Minimalist & Elegant */}
+            <div className="w-full overflow-hidden py-4 mt-8 bg-transparent">
                 <motion.div
-                    animate={{ x: [1200, -2500] }}
-                    transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-                    className="whitespace-nowrap flex gap-40 items-center"
+                    animate={{ x: [1200, -2800] }}
+                    transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
+                    className="whitespace-nowrap flex gap-60 items-center"
                 >
                     {[1, 2].map((i) => (
-                        <span key={i} className="text-base md:text-lg font-medium text-black leading-none tracking-tight flex items-center opacity-70">
-                            <span className="text-emerald-600 mr-4 font-black">{" >>> "}</span>
+                        <span key={i} className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.4em] flex items-center">
+                            <span className="text-emerald-500 mr-8 drop-shadow-sm">✦</span>
                             Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                            <span className="w-1.5 h-6 bg-emerald-600/20 ml-4 animate-pulse"></span>
+                            <span className="w-12 h-[1px] bg-slate-200 ml-8"></span>
                         </span>
                     ))}
                 </motion.div>

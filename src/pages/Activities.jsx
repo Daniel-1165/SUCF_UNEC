@@ -280,17 +280,17 @@ const Activities = () => {
                 viewport={{ once: true }}
                 className="container mx-auto px-6 max-w-7xl"
             >
-                <div className="zeni-card-dark p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
+                <div className="bg-[#00211F] p-10 md:p-16 rounded-[2.5rem] md:rounded-[3rem] border border-white/5 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
                     <div className="relative z-10 max-w-2xl">
                         <div className="flex items-center gap-2 mb-6">
                             <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                             <span className="text-[10px] font-black text-emerald-400 tracking-[0.3em] uppercase">Weekly Note</span>
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
                             More than just <br />
                             <span className="text-emerald-400 italic">Gatherings.</span>
                         </h2>
-                        <p className="text-white/60 text-lg font-medium leading-relaxed">
+                        <p className="text-white/70 text-lg font-medium leading-relaxed">
                             We also have other Weekly Wing Activities and special programs throughout the semester. Connect with us to stay updated.
                         </p>
                     </div>
