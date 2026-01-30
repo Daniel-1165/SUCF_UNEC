@@ -803,10 +803,22 @@ const AdminPanel = () => {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Headline</label><input type="text" required value={newsForm.title} onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Category (e.g. Event, Update)</label><input type="text" required value={newsForm.category} onChange={(e) => setNewsForm({ ...newsForm, category: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
-                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Image (Upload)</label><input type="file" accept="image/*" onChange={(e) => setNewsForm({ ...newsForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Image (Upload) {editingNewsId && '(Optional)'}</label><input type="file" accept="image/*" onChange={(e) => setNewsForm({ ...newsForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Or Image URL</label><input type="text" value={newsForm.image_url} onChange={(e) => setNewsForm({ ...newsForm, image_url: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                     </div>
-                                    <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Details</label><textarea required rows="4" value={newsForm.content} onChange={(e) => setNewsForm({ ...newsForm, content: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Details (Full Content)</label>
+                                        <div className="bg-gray-50 rounded-xl overflow-hidden border border-transparent focus-within:bg-white focus-within:border-emerald-500 transition-all">
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={newsForm.content}
+                                                onChange={(value) => setNewsForm({ ...newsForm, content: value })}
+                                                modules={quillModules}
+                                                formats={quillFormats}
+                                                className="h-64 mb-12"
+                                            />
+                                        </div>
+                                    </div>
                                     <div className="flex justify-end gap-3">
                                         {editingNewsId && (
                                             <button
