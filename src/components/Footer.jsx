@@ -78,13 +78,13 @@ const Footer = () => {
                                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 shrink-0">
                                     <FiPhone />
                                 </div>
-                                <span className="font-bold text-white">+234 816 570 7615</span>
+                                <a href="tel:07069753310" className="font-bold text-white hover:text-emerald-400 transition-colors">07069753310</a>
                             </li>
                             <li className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 shrink-0">
                                     <FiMail />
                                 </div>
-                                <span className="font-medium hover:text-white cursor-pointer transition-colors">contact@sucfunec.org</span>
+                                <a href="mailto:sucfunec01@gmail.com" className="font-medium hover:text-white transition-colors">sucfunec01@gmail.com</a>
                             </li>
                         </ul>
                     </div>

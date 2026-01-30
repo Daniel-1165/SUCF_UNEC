@@ -3,6 +3,18 @@ import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiYoutube, FiSend, 
 import { motion } from 'framer-motion';
 
 const Contact = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const firstName = e.target.elements.firstName.value;
+        const lastName = e.target.elements.lastName.value;
+        const email = e.target.elements.email.value;
+        const message = e.target.elements.message.value;
+
+        const subject = encodeURIComponent(`Inquiry from ${firstName} ${lastName} via Website`);
+        const body = encodeURIComponent(`From: ${firstName} ${lastName}\nSender Email: ${email}\n\nMessage:\n${message}`);
+        window.location.href = `mailto:sucfunec01@gmail.com?subject=${subject}&body=${body}`;
+    };
+
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
             <div className="container mx-auto px-6 max-w-7xl">
@@ -34,7 +46,8 @@ const Contact = () => {
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="zeni-card-dark p-6 md:p-10 relative overflow-hidden group"
+                                className="zeni-card-dark p-6 md:p-10 relative overflow-hidden group cursor-pointer"
+                                onClick={() => window.location.href = 'tel:07069753310'}
                             >
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform" />
                                 <div className="flex items-start gap-4 md:gap-8 relative z-10">
@@ -42,9 +55,9 @@ const Contact = () => {
                                         <FiPhone />
                                     </div>
                                     <div>
-                                        <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-2 md:mb-4">Call/WhatsApp</h3>
-                                        <p className="text-xl md:text-2xl font-black mb-1 tracking-tight">+234 816 570 7615</p>
-                                        <p className="text-emerald-100/40 text-[10px] md:text-sm font-medium uppercase tracking-widest">President's Office</p>
+                                        <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-2 md:mb-4">Call / WhatsApp</h3>
+                                        <p className="text-xl md:text-2xl font-black mb-1 tracking-tight">07069753310</p>
+                                        <p className="text-emerald-100/40 text-[10px] md:text-sm font-medium uppercase tracking-widest">Click to Call Directly</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -54,7 +67,8 @@ const Contact = () => {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="zeni-card p-6 md:p-10 group bg-white/60 backdrop-blur-xl border-emerald-100"
+                                className="zeni-card p-6 md:p-10 group bg-white/60 backdrop-blur-xl border-emerald-100 cursor-pointer"
+                                onClick={() => window.location.href = 'mailto:sucfunec01@gmail.com'}
                             >
                                 <div className="flex items-start gap-4 md:gap-8">
                                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-[1.5rem] bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl md:text-3xl group-hover:scale-110 transition-transform">
@@ -62,7 +76,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 mb-2 md:mb-4">Email Address</h3>
-                                        <p className="text-xl md:text-2xl font-black text-[#00211F] mb-1 tracking-tight break-all">sucfunec@gmail.com</p>
+                                        <p className="text-xl md:text-2xl font-black text-[#00211F] mb-1 tracking-tight break-all">sucfunec01@gmail.com</p>
                                         <p className="text-[#00211F] opacity-30 text-[10px] md:text-sm font-medium uppercase tracking-widest">Official Correspondence</p>
                                     </div>
                                 </div>
@@ -105,29 +119,29 @@ const Contact = () => {
                                 <h2 className="text-2xl md:text-3xl font-black text-[#00211F] tracking-tight">Drop a Message</h2>
                             </div>
 
-                            <form className="space-y-10">
+                            <form onSubmit={handleSubmit} className="space-y-10">
                                 <div className="grid md:grid-cols-2 gap-10">
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">First Name</label>
-                                        <input type="text" className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Daniel" />
+                                        <input type="text" name="firstName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Daniel" />
                                     </div>
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Last Name</label>
-                                        <input type="text" className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Chime" />
+                                        <input type="text" name="lastName" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="Chime" />
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Email Address</label>
-                                    <input type="email" className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="your@email.com" />
+                                    <input type="email" name="email" required className="w-full px-8 py-5 rounded-[1.5rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20" placeholder="your@email.com" />
                                 </div>
 
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/40 px-2">Your Message</label>
-                                    <textarea rows="6" className="w-full px-8 py-5 rounded-[2rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20 resize-none" placeholder="I would like to enquire about..."></textarea>
+                                    <textarea name="message" required rows="6" className="w-full px-8 py-5 rounded-[2rem] bg-[#F5F9F7] border border-transparent focus:bg-white focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 outline-none transition-all font-bold text-[#00211F] placeholder:opacity-20 resize-none" placeholder="I would like to enquire about..."></textarea>
                                 </div>
 
-                                <button className="w-full py-6 rounded-[2rem] bg-[#00211F] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-emerald-600 hover:scale-[1.02] transition-all shadow-2xl shadow-emerald-900/20 active:scale-95">
+                                <button type="submit" className="w-full py-6 rounded-[2rem] bg-[#00211F] text-white font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-emerald-600 hover:scale-[1.02] transition-all shadow-2xl shadow-emerald-900/20 active:scale-95">
                                     Send Message <FiSend className="text-lg" />
                                 </button>
                             </form>
