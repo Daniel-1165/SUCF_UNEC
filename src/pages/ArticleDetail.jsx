@@ -146,9 +146,9 @@ const ArticleDetail = () => {
                             </motion.div>
                         )}
 
-                        {/* Rich Content */}
+                        {/* Rich Content - Enhanced Paragraph Styling */}
                         <div
-                            className="prose prose-xl max-w-none text-black leading-relaxed font-sans prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600"
+                            className="prose prose-xl md:prose-2xl max-w-none text-black leading-relaxed font-sans prose-emerald prose-p:mb-8 prose-p:leading-[1.8] prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600"
                             dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 
