@@ -3,6 +3,7 @@ import { FiPhone, FiMail, FiMapPin, FiInstagram, FiFacebook, FiYoutube, FiSend, 
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import emailjs from '@emailjs/browser';
+import SEO from '../components/SEO';
 
 const Contact = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,6 +70,10 @@ const Contact = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+            <SEO
+                title="Contact Us"
+                description="Get in touch with SUCF UNEC. Have questions about our activities or want to share a testimony? Reach out to us."
+            />
             <div className="container mx-auto px-6 max-w-7xl">
                 <header className="max-w-4xl mb-12 md:mb-24">
                     <motion.div

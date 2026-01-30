@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiClock, FiMapPin, FiCompass, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 const Activities = () => {
     const events = [
@@ -97,7 +98,11 @@ const Activities = () => {
     };
 
     return (
-        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient relative">
+        <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+            <SEO
+                title="Our Activities"
+                description="Join our weekly fellowships, Bible studies, and special programs. Stay updated with SUCF UNEC activities."
+            />
             {/* Map Modal */}
             {showMap && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setShowMap(false)}>

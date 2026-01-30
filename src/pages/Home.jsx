@@ -8,6 +8,7 @@ import BooksSection from '../components/BooksSection';
 import NewsSection from '../components/NewsSection';
 import { supabase } from '../supabaseClient';
 import { fadeInUp, staggerContainer, staggerItem } from '../utils/animations';
+import SEO from '../components/SEO';
 
 // Use the assets we have
 const heroImages = [
@@ -83,6 +84,10 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] text-slate-900 bg-grid-pattern overflow-x-hidden font-sans">
+            <SEO
+                title="The Unique Fellowship"
+                description="Experience a community where spiritual growth meets academic excellence at the University of Nigeria, Enugu Campus."
+            />
             {/* Hero Section */}
             <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
                 <div className="container mx-auto px-4 md:px-6">

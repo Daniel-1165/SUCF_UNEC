@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiUsers, FiAward, FiTarget, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import AnthemSection from '../components/AnthemSection';
+import SEO from '../components/SEO';
 
 const About = () => {
     const executives = [
@@ -14,6 +15,10 @@ const About = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
+            <SEO
+                title="About Us"
+                description="Learn about the history, vision, and mission of SSUCF UNEC - raising balanced Christian students at the University of Nigeria, Enugu Campus."
+            />
             {/* Header */}
             <section className="container mx-auto px-6 mb-32 max-w-7xl">
                 <div className="max-w-4xl">

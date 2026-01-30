@@ -5,7 +5,8 @@ import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary'
 
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider } from './context/AuthContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 console.log('🚀 Main.jsx loaded - Starting app...');
 
@@ -13,10 +14,12 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
       <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <HelmetProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </HelmetProvider>
       </AuthProvider>
     </ErrorBoundary>
   </StrictMode>,
-)
+);
