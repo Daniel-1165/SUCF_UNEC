@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
@@ -31,7 +31,17 @@ const quillFormats = [
 const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news', 'events'
+
+    // Handle initial tab from URL
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const tab = params.get('tab');
+        if (tab && ['gallery', 'articles', 'books', 'news', 'events'].includes(tab)) {
+            setActiveTab(tab);
+        }
+    }, [location]);
 
     // Gallery State
     const [galleryImages, setGalleryImages] = useState([]);
@@ -60,11 +70,11 @@ const AdminPanel = () => {
         author: '',
         description: '',
         semester: '',
-        file_url: '',
         image_url: '',
         bookFile: null,
         imageFile: null
     });
+    const [editingBookId, setEditingBookId] = useState(null);
 
     // News State
     const [news, setNews] = useState([]);
@@ -75,6 +85,7 @@ const AdminPanel = () => {
         category: 'General',
         imageFile: null
     });
+    const [editingNewsId, setEditingNewsId] = useState(null);
 
     // Fellowship Events State
     const [fellowshipEvents, setFellowshipEvents] = useState([]);
@@ -86,6 +97,7 @@ const AdminPanel = () => {
         flyer_url: '',
         imageFile: null
     });
+    const [editingEventId, setEditingEventId] = useState(null);
 
     // Use a ref to track if we've successfully auth'd once
     const hasAuthorized = React.useRef(false);
@@ -281,16 +293,47 @@ const AdminPanel = () => {
             if (bookForm.imageFile) finalImageUrl = await uploadFile(bookForm.imageFile, 'content-images', 'book-covers');
 
             const { bookFile, imageFile, ...submitData } = bookForm;
-            const { error } = await supabase.from('books').insert([{ ...submitData, file_url: finalFileUrl, image_url: finalImageUrl }]);
-            if (error) throw error;
-            setBookForm({ title: '', author: '', description: '', semester: '', file_url: '', image_url: '', bookFile: null, imageFile: null });
+
+            if (editingBookId) {
+                const { error } = await supabase
+                    .from('books')
+                    .update({ ...submitData, file_url: finalFileUrl, image_url: finalImageUrl })
+                    .eq('id', editingBookId);
+                if (error) throw error;
+                alert("Book updated!");
+            } else {
+                const { error } = await supabase.from('books').insert([{ ...submitData, file_url: finalFileUrl, image_url: finalImageUrl }]);
+                if (error) throw error;
+                alert("Book added!");
+            }
+
+            resetBookForm();
             fetchBooks();
-            alert("Book added!");
         } catch (error) {
             alert(error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const resetBookForm = () => {
+        setBookForm({ title: '', author: '', description: '', semester: '', file_url: '', image_url: '', bookFile: null, imageFile: null });
+        setEditingBookId(null);
+    };
+
+    const handleEditBook = (book) => {
+        setBookForm({
+            title: book.title,
+            author: book.author || '',
+            description: book.description || '',
+            semester: book.semester || '',
+            file_url: book.file_url,
+            image_url: book.image_url || '',
+            bookFile: null,
+            imageFile: null
+        });
+        setEditingBookId(book.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteBook = async (id) => {
@@ -309,16 +352,44 @@ const AdminPanel = () => {
                 finalImageUrl = await uploadFile(newsForm.imageFile, 'content-images', 'news');
             }
             const { imageFile, ...submitData } = newsForm;
-            const { error } = await supabase.from('news').insert([{ ...submitData, image_url: finalImageUrl }]);
-            if (error) throw error;
-            setNewsForm({ title: '', content: '', image_url: '', category: 'General', imageFile: null });
+
+            if (editingNewsId) {
+                const { error } = await supabase
+                    .from('news')
+                    .update({ ...submitData, image_url: finalImageUrl })
+                    .eq('id', editingNewsId);
+                if (error) throw error;
+                alert("News updated!");
+            } else {
+                const { error } = await supabase.from('news').insert([{ ...submitData, image_url: finalImageUrl }]);
+                if (error) throw error;
+                alert("News posted!");
+            }
+
+            resetNewsForm();
             fetchNews();
-            alert("News posted!");
         } catch (error) {
             alert(error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const resetNewsForm = () => {
+        setNewsForm({ title: '', content: '', image_url: '', category: 'General', imageFile: null });
+        setEditingNewsId(null);
+    };
+
+    const handleEditNews = (item) => {
+        setNewsForm({
+            title: item.title,
+            content: item.content,
+            image_url: item.image_url || '',
+            category: item.category || 'General',
+            imageFile: null
+        });
+        setEditingNewsId(item.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteNews = async (id) => {
@@ -338,19 +409,47 @@ const AdminPanel = () => {
             }
 
             const { imageFile, ...submitData } = eventForm;
-            const { error } = await supabase.from('fellowship_events').insert([
-                { ...submitData, flyer_url: finalImageUrl, created_by: user.id }
-            ]);
 
-            if (error) throw error;
-            setEventForm({ title: '', event_date: '', event_time: '', location: '', flyer_url: '', imageFile: null });
+            if (editingEventId) {
+                const { error } = await supabase
+                    .from('fellowship_events')
+                    .update({ ...submitData, flyer_url: finalImageUrl })
+                    .eq('id', editingEventId);
+                if (error) throw error;
+                alert("Event flyer updated!");
+            } else {
+                const { error } = await supabase.from('fellowship_events').insert([
+                    { ...submitData, flyer_url: finalImageUrl, created_by: user.id }
+                ]);
+                if (error) throw error;
+                alert("Fellowship event published!");
+            }
+
+            resetEventForm();
             fetchFellowshipEvents();
-            alert("Fellowship event published!");
         } catch (error) {
             alert(error.message);
         } finally {
             setUploading(false);
         }
+    };
+
+    const resetEventForm = () => {
+        setEventForm({ title: '', event_date: '', event_time: '', location: '', flyer_url: '', imageFile: null });
+        setEditingEventId(null);
+    };
+
+    const handleEditEvent = (event) => {
+        setEventForm({
+            title: event.title,
+            event_date: event.event_date ? new Date(event.event_date).toISOString().slice(0, 16) : '',
+            event_time: event.event_time,
+            location: event.location || '',
+            flyer_url: event.flyer_url,
+            imageFile: null
+        });
+        setEditingEventId(event.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteEvent = async (id) => {
@@ -520,13 +619,22 @@ const AdminPanel = () => {
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Cover Image (Optional)</label><input type="file" accept="image/*" onChange={(e) => setBookForm({ ...bookForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
                                     </div>
                                     <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Description</label><textarea rows="4" value={bookForm.description} onChange={(e) => setBookForm({ ...bookForm, description: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
-                                    <div className="flex justify-end">
+                                    <div className="flex justify-end gap-3">
+                                        {editingBookId && (
+                                            <button
+                                                type="button"
+                                                onClick={resetBookForm}
+                                                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
                                         <button
                                             type="submit"
                                             disabled={uploading}
                                             className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 disabled:opacity-50"
                                         >
-                                            {uploading ? 'PROCESSING...' : <><FiSave /> Upload Book</>}
+                                            {uploading ? 'PROCESSING...' : <><FiSave /> {editingBookId ? 'Update Book' : 'Upload Book'}</>}
                                         </button>
                                     </div>
                                 </form>
@@ -536,7 +644,10 @@ const AdminPanel = () => {
                                     <div key={book.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden group hover:shadow-xl transition-all flex flex-col">
                                         <div className="aspect-[3/4] bg-gray-50 relative">
                                             {book.image_url ? <img src={book.image_url} alt={book.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-200"><FiBook className="text-6xl" /></div>}
-                                            <button onClick={() => handleDeleteBook(book.id)} className="absolute top-4 right-4 p-3 bg-white/90 text-red-500 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"><FiTrash2 /></button>
+                                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                                <button onClick={() => handleEditBook(book)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button>
+                                                <button onClick={() => handleDeleteBook(book.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button>
+                                            </div>
                                         </div>
                                         <div className="p-6"><h4 className="font-bold text-emerald-900 truncate">{book.title}</h4><p className="text-xs text-gray-400 mt-1">{book.author || 'Unknown Author'}</p></div>
                                     </div>
@@ -555,10 +666,23 @@ const AdminPanel = () => {
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Location</label><input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} placeholder="e.g. Architecture Auditorium" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div className="md:col-span-2">
                                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Flyer Flyer (Upload)</label>
-                                            <input type="file" accept="image/*" required onChange={(e) => setEventForm({ ...eventForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" />
+                                            <input type="file" accept="image/*" onChange={(e) => setEventForm({ ...eventForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" />
                                         </div>
                                     </div>
-                                    <div className="flex justify-end"><button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">{uploading ? 'PROCESSING...' : <><FiSave /> Publish Event Flyer</>}</button></div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingEventId && (
+                                            <button
+                                                type="button"
+                                                onClick={resetEventForm}
+                                                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                                            {uploading ? 'PROCESSING...' : <><FiSave /> {editingEventId ? 'Update Event Flyer' : 'Publish Event Flyer'}</>}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
 
@@ -577,7 +701,10 @@ const AdminPanel = () => {
                                                             {isPast ? 'Past Event' : 'Upcoming'}
                                                         </span>
                                                     </div>
-                                                    <button onClick={() => handleDeleteEvent(event.id)} className="absolute top-4 right-4 p-3 bg-white/90 text-red-500 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"><FiTrash2 /></button>
+                                                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                                        <button onClick={() => handleEditEvent(event)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button>
+                                                        <button onClick={() => handleDeleteEvent(event.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button>
+                                                    </div>
                                                 </div>
                                                 <div className="p-6">
                                                     <h4 className="font-bold text-emerald-900 truncate">{event.title}</h4>
@@ -602,14 +729,30 @@ const AdminPanel = () => {
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Or Image URL</label><input type="text" value={newsForm.image_url} onChange={(e) => setNewsForm({ ...newsForm, image_url: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                     </div>
                                     <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Details</label><textarea required rows="4" value={newsForm.content} onChange={(e) => setNewsForm({ ...newsForm, content: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
-                                    <div className="flex justify-end"><button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2"><FiSave /> Post Update</button></div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingNewsId && (
+                                            <button
+                                                type="button"
+                                                onClick={resetNewsForm}
+                                                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                                            <FiSave /> {editingNewsId ? 'Update Update' : 'Post Update'}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                             <div className="space-y-4">
                                 {news.map((item) => (
                                     <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex justify-between items-center group hover:shadow-md transition-all">
                                         <div><h4 className="font-bold text-lg text-emerald-900">{item.title}</h4><p className="text-sm text-gray-400">{item.category} • {new Date(item.created_at).toLocaleDateString()}</p></div>
-                                        <button onClick={() => handleDeleteNews(item.id)} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><FiTrash2 /></button>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleEditNews(item)} className="p-3 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-all"><FiEdit /></button>
+                                            <button onClick={() => handleDeleteNews(item.id)} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><FiTrash2 /></button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

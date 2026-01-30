@@ -156,7 +156,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                 {user?.isAdmin && (
                                     <div className={`absolute inset-0 bg-white/80 transition-all duration-300 flex items-center justify-center gap-4 ${event?.flyer_url ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
                                         <Link
-                                            to="/admin"
+                                            to="/admin?tab=events"
                                             className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 hover:scale-110 transition-all shadow-lg"
                                             title={event?.flyer_url ? "Replace Flyer" : "Add Flyer"}
                                         >
@@ -255,17 +255,17 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
             </div>
 
             {/* Sliding Text Message - Transparent Background & Black Text */}
-            <div className="w-full overflow-hidden py-10 mt-20 bg-black/5 border-y border-black/5">
+            <div className="w-full overflow-hidden py-6 mt-10">
                 <motion.div
                     animate={{ x: [1200, -2500] }}
                     transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
                     className="whitespace-nowrap flex gap-40 items-center"
                 >
                     {[1, 2].map((i) => (
-                        <span key={i} className="text-2xl md:text-3xl font-mono text-black leading-none tracking-tight flex items-center">
-                            <span className="text-emerald-600 mr-4">{" >>> "}</span>
+                        <span key={i} className="text-base md:text-lg font-medium text-black leading-none tracking-tight flex items-center opacity-70">
+                            <span className="text-emerald-600 mr-4 font-black">{" >>> "}</span>
                             Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                            <span className="w-3 h-8 bg-black/20 ml-4 animate-pulse">|</span>
+                            <span className="w-1.5 h-6 bg-emerald-600/20 ml-4 animate-pulse"></span>
                         </span>
                     ))}
                 </motion.div>

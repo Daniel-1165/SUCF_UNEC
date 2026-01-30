@@ -12,6 +12,8 @@ const Articles = () => {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const categories = ['All', 'Spiritual Growth', 'Academic', 'Prayer', 'Testimony'];
 
@@ -58,6 +60,13 @@ const Articles = () => {
         const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
+
+    const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
+    const paginatedArticles = filteredArticles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, selectedCategory]);
 
     return (
         <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
@@ -116,8 +125,8 @@ const Articles = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredArticles.map((article, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
+                    {paginatedArticles.map((article, index) => (
                         <motion.div
                             key={article.id}
                             initial={{ opacity: 0, y: 30 }}
@@ -136,9 +145,9 @@ const Articles = () => {
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="zeni-card flex flex-col h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
+                                className="zeni-card flex flex-col md:flex-row h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
                             >
-                                <div className="h-64 overflow-hidden relative">
+                                <div className="h-64 md:h-auto md:w-1/3 overflow-hidden relative">
                                     <img
                                         src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
                                         alt={article.title}
@@ -149,17 +158,17 @@ const Articles = () => {
                                     </div>
                                 </div>
 
-                                <div className="p-10 flex-grow flex flex-col">
+                                <div className="p-10 flex-grow flex flex-col justify-center">
                                     <div className="flex items-center gap-4 text-[9px] font-black text-emerald-600 mb-6 uppercase tracking-widest opacity-60">
                                         <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiUser /> {article.author_name || 'Admin'}</span>
                                         <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                     </div>
 
-                                    <h2 className="text-2xl md:text-3xl font-black text-[#00211F] mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter">
+                                    <h2 className="text-2xl md:text-4xl font-black text-[#00211F] mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter">
                                         {article.title}
                                     </h2>
 
-                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-3 leading-relaxed font-medium">
+                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-2 leading-relaxed font-medium">
                                         {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 150) + '...'}
                                     </p>
 
@@ -171,6 +180,42 @@ const Articles = () => {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Sleek Pagination */}
+                {totalPages > 1 && (
+                    <div className="mt-20 flex flex-col items-center gap-8">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                disabled={currentPage === 1}
+                                className="w-14 h-14 rounded-2xl border-2 border-gray-100 flex items-center justify-center text-slate-400 hover:border-emerald-500 hover:text-emerald-500 disabled:opacity-30 disabled:hover:border-gray-100 disabled:hover:text-slate-400 transition-all"
+                            >
+                                <FiArrowRight className="rotate-180 text-xl" />
+                            </button>
+
+                            <div className="flex gap-2">
+                                {[...Array(totalPages)].map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        className={`h-1.5 transition-all duration-500 rounded-full ${currentPage === i + 1 ? 'w-8 bg-emerald-600' : 'w-2 bg-gray-200 hover:bg-emerald-200'}`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                disabled={currentPage === totalPages}
+                                className="w-14 h-14 rounded-2xl border-2 border-gray-100 flex items-center justify-center text-slate-400 hover:border-emerald-500 hover:text-emerald-500 disabled:opacity-30 disabled:hover:border-gray-100 disabled:hover:text-slate-400 transition-all"
+                            >
+                                <FiArrowRight className="text-xl" />
+                            </button>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+                            Page <span className="text-emerald-600">{currentPage}</span> of {totalPages}
+                        </p>
+                    </div>
+                )}
 
                 {/* No Results Message */}
                 {filteredArticles.length === 0 && (

@@ -62,7 +62,9 @@
     @apply bg-white rounded-[2.5rem] md:rounded-[3rem] border border-gray-200 shadow-zeni hover:shadow-zeni-hover transition-all duration-700;
   }
 
-  .zeni-card-dark {}
+  .zeni-card-dark {
+    @apply bg-[#00211F] text-white rounded-[2.5rem] md:rounded-[3rem] border border-white/5 shadow-zeni transition-all duration-700;
+  }
 }
 
 /* Custom Utilities */
