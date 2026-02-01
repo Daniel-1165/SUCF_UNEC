@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiArrowRight, FiPlus, FiTrash2, FiMapPin, FiClock } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
 const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
@@ -10,21 +10,34 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Calculate fallback Sunday
+    // Calculate fallback Sunday using UTC to ensure global consistency
+    // Fellowship is Sunday 3:00 PM WAT (West Africa Time) = UTC+1
+    // 15:00 WAT = 14:00 UTC
     const getNextSunday = () => {
         const now = new Date();
-        const nextSunday = new Date();
-        nextSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
-        if (now.getDay() === 0 && now.getHours() >= 15) {
-            nextSunday.setDate(nextSunday.getDate() + 7);
+        const currentDay = now.getUTCDay(); // Sunday = 0
+        const currentHour = now.getUTCHours();
+
+        let daysUntilSunday = (7 - currentDay) % 7;
+
+        // If it is Sunday (0), check if we passed 14:00 UTC (3 PM WAT)
+        if (currentDay === 0 && currentHour >= 14) {
+            daysUntilSunday = 7;
         }
-        nextSunday.setHours(15, 0, 0, 0);
+
+        const nextSunday = new Date();
+        nextSunday.setDate(now.getDate() + daysUntilSunday);
+        // Set to 14:00 UTC (3:00 PM WAT)
+        nextSunday.setUTCHours(14, 0, 0, 0);
+
         return nextSunday;
     };
 
     useEffect(() => {
         const fetchNextEvent = async () => {
             try {
+                // We want to verify against local time? No, ideally ISO string comparison works fine.
+                // But let's stick to the simple query.
                 const { data, error } = await supabase
                     .from('fellowship_events')
                     .select('*')
@@ -81,6 +94,9 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
     useEffect(() => {
         if (!event?.event_date) return;
 
+        // Run immediately to avoid 1s delay
+        setTimeLeft(calculateTimeLeft());
+
         const timer = setInterval(() => {
             setTimeLeft(calculateTimeLeft());
         }, 1000);
@@ -98,12 +114,12 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
     Object.keys(timeLeft).forEach((interval) => {
         timerComponents.push(
             <div key={interval} className="flex flex-col items-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 glass-card flex items-center justify-center rounded-2xl mb-2">
-                    <span className="text-2xl md:text-3xl font-bold text-emerald-900">
+                <div className="w-16 h-16 md:w-20 md:h-20 glass-card flex items-center justify-center rounded-xl mb-2 border border-slate-100 shadow-lg">
+                    <span className="text-2xl md:text-3xl font-bold text-emerald-900 font-heading">
                         {String(timeLeft[interval]).padStart(2, '0')}
                     </span>
                 </div>
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500">{interval}</span>
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-slate-500">{interval}</span>
             </div>
         );
     });
@@ -115,35 +131,35 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-50 rounded-full border border-slate-200 mb-8"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-50 rounded-full border border-slate-200 mb-12 shadow-sm"
                 >
                     <span className="w-2 h-2 bg-emerald-500 animate-pulse rounded-full"></span>
                     <span className="text-[10px] font-bold text-slate-600 tracking-widest uppercase">Upcoming Fellowship</span>
                 </motion.div>
 
                 <div className="flex flex-col lg:flex-row items-center gap-16 w-full max-w-6xl">
-                    {/* Flyer Section - Always Visible */}
+                    {/* Flyer Section - Modernized */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, x: -20 }}
+                        initial={{ opacity: 0, scale: 0.95, x: -20 }}
                         whileInView={{ opacity: 1, scale: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative group">
-                            {/* Subtly Integrated Glow */}
-                            <div className="absolute -inset-10 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-1000"></div>
+                        <div className="relative group perspective-1000">
+                            {/* Refined Glow */}
+                            <div className="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
-                            {/* Main Flyer Container - Seamless & borderless */}
-                            <div className="relative z-10 p-4 bg-white/30 backdrop-blur-2xl rounded-[3rem] shadow-2xl shadow-emerald-900/5 transition-all duration-700">
-                                <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-slate-50 flex items-center justify-center relative">
+                            {/* Main Flyer Container - Modern Glassmorphism & Less Round */}
+                            <div className="relative z-10 p-2 bg-white/50 backdrop-blur-xl rounded-2xl shadow-2xl shadow-slate-200/50 border border-white/60 transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)]">
+                                <div className="w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center relative">
                                     {event?.flyer_url ? (
                                         <img
                                             src={event.flyer_url}
                                             alt={event.title}
-                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000"
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                                         />
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center text-slate-200">
+                                        <div className="flex flex-col items-center justify-center text-slate-300">
                                             <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-200 flex items-center justify-center mb-4">
                                                 <span className="text-4xl grayscale opacity-50">🖼️</span>
                                             </div>
@@ -154,7 +170,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
 
                                 {/* Admin Controls Overlay */}
                                 {user?.isAdmin && (
-                                    <div className={`absolute inset-0 bg-white/80 transition-all duration-300 flex items-center justify-center gap-4 ${event?.flyer_url ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
+                                    <div className={`absolute inset-0 bg-white/80 transition-all duration-300 flex items-center justify-center gap-4 rounded-xl ${event?.flyer_url ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
                                         <Link
                                             to="/admin?tab=events"
                                             className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 hover:scale-110 transition-all shadow-lg"
@@ -195,33 +211,33 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="w-full lg:w-1/2 flex flex-col justify-center"
+                        className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left items-center lg:items-start"
                     >
-                        <h2 className="text-4xl md:text-6xl font-heading text-slate-900 font-extrabold mb-4 leading-none tracking-tighter uppercase">
+                        <h2 className="text-3xl md:text-5xl font-heading text-slate-900 font-extrabold mb-6 leading-none tracking-tight">
                             {event?.title}
                         </h2>
 
                         {(event?.location || event?.event_time) && (
-                            <div className="flex flex-wrap gap-4 mb-10 overflow-hidden">
+                            <div className="flex flex-wrap gap-3 mb-10 justify-center lg:justify-start">
                                 {event.event_time && (
-                                    <span className="px-5 py-2 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
-                                        {event.event_time}
+                                    <span className="px-4 py-2 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-2">
+                                        <FiClock /> {event.event_time}
                                     </span>
                                 )}
                                 {event.location && (
-                                    <span className="px-5 py-2 bg-white text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
-                                        {event.location}
+                                    <span className="px-4 py-2 bg-slate-50 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-2">
+                                        <FiMapPin /> {event.location}
                                     </span>
                                 )}
                             </div>
                         )}
 
-                        <div className="flex gap-4 md:gap-6 justify-start">
+                        <div className="flex gap-4 md:gap-6 justify-center lg:justify-start">
                             {timerComponents.length ? (
                                 timerComponents.map((comp, idx) => (
                                     <div key={idx} className="flex flex-col items-center">
-                                        <div className="w-16 h-16 md:w-20 md:h-20 bg-white border border-slate-200 shadow-sm flex items-center justify-center rounded-2xl mb-2">
-                                            <span className="text-2xl md:text-3xl font-bold text-slate-900">
+                                        <div className="w-16 h-16 md:w-20 md:h-20 bg-white border border-slate-200 shadow-sm flex items-center justify-center rounded-xl mb-2">
+                                            <span className="text-2xl md:text-3xl font-bold text-slate-900 font-heading">
                                                 {comp.props.children[0].props.children}
                                             </span>
                                         </div>
@@ -232,9 +248,14 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="text-2xl font-bold text-emerald-600 italic uppercase tracking-tighter"
+                                    className="p-6 bg-emerald-50 border border-emerald-100 rounded-2xl"
                                 >
-                                    Join us now! We are live.
+                                    <p className="text-xl md:text-2xl font-bold text-emerald-800 uppercase tracking-tight mb-2">
+                                        Happening Now!
+                                    </p>
+                                    <p className="text-sm text-emerald-600 font-medium">
+                                        Join us live at the venue or connect online.
+                                    </p>
                                 </motion.div>
                             )}
                         </div>
@@ -244,7 +265,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                 <div className="w-12 h-12 rounded-full border border-slate-200 text-slate-900 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                                     <FiArrowRight className="text-xl" />
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <span className="block text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Need Directions?</span>
                                     <span className="block text-sm font-bold text-slate-900 underline underline-offset-4 decoration-slate-200 group-hover:decoration-emerald-500 transition-all">Get Location Info</span>
                                 </div>
@@ -254,19 +275,24 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                 </div>
             </div>
 
-            {/* Sleek Sliding Text Message - Minimalist & Elegant */}
-            <div className="w-full overflow-hidden py-4 mt-8 bg-transparent">
+            {/* Enhanced Sliding Text - Professional Ticker Style */}
+            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-3 mt-16 overflow-hidden relative">
+                <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10"></div>
+
                 <motion.div
-                    animate={{ x: [1200, -2800] }}
-                    transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
-                    className="whitespace-nowrap flex gap-60 items-center"
+                    animate={{ x: [0, -2000] }}
+                    transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+                    className="whitespace-nowrap flex gap-12 items-center"
                 >
-                    {[1, 2].map((i) => (
-                        <span key={i} className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.4em] flex items-center">
-                            <span className="text-emerald-500 mr-8 drop-shadow-sm">✦</span>
-                            Join us at Architecture Auditorium for a Life Changing Session in God's Presence
-                            <span className="w-12 h-[1px] bg-slate-200 ml-8"></span>
-                        </span>
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="flex items-center gap-4 opacity-70">
+                            <span className="text-[10px] md:text-xs font-bold text-slate-600 uppercase tracking-[0.2em] flex items-center gap-4">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                            </span>
+                            <span className="text-slate-300 px-4">|</span>
+                        </div>
                     ))}
                 </motion.div>
             </div>

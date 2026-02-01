@@ -104,16 +104,21 @@ const NewsListItem = ({ item }) => {
 const NewsSection = () => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [visibleCount, setVisibleCount] = useState(4); // Initial visible count
 
     const fetchNews = async () => {
         setLoading(true);
         try {
-            // Fetch 4 items: 1 Featured + 3 List items
+            // Calculate date 2 weeks ago
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+            // Fetch news newer than 2 weeks
             const { data, error } = await supabase
-                .from('news') // Or 'articles' if you handle them dynamically, sticking to 'news' for now based on context
+                .from('news')
                 .select('*')
-                .order('created_at', { ascending: false })
-                .limit(4);
+                .gte('created_at', twoWeeksAgo.toISOString())
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
             setNews(data || []);
@@ -128,8 +133,14 @@ const NewsSection = () => {
         fetchNews();
     }, []);
 
-    const featuredPost = news[0];
-    const recentPosts = news.slice(1);
+    const visibleNews = news.slice(0, visibleCount);
+    const featuredPost = visibleNews[0];
+    const recentPosts = visibleNews.slice(1);
+    const hasMore = visibleCount < news.length;
+
+    const handleLoadMore = () => {
+        setVisibleCount(prev => prev + 4);
+    };
 
     return (
         <section className="py-24 bg-white relative overflow-hidden">
@@ -147,9 +158,6 @@ const NewsSection = () => {
                             Latest <span className="text-emerald-600">News.</span>
                         </h2>
                     </div>
-                    <Link to="/articles" className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">
-                        View All Archives <FiArrowRight />
-                    </Link>
                 </div>
 
                 {loading ? (
@@ -182,8 +190,20 @@ const NewsSection = () => {
                                 )}
                             </div>
 
-                            <Link to="/articles" className="mt-8 md:hidden flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">
-                                View All Archives <FiArrowRight />
+                            {/* Load More Button */}
+                            {hasMore && (
+                                <div className="mt-8 text-center md:text-left">
+                                    <button
+                                        onClick={handleLoadMore}
+                                        className="px-6 py-3 bg-slate-50 hover:bg-emerald-50 text-emerald-600 font-bold rounded-xl transition-all flex items-center gap-2 text-sm uppercase tracking-wider mx-auto md:mx-0"
+                                    >
+                                        Load More Updates
+                                    </button>
+                                </div>
+                            )}
+
+                            <Link to="/articles" className="mt-8 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">
+                                View Full Archive <FiArrowRight />
                             </Link>
                         </div>
                     </div>

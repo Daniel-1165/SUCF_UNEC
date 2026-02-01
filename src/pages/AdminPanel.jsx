@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle } from 'react-icons/fi';
+import { FiImage, FiFileText, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiBell, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -32,13 +32,13 @@ const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news', 'events'
+    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news', 'events', 'users'
 
     // Handle initial tab from URL
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
-        if (tab && ['gallery', 'articles', 'books', 'news', 'events', 'messages'].includes(tab)) {
+        if (tab && ['gallery', 'articles', 'books', 'news', 'events', 'messages', 'users'].includes(tab)) {
             setActiveTab(tab);
         }
     }, [location]);
@@ -100,6 +100,11 @@ const AdminPanel = () => {
     });
     const [editingEventId, setEditingEventId] = useState(null);
     const [contactMessages, setContactMessages] = useState([]);
+
+    // Users State
+    const [userSearchTerm, setUserSearchTerm] = useState('');
+    const [userResults, setUserResults] = useState([]);
+    const [searchingUsers, setSearchingUsers] = useState(false);
 
     // Use a ref to track if we've successfully auth'd once
     const hasAuthorized = React.useRef(false);
@@ -167,6 +172,26 @@ const AdminPanel = () => {
         if (!error) setNews(data);
     };
 
+    // Cleanup News (2 weeks old)
+    const cleanupNews = async () => {
+        if (!window.confirm("Remove news older than 2 weeks?")) return;
+        const twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+        try {
+            const { error } = await supabase
+                .from('news')
+                .delete()
+                .lt('created_at', twoWeeksAgo.toISOString());
+
+            if (error) throw error;
+            alert("Cleanup complete!");
+            fetchNews();
+        } catch (err) {
+            alert("Cleanup failed: " + err.message);
+        }
+    };
+
     const fetchFellowshipEvents = async () => {
         const { data, error } = await supabase
             .from('fellowship_events')
@@ -195,6 +220,45 @@ const AdminPanel = () => {
         if (!window.confirm("Delete this message?")) return;
         const { error } = await supabase.from('contact_messages').delete().eq('id', id);
         if (!error) fetchContactMessages();
+    };
+
+    // --- USER MANAGEMENT ---
+    const searchUsers = async (e) => {
+        e.preventDefault();
+        setSearchingUsers(true);
+        try {
+            // Search in profiles
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .ilike('full_name', `%${userSearchTerm}%`); // Assuming full_name exists
+
+            if (error) throw error;
+            setUserResults(data || []);
+        } catch (err) {
+            console.error(err);
+            alert("Search failed. Ensure profiles table exists.");
+        } finally {
+            setSearchingUsers(false);
+        }
+    };
+
+    const toggleAdminStatus = async (profileId, currentStatus) => {
+        if (!window.confirm(`Are you sure you want to ${currentStatus ? 'REMOVE' : 'MAKE'} Admin?`)) return;
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({ is_admin: !currentStatus })
+                .eq('id', profileId);
+
+            if (error) throw error;
+
+            // Update local list
+            setUserResults(prev => prev.map(u => u.id === profileId ? { ...u, is_admin: !currentStatus } : u));
+            alert("Updated successfully!");
+        } catch (err) {
+            alert("Update failed: " + err.message);
+        }
     };
 
     // --- UTILS ---
@@ -552,6 +616,9 @@ const AdminPanel = () => {
                                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
                             )}
                         </button>
+                        <button onClick={() => setActiveTab('users')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'users' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
+                            <FiUsers /> Users
+                        </button>
                     </div>
                 </div>
 
@@ -798,7 +865,12 @@ const AdminPanel = () => {
                     ) : activeTab === 'news' ? (
                         <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiBell className="text-emerald-500" /> Post News / Update</h3>
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-xl font-bold text-emerald-900 flex items-center gap-2"><FiBell className="text-emerald-500" /> Post News / Update</h3>
+                                    <button onClick={cleanupNews} className="text-xs font-bold text-red-400 hover:text-red-500 hover:underline">
+                                        Cleanup Old News (2 Weeks+)
+                                    </button>
+                                </div>
                                 <form onSubmit={handleNewsSubmit} className="space-y-6">
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Headline</label><input type="text" required value={newsForm.title} onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
@@ -847,7 +919,7 @@ const AdminPanel = () => {
                                 ))}
                             </div>
                         </motion.div>
-                    ) : (
+                    ) : activeTab === 'messages' ? (
                         <motion.div key="messages" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-2xl font-black text-emerald-900">Inbound Inquiries</h3>
@@ -891,6 +963,45 @@ const AdminPanel = () => {
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div key="users" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+                            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiUsers className="text-emerald-500" /> Manage Admins</h3>
+                                <form onSubmit={searchUsers} className="flex gap-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Search user by name..."
+                                        value={userSearchTerm}
+                                        onChange={(e) => setUserSearchTerm(e.target.value)}
+                                        className="flex-1 bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all"
+                                    />
+                                    <button disabled={searchingUsers} className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg flex items-center gap-2">
+                                        <FiSearch /> Search
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div className="space-y-4">
+                                {userResults.map((u) => (
+                                    <div key={u.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex justify-between items-center group hover:shadow-md transition-all">
+                                        <div>
+                                            <h4 className="font-bold text-lg text-emerald-900">{u.full_name || 'Unknown Name'}</h4>
+                                            <p className="text-sm text-gray-400">{u.email} • {u.school} • {u.department}</p>
+                                        </div>
+                                        <div>
+                                            {u.is_admin ? (
+                                                <button onClick={() => toggleAdminStatus(u.id, true)} className="px-4 py-2 bg-red-50 text-red-500 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all text-xs border border-red-100">Revoke Admin</button>
+                                            ) : (
+                                                <button onClick={() => toggleAdminStatus(u.id, false)} className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl font-bold hover:bg-emerald-600 hover:text-white transition-all text-xs border border-emerald-100">Make Admin</button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                                {userResults.length === 0 && userSearchTerm && !searchingUsers && (
+                                    <p className="text-gray-400 italic text-center py-8">No users found or search not initiated.</p>
+                                )}
                             </div>
                         </motion.div>
                     )}

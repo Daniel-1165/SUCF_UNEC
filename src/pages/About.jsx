@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
 import { FiUsers, FiAward, FiTarget, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
@@ -6,12 +7,36 @@ import AnthemSection from '../components/AnthemSection';
 import SEO from '../components/SEO';
 
 const About = () => {
-    const executives = [
-        { name: "Bro. Zuby Benjamin", role: "President", img: "/assets/execs/president.jpg" },
-        { name: "Sis. Onyiyechi Ogbonna \n @Christlike", role: "Vice President", img: "/assets/execs/ifunanya.jpg" },
-        { name: "Sis. Fear God", role: "General Secretary", img: "/assets/execs/blessing.jpg" },
-        { name: "Bro. Wisdom Ogbonna", role: "Prayer Secretary", img: "/assets/execs/emmanuel.jpg" },
-    ];
+    const [executives, setExecutives] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchExecutives = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('executives')
+                .select('*')
+                .order('created_at', { ascending: true })
+                .limit(4);
+
+            if (error) throw error;
+            setExecutives(data || []);
+        } catch (error) {
+            console.error('Error fetching executives:', error);
+            // Fallback default
+            setExecutives([
+                { name: "Bro. Zuby Benjamin", role: "President", img_url: "/assets/execs/president.jpg" },
+                { name: "Sis. Onyiyechi Ogbonna", role: "Vice President", img_url: "/assets/execs/ifunanya.jpg" },
+                { name: "Sis. Fear God", role: "General Secretary", img_url: "/assets/execs/blessing.jpg" },
+                { name: "Bro. Wisdom Ogbonna", role: "Prayer Secretary", img_url: "/assets/execs/emmanuel.jpg" },
+            ]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchExecutives();
+    }, []);
 
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
@@ -155,7 +180,7 @@ const About = () => {
                             <div className="relative mb-8 pt-4">
                                 <div className="absolute inset-0 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700" />
                                 <div className="w-40 h-40 rounded-full overflow-hidden border-8 border-[#F5F9F7] shadow-xl relative z-10 group-hover:border-emerald-50 transition-all">
-                                    <img src={exec.img} alt={exec.name} className="w-full h-full object-cover transition-all duration-700" />
+                                    <img src={exec.img_url || exec.img} alt={exec.name} className="w-full h-full object-cover transition-all duration-700" />
                                 </div>
                             </div>
 
