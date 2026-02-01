@@ -158,7 +158,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                 <Link
                                     to="/admin?tab=events"
                                     onClick={(e) => e.stopPropagation()}
-                                    className="absolute -top-4 -right-4 w-12 h-12 bg-white text-emerald-900 rounded-full shadow-lg border border-slate-100 flex items-center justify-center hover:bg-emerald-900 hover:text-white transition-all z-20"
+                                    className="absolute -top-4 -right-4 w-12 h-12 bg-white text-emerald-900 rounded-full shadow-lg border border-slate-100 flex items-center justify-center hover:bg-emerald-900 hover:text-white transition-all z-20 opacity-0 group-hover:opacity-100 duration-300"
                                     title="Manage Events"
                                 >
                                     <FiPlus />
