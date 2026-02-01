@@ -169,7 +169,7 @@ const Executives = () => {
                         className="relative group pt-16"
                     >
                         {/* Zeni Style Card */}
-                        <div className="zeni-card h-full p-8 pt-24 text-center group-hover:bg-white transition-all duration-500 relative">
+                        <div className="zeni-card h-full p-8 pt-32 text-center group-hover:bg-white transition-all duration-500 relative">
 
                             {/* Admin Overlay Trigger */}
                             {user?.isAdmin && (

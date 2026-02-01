@@ -79,11 +79,10 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         let timeLeft = {};
 
         if (difference > 0) {
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            // For weekly events, cap at 7 days
             timeLeft = {
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60),
+                days: Math.min(days, 7)
             };
         }
         return timeLeft;
@@ -138,45 +137,45 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                 </motion.div>
 
                 <div className="flex flex-col lg:flex-row items-center gap-16 w-full max-w-6xl">
-                    {/* Flyer Section - Modernized */}
+                    {/* Flyer Section - Minimalist & Sleek */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, x: -20 }}
                         whileInView={{ opacity: 1, scale: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative group perspective-1000">
-                            {/* Refined Glow */}
-                            <div className="absolute -inset-4 bg-emerald-500/10 rounded-2xl blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <div className="relative group">
+                            {/* Subtle Shadow */}
+                            <div className="absolute -inset-2 bg-slate-900/5 rounded-lg blur-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            {/* Main Flyer Container - Modern Glassmorphism & Less Round */}
-                            <div className="relative z-10 p-2 bg-white/50 backdrop-blur-xl rounded-2xl shadow-2xl shadow-slate-200/50 border border-white/60 transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)]">
-                                <div className="w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center relative">
+                            {/* Main Flyer Container - Clean & Minimal */}
+                            <div className="relative z-10 bg-white rounded-lg shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:border-slate-300/60">
+                                <div className="w-full aspect-[4/5] bg-slate-50 flex items-center justify-center relative">
                                     {event?.flyer_url ? (
                                         <img
                                             src={event.flyer_url}
                                             alt={event.title}
-                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                                            className="w-full h-full object-cover"
                                         />
                                     ) : (
                                         <div className="flex flex-col items-center justify-center text-slate-300">
-                                            <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-200 flex items-center justify-center mb-4">
-                                                <span className="text-4xl grayscale opacity-50">🖼️</span>
+                                            <div className="w-16 h-16 rounded-full border border-slate-200 flex items-center justify-center mb-3">
+                                                <span className="text-3xl grayscale opacity-40">🖼️</span>
                                             </div>
-                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Waiting for Flyer</p>
+                                            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-400">Awaiting Flyer</p>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Admin Controls Overlay */}
                                 {user?.isAdmin && (
-                                    <div className={`absolute inset-0 bg-white/80 transition-all duration-300 flex items-center justify-center gap-4 rounded-xl ${event?.flyer_url ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
+                                    <div className={`absolute inset-0 bg-white/95 backdrop-blur-sm transition-all duration-300 flex items-center justify-center gap-3 ${event?.flyer_url ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
                                         <Link
                                             to="/admin?tab=events"
-                                            className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 hover:scale-110 transition-all shadow-lg"
+                                            className="w-11 h-11 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-emerald-600 transition-all shadow-sm"
                                             title={event?.flyer_url ? "Replace Flyer" : "Add Flyer"}
                                         >
-                                            <FiPlus size={24} />
+                                            <FiPlus size={20} />
                                         </Link>
                                         {event?.flyer_url && (
                                             <button
@@ -194,10 +193,10 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                                         }
                                                     }
                                                 }}
-                                                className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all shadow-lg"
+                                                className="w-11 h-11 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-all shadow-sm"
                                                 title="Delete Event"
                                             >
-                                                <FiTrash2 size={24} />
+                                                <FiTrash2 size={20} />
                                             </button>
                                         )}
                                     </div>
@@ -213,9 +212,16 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                         viewport={{ once: true }}
                         className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left items-center lg:items-start"
                     >
-                        <h2 className="text-3xl md:text-5xl font-heading text-slate-900 font-extrabold mb-6 leading-none tracking-tight">
-                            {event?.title}
-                        </h2>
+                        <div className="mb-6">
+                            <h2 className="text-3xl md:text-5xl font-heading text-slate-900 font-extrabold leading-none tracking-tight">
+                                {event?.title}
+                            </h2>
+                            {event?.bible_reference && (
+                                <p className="text-sm md:text-base text-emerald-600 font-semibold mt-2 italic">
+                                    {event.bible_reference}
+                                </p>
+                            )}
+                        </div>
 
                         {(event?.location || event?.event_time) && (
                             <div className="flex flex-wrap gap-3 mb-10 justify-center lg:justify-start">
@@ -234,21 +240,19 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
 
                         <div className="flex gap-4 md:gap-6 justify-center lg:justify-start">
                             {timerComponents.length ? (
-                                timerComponents.map((comp, idx) => (
-                                    <div key={idx} className="flex flex-col items-center">
-                                        <div className="w-16 h-16 md:w-20 md:h-20 bg-white border border-slate-200 shadow-sm flex items-center justify-center rounded-xl mb-2">
-                                            <span className="text-2xl md:text-3xl font-bold text-slate-900 font-heading">
-                                                {comp.props.children[0].props.children}
-                                            </span>
-                                        </div>
-                                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-slate-400">{comp.key}</span>
+                                <div className="flex flex-col items-center">
+                                    <div className="w-24 h-24 md:w-28 md:h-28 bg-slate-900 border border-slate-800 shadow-lg flex items-center justify-center rounded-lg mb-3">
+                                        <span className="text-4xl md:text-5xl font-bold text-white font-heading">
+                                            {String(timeLeft.days || 0).padStart(2, '0')}
+                                        </span>
                                     </div>
-                                ))
+                                    <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-500">Days</span>
+                                </div>
                             ) : (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="p-6 bg-emerald-50 border border-emerald-100 rounded-2xl"
+                                    className="p-6 bg-emerald-50 border border-emerald-100 rounded-lg"
                                 >
                                     <p className="text-xl md:text-2xl font-bold text-emerald-800 uppercase tracking-tight mb-2">
                                         Happening Now!

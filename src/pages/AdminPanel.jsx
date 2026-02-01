@@ -95,6 +95,7 @@ const AdminPanel = () => {
         event_date: '',
         event_time: '',
         location: '',
+        bible_reference: '',
         flyer_url: '',
         imageFile: null
     });
@@ -554,7 +555,7 @@ const AdminPanel = () => {
     };
 
     const resetEventForm = () => {
-        setEventForm({ title: '', event_date: '', event_time: '', location: '', flyer_url: '', imageFile: null });
+        setEventForm({ title: '', event_date: '', event_time: '', location: '', bible_reference: '', flyer_url: '', imageFile: null });
         setEditingEventId(null);
     };
 
@@ -564,6 +565,7 @@ const AdminPanel = () => {
             event_date: event.event_date ? new Date(event.event_date).toISOString().slice(0, 16) : '',
             event_time: event.event_time,
             location: event.location || '',
+            bible_reference: event.bible_reference || '',
             flyer_url: event.flyer_url,
             imageFile: null
         });
@@ -589,12 +591,20 @@ const AdminPanel = () => {
     return (
         <div className="min-h-screen pt-32 pb-20 bg-gray-50 px-6">
             <div className="container mx-auto max-w-6xl">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-                    <div>
-                        <h1 className="text-4xl font-serif font-black text-emerald-900 mb-2">Admin Dashboard</h1>
-                        <p className="text-gray-500">Manage your content and visual assets.</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+                    <div className="flex items-center gap-4 flex-wrap">
+                        <div>
+                            <h1 className="text-4xl font-serif font-black text-emerald-900 mb-2">Admin Dashboard</h1>
+                            <p className="text-gray-500">Manage your content and visual assets.</p>
+                        </div>
+                        <button
+                            onClick={() => setActiveTab('users')}
+                            className={`px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-md ${activeTab === 'users' ? 'bg-emerald-900 text-white' : 'bg-white text-emerald-900 border border-emerald-200 hover:bg-emerald-50'}`}
+                        >
+                            <FiUsers /> Users
+                        </button>
                     </div>
-                    <div className="flex gap-4 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 mt-6 md:mt-0 flex-wrap justify-center">
+                    <div className="flex gap-4 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex-wrap justify-center">
                         <button onClick={() => setActiveTab('gallery')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'gallery' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
                             <FiImage /> Gallery
                         </button>
@@ -615,9 +625,6 @@ const AdminPanel = () => {
                             {contactMessages.some(m => m.status === 'unread') && (
                                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
                             )}
-                        </button>
-                        <button onClick={() => setActiveTab('users')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'users' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
-                            <FiUsers /> Users
                         </button>
                     </div>
                 </div>
@@ -806,6 +813,7 @@ const AdminPanel = () => {
                                 <form onSubmit={handleEventSubmit} className="space-y-6">
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Title</label><input type="text" required value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} placeholder="e.g. Sunday Fellowship, Special Praise Night" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bible Reference (Optional)</label><input type="text" value={eventForm.bible_reference} onChange={(e) => setEventForm({ ...eventForm, bible_reference: e.target.value })} placeholder="e.g. John 3:16" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Date</label><input type="datetime-local" required value={eventForm.event_date} onChange={(e) => setEventForm({ ...eventForm, event_date: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Display Time</label><input type="text" required value={eventForm.event_time} onChange={(e) => setEventForm({ ...eventForm, event_time: e.target.value })} placeholder="e.g. 3:00 PM PROMPT" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Location</label><input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} placeholder="e.g. Architecture Auditorium" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
@@ -969,7 +977,7 @@ const AdminPanel = () => {
                         <motion.div key="users" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
                                 <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2"><FiUsers className="text-emerald-500" /> Manage Admins</h3>
-                                <form onSubmit={searchUsers} className="flex gap-4">
+                                <form onSubmit={searchUsers} className="flex flex-col sm:flex-row gap-4">
                                     <input
                                         type="text"
                                         placeholder="Search user by name..."
@@ -977,7 +985,7 @@ const AdminPanel = () => {
                                         onChange={(e) => setUserSearchTerm(e.target.value)}
                                         className="flex-1 bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all"
                                     />
-                                    <button disabled={searchingUsers} className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg flex items-center gap-2">
+                                    <button disabled={searchingUsers} className="bg-emerald-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <FiSearch /> Search
                                     </button>
                                 </form>
