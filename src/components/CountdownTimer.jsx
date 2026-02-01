@@ -77,13 +77,12 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         fetchNextEvent();
     }, [propTargetDate, propTitle]);
 
-    // Countdown Logic
+    // Countdown Logic - Strictly Weekly (0-7 days)
     useEffect(() => {
-        if (!event?.event_date) return;
-
         const timer = setInterval(() => {
             const now = new Date();
-            const targetDate = new Date(event.event_date);
+            // We always target the next upcoming Sunday 3PM for the weekly rhythm
+            const targetDate = getNextFellowshipDate();
             const difference = targetDate.getTime() - now.getTime();
 
             if (difference > 0) {
@@ -99,7 +98,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [event]);
+    }, []);
 
     if (loading) return null;
 
