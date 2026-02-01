@@ -95,7 +95,10 @@ const AdminPanel = () => {
         event_date: '',
         event_time: '',
         location: '',
+        event_time: '',
+        location: '',
         bible_reference: '',
+        description: '',
         flyer_url: '',
         imageFile: null
     });
@@ -555,7 +558,7 @@ const AdminPanel = () => {
     };
 
     const resetEventForm = () => {
-        setEventForm({ title: '', event_date: '', event_time: '', location: '', bible_reference: '', flyer_url: '', imageFile: null });
+        setEventForm({ title: '', event_date: '', event_time: '', location: '', bible_reference: '', description: '', flyer_url: '', imageFile: null });
         setEditingEventId(null);
     };
 
@@ -566,6 +569,7 @@ const AdminPanel = () => {
             event_time: event.event_time,
             location: event.location || '',
             bible_reference: event.bible_reference || '',
+            description: event.description || '',
             flyer_url: event.flyer_url,
             imageFile: null
         });
@@ -814,6 +818,7 @@ const AdminPanel = () => {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Title</label><input type="text" required value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} placeholder="e.g. Sunday Fellowship, Special Praise Night" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bible Reference (Optional)</label><input type="text" value={eventForm.bible_reference} onChange={(e) => setEventForm({ ...eventForm, bible_reference: e.target.value })} placeholder="e.g. John 3:16" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Description / Details</label><textarea rows="3" value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} placeholder="Details about the service..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Event Date</label><input type="datetime-local" required value={eventForm.event_date} onChange={(e) => setEventForm({ ...eventForm, event_date: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Display Time</label><input type="text" required value={eventForm.event_time} onChange={(e) => setEventForm({ ...eventForm, event_time: e.target.value })} placeholder="e.g. 3:00 PM PROMPT" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Location</label><input type="text" value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} placeholder="e.g. Architecture Auditorium" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
