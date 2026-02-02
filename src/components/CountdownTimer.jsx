@@ -77,9 +77,29 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         fetchNextEvent();
     }, [propTargetDate, propTitle]);
 
+    const [isLive, setIsLive] = useState(false);
+
+    // Filter for live status: Sunday 3:00 PM to 5:00 PM
+    const checkIfLive = () => {
+        const now = new Date();
+        const day = now.getDay(); // 0 is Sunday
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+
+        if (day === 0) {
+            const timeInMinutes = hours * 60 + minutes;
+            const startLive = 15 * 60; // 15:00 (3:00 PM)
+            const endLive = 17 * 60;   // 17:00 (5:00 PM)
+            return timeInMinutes >= startLive && timeInMinutes <= endLive;
+        }
+        return false;
+    };
+
     // Countdown Logic - Strictly Weekly (0-7 days)
     useEffect(() => {
         const timer = setInterval(() => {
+            setIsLive(checkIfLive());
+
             const now = new Date();
             // We always target the next upcoming Sunday 3PM for the weekly rhythm
             const targetDate = getNextFellowshipDate();
@@ -187,25 +207,41 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                             </div>
                         )}
 
-                        {/* Weekly Countdown Grid */}
-                        <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-12">
-                            {[
-                                { label: 'Days', value: timeLeft.days },
-                                { label: 'Hours', value: timeLeft.hours },
-                                { label: 'Minutes', value: timeLeft.minutes },
-                                { label: 'Seconds', value: timeLeft.seconds }
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex flex-col items-center">
-                                    <div className="w-16 h-16 md:w-24 md:h-24 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-2 relative overflow-hidden group">
-                                        <div className="absolute inset-0 bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                                        <span className="text-2xl md:text-4xl font-bold text-white font-mono relative z-10">
-                                            {String(item.value).padStart(2, '0')}
-                                        </span>
-                                    </div>
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.label}</span>
+                        {/* Weekly Countdown Grid or LIVE Status */}
+                        {isLive ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="mb-12 flex flex-col items-center lg:items-start"
+                            >
+                                <div className="flex items-center gap-3 bg-red-600 text-white px-8 py-4 rounded-2xl shadow-xl shadow-red-600/20 animate-pulse">
+                                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                                    <span className="text-xl font-black uppercase tracking-widest leading-none">Fellowship is Live!</span>
                                 </div>
-                            ))}
-                        </div>
+                                <p className="mt-4 text-slate-500 font-bold uppercase text-[10px] tracking-widest flex items-center gap-2">
+                                    Join us now at the Architecture Auditorium
+                                </p>
+                            </motion.div>
+                        ) : (
+                            <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-12">
+                                {[
+                                    { label: 'Days', value: timeLeft.days },
+                                    { label: 'Hours', value: timeLeft.hours },
+                                    { label: 'Minutes', value: timeLeft.minutes },
+                                    { label: 'Seconds', value: timeLeft.seconds }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex flex-col items-center">
+                                        <div className="w-16 h-16 md:w-24 md:h-24 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-2 relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                            <span className="text-2xl md:text-4xl font-bold text-white font-mono relative z-10">
+                                                {String(item.value).padStart(2, '0')}
+                                            </span>
+                                        </div>
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Former Style Contact Link */}
                         <div className="group cursor-pointer">

@@ -231,17 +231,17 @@ const AdminPanel = () => {
         e.preventDefault();
         setSearchingUsers(true);
         try {
-            // Search in profiles
+            // Search in profiles by email
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .ilike('full_name', `%${userSearchTerm}%`); // Assuming full_name exists
+                .ilike('email', `%${userSearchTerm}%`);
 
             if (error) throw error;
             setUserResults(data || []);
         } catch (err) {
             console.error(err);
-            alert("Search failed. Ensure profiles table exists.");
+            alert("Search failed. Ensure profiles table and email column exist.");
         } finally {
             setSearchingUsers(false);
         }
@@ -985,7 +985,7 @@ const AdminPanel = () => {
                                 <form onSubmit={searchUsers} className="flex flex-col sm:flex-row gap-4">
                                     <input
                                         type="text"
-                                        placeholder="Search user by name..."
+                                        placeholder="Search user by email address..."
                                         value={userSearchTerm}
                                         onChange={(e) => setUserSearchTerm(e.target.value)}
                                         className="flex-1 bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all"

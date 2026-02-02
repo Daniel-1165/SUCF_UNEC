@@ -14,7 +14,7 @@ const FeaturedNewsCard = ({ item }) => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="group relative h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/50 cursor-pointer"
+            className="group relative h-[350px] sm:h-[400px] md:h-[500px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/50 cursor-pointer"
         >
             {/* Background Image */}
             {item.image_url ? (
@@ -33,11 +33,11 @@ const FeaturedNewsCard = ({ item }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
             {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 text-white z-10">
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 text-white z-10">
                 <span className="inline-block px-3 py-1 mb-4 bg-emerald-600 rounded-full text-[10px] font-bold uppercase tracking-widest text-white">
                     {item.category || 'Featured'}
                 </span>
-                <h3 className="text-2xl md:text-4xl font-bold mb-4 leading-tight group-hover:text-emerald-400 transition-colors">
+                <h3 className="text-xl sm:text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight group-hover:text-emerald-400 transition-colors">
                     {item.title}
                 </h3>
                 <div className="flex items-center justify-between mt-6 border-t border-white/20 pt-6">
@@ -49,7 +49,7 @@ const FeaturedNewsCard = ({ item }) => {
             </div>
 
             {/* Clickable Overlay Link */}
-            <Link to={`/articles/${item.id}`} className="absolute inset-0 z-20" />
+            <Link to={`/news/${item.id}`} className="absolute inset-0 z-20" />
         </motion.div>
     );
 };
@@ -85,7 +85,7 @@ const NewsListItem = ({ item }) => {
             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-2 border-white group-hover:bg-emerald-500 transition-colors" />
 
             <div className="flex-1 pb-8 border-b border-slate-100 group-last:border-0 group-last:pb-0">
-                <Link to={`/articles/${item.id}`} className="block group-hover:translate-x-1 transition-transform">
+                <Link to={`/news/${item.id}`} className="block group-hover:translate-x-1 transition-transform">
                     <h4 className="text-lg font-bold text-slate-800 leading-snug mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
                         {item.title}
                     </h4>
@@ -150,10 +150,6 @@ const NewsSection = () => {
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                            <span className="text-sm font-bold text-red-500 uppercase tracking-widest">Live Updates</span>
-                        </div>
                         <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
                             Latest <span className="text-emerald-600">News.</span>
                         </h2>
