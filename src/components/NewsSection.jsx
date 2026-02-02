@@ -84,13 +84,13 @@ const NewsListItem = ({ item }) => {
             {/* Timeline Dot */}
             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-2 border-white group-hover:bg-emerald-500 transition-colors" />
 
-            <div className="flex-1 pb-8 border-b border-slate-100 group-last:border-0 group-last:pb-0">
+            <div className="flex-1 pb-6 md:pb-8 border-b border-slate-100 group-last:border-0 group-last:pb-0">
                 <Link to={`/news/${item.id}`} className="block group-hover:translate-x-1 transition-transform">
-                    <h4 className="text-lg font-bold text-slate-800 leading-snug mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                    <h4 className="text-base sm:text-lg font-bold text-slate-800 leading-snug mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
                         {item.title}
                     </h4>
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-red-500/80 uppercase tracking-wide">
+                        <span className="text-[10px] sm:text-xs font-bold text-red-500/80 uppercase tracking-wide">
                             {getRelativeTime(item.created_at)}
                         </span>
                         <FiChevronRight className="text-slate-300 group-hover:text-emerald-500 transition-colors" />
@@ -109,16 +109,12 @@ const NewsSection = () => {
     const fetchNews = async () => {
         setLoading(true);
         try {
-            // Calculate date 2 weeks ago
-            const twoWeeksAgo = new Date();
-            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
-            // Fetch news newer than 2 weeks
+            // Fetch latest news (unrestricted by date)
             const { data, error } = await supabase
                 .from('news')
                 .select('*')
-                .gte('created_at', twoWeeksAgo.toISOString())
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false })
+                .limit(10);
 
             if (error) throw error;
             setNews(data || []);
@@ -143,14 +139,14 @@ const NewsSection = () => {
     };
 
     return (
-        <section className="py-24 bg-white relative overflow-hidden">
+        <section className="py-16 md:py-24 bg-white relative overflow-hidden">
             {/* Decorative Background */}
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-slate-50 rounded-full blur-3xl opacity-50 z-0" />
 
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-4">
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight">
                             Latest <span className="text-emerald-600">News.</span>
                         </h2>
                     </div>
@@ -172,7 +168,7 @@ const NewsSection = () => {
 
                         {/* List Column */}
                         <div className="lg:col-span-5 flex flex-col pt-2">
-                            <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-6 md:mb-8 flex items-center gap-3">
                                 <span className="w-8 h-1 bg-red-500 rounded-full" />
                                 Recent Headlines
                             </h3>
