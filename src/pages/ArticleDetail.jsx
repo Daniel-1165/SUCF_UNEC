@@ -89,7 +89,7 @@ const ArticleDetail = () => {
                 {/* Minimalist Navigation */}
                 <div className="flex justify-between items-center mb-12 py-4 border-b border-black/10">
                     <Link
-                        to={isNews ? "/" : "/articles"}
+                        to={isNews ? "/news" : "/articles"}
                         className="inline-flex items-center gap-2 text-black hover:text-emerald-600 transition-all font-black text-[10px] uppercase tracking-[0.2em] group"
                     >
                         <FiArrowLeft className="group-hover:-translate-x-2 transition-transform" /> {isNews ? "Back to News" : "Back to Articles"}
@@ -183,7 +183,7 @@ const ArticleDetail = () => {
                                 </h3>
                                 <div className="space-y-8">
                                     {otherNews.map((news) => (
-                                        <Link to={`/articles/${news.id}`} key={news.id} className="group block">
+                                        <Link to={isNews ? `/news/${news.id}` : `/articles/${news.id}`} key={news.id} className="group block">
                                             <div className="flex gap-4">
                                                 {news.image_url && (
                                                     <div className="w-20 h-20 shrink-0 bg-white grayscale group-hover:grayscale-0 transition-all overflow-hidden rounded-lg">

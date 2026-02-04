@@ -79,10 +79,9 @@ const NewsListItem = ({ item }) => {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex gap-4 group relative pl-6 border-l-2 border-slate-100 hover:border-emerald-500 transition-colors"
+            className="flex-1 group relative transition-colors"
         >
-            {/* Timeline Dot */}
-            <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-2 border-white group-hover:bg-emerald-500 transition-colors" />
+            {/* Timeline Dot (Removed in favor of numbers) */}
 
             <div className="flex-1 pb-6 md:pb-8 border-b border-slate-100 group-last:border-0 group-last:pb-0">
                 <Link to={`/news/${item.id}`} className="block group-hover:translate-x-1 transition-transform">
@@ -174,8 +173,13 @@ const NewsSection = () => {
                             </h3>
                             <div className="space-y-6">
                                 {recentPosts.length > 0 ? (
-                                    recentPosts.map((item) => (
-                                        <NewsListItem key={item.id} item={item} />
+                                    recentPosts.map((item, idx) => (
+                                        <div key={item.id} className="flex gap-4 items-start">
+                                            <span className="text-2xl font-black text-slate-100 mt-1 select-none">
+                                                {(idx + 1).toString().padStart(2, '0')}
+                                            </span>
+                                            <NewsListItem item={item} />
+                                        </div>
                                     ))
                                 ) : (
                                     <p className="text-slate-400 italic">No other recent news.</p>
@@ -194,7 +198,7 @@ const NewsSection = () => {
                                 </div>
                             )}
 
-                            <Link to="/articles" className="mt-8 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">
+                            <Link to="/news" className="mt-8 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">
                                 View Full Archive <FiArrowRight />
                             </Link>
                         </div>

@@ -15,6 +15,7 @@ import Library from './pages/Library';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Debug from './pages/Debug';
+import News from './pages/News';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
@@ -37,6 +38,8 @@ function App() {
         <Route path="/library" element={<Library />} />
         <Route path="/articles" element={<Articles />} />
         <Route path="/articles/:id" element={<ArticleDetail />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<ArticleDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/executives" element={<Executives />} />
 
