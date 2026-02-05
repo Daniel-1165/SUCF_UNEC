@@ -13,51 +13,44 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         let mounted = true;
 
-        // Safety Timeout: Force app to load if Supabase hangs
+        // Safety Timeout: Force app to load if Supabase hangs indefinitely
         const safetyTimer = setTimeout(() => {
             if (mounted && loading) {
-                console.warn("Auth: Safety timeout triggered!");
+                console.warn("Auth: Safety timeout triggered! App forced to continue.");
                 setLoading(false);
             }
-        }, 5000); // Reduced to 5 seconds for snappier experience
+        }, 8000);
 
-        const fetchAdminStatus = async (userId) => {
+        const fetchAdminStatus = async (userId, email) => {
             if (!userId) return false;
-            console.log(`Auth: Fetching admin status for ${userId}...`);
+
+            // Primary Admin Failsafe: Instant check for core admin
+            if (email === 'sucfunec01@gmail.com') return true;
+
             try {
-                // Create a promise that rejects after 2 seconds
+                // Admin Status Check with 3s Timeout
                 const timeoutPromise = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error("Admin check timed out")), 2000)
+                    setTimeout(() => reject(new Error("Admin check timed out")), 3000)
                 );
 
-                // The actual Supabase query
                 const queryPromise = supabase
                     .from('profiles')
                     .select('is_admin')
                     .eq('id', userId)
                     .single();
 
-                // Race them
                 const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
                 if (error) {
                     if (error.code !== 'PGRST116') {
                         console.warn("Auth: Admin status check failed:", error.message);
-                    } else {
-                        console.log("Auth: No profile found for admin check.");
                     }
                     return false;
                 }
-                console.log("Auth: Admin status fetched:", data.is_admin);
-                return data.is_admin || false;
+                return data?.is_admin || false;
             } catch (err) {
                 console.error("Auth: Exception in admin fetch:", err.message);
-                // Hardcoded fallback for the primary admin email
-                const session = await supabase.auth.getSession();
-                const email = session.data.session?.user?.email;
-                if (email === 'sucfunec01@gmail.com') return true;
-
-                return false; // Fail safe
+                return false;
             }
         };
 
@@ -68,57 +61,58 @@ export const AuthProvider = ({ children }) => {
                 console.log("Auth: No session detected.");
                 setUser(null);
                 setLoading(false);
+                clearTimeout(safetyTimer);
                 return;
             }
 
-            console.log("Auth: Session found, verifying identity...");
+            console.log("Auth: Session found for", session.user.email);
 
             try {
-                // Fetch admin status, but don't block the user from logging in if it fails
-                const profileIsAdmin = await fetchAdminStatus(session.user.id).catch(e => {
-                    console.error("Auth: Admin check error (non-fatal):", e);
-                    return false;
-                });
-
-                // Force admin status for specific emails as a failsafe
-                const isAdmin = profileIsAdmin || session.user.email === 'sucfunec01@gmail.com';
+                // Determine Admin Status
+                const isAdmin = await fetchAdminStatus(session.user.id, session.user.email);
 
                 if (mounted) {
-                    // Always set the user, even if admin check had issues
                     setUser({ ...session.user, isAdmin });
                     setLoading(false);
+                    clearTimeout(safetyTimer);
+                    console.log(`Auth: Identity verified. Admin: ${isAdmin}`);
                 }
             } catch (err) {
-                console.error("Auth: Critical verification failure:", err);
-                // Fallback: allow login as normal user
+                console.error("Auth: Verification error:", err);
                 if (mounted) {
                     setUser(session.user);
                     setLoading(false);
+                    clearTimeout(safetyTimer);
                 }
             }
         };
 
-        // Check active session
-        const getSession = async () => {
-            console.log("Auth: Initial session check...");
+        // Initial Session Retrieval
+        const initializeAuth = async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 if (error) throw error;
                 await updateAuthState(session);
             } catch (error) {
-                console.error("Auth: GetSession Exception:", error);
-                if (mounted) setLoading(false);
-            } finally {
-                clearTimeout(safetyTimer);
+                console.error("Auth: Initialization error:", error.message);
+                if (mounted) {
+                    setLoading(false);
+                    clearTimeout(safetyTimer);
+                }
             }
         };
 
-        getSession();
+        initializeAuth();
 
-        // Listen for changes
+        // Real-time Authentication State Listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log("Auth: Event fired ->", event);
-            await updateAuthState(session);
+            console.log(`Auth: External event -> ${event}`);
+            if (event === 'SIGNED_OUT') {
+                setUser(null);
+                setLoading(false);
+            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+                await updateAuthState(session);
+            }
         });
 
         return () => {
@@ -132,20 +126,22 @@ export const AuthProvider = ({ children }) => {
         signUp: (data) => supabase.auth.signUp(data),
         signIn: (data) => supabase.auth.signInWithPassword(data),
         signOut: async () => {
-            console.log("Auth: Sign out triggered. Clearing local state first.");
-            setUser(null); // Clear immediately to fix UI hang
+            console.log("Auth: Signing out...");
             try {
-                // Attempt Supabase sign out, but don't hang if it's slow
+                // Clear state immediately for UI responsiveness
+                setUser(null);
                 const { error } = await supabase.auth.signOut();
-                if (error) console.error("Auth: Supabase sign out error:", error.message);
-                return { error };
+                if (error) throw error;
+                return { success: true };
             } catch (err) {
-                console.error("Auth: Sign out exception:", err);
+                console.error("Auth: Sign out issue:", err.message);
                 return { error: err };
             }
         },
         user,
-        loading
+        loading,
+        isAuthenticated: !!user,
+        isAdmin: !!user?.isAdmin
     };
 
     return (

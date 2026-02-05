@@ -247,24 +247,30 @@ const Home = () => {
                     <div className="grid md:grid-cols-3 gap-8">
                         {loadingArticles ? (
                             [1, 2, 3].map(i => <div key={i} className="h-96 bg-slate-200 rounded-3xl animate-pulse" />)
-                        ) : articles.map((article, i) => (
-                            <Link to={`/articles/${article.id}`} key={article.id} className="group">
-                                <div className="rounded-3xl overflow-hidden mb-6 relative aspect-[4/3]">
-                                    <img
-                                        src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900">
-                                        {article.category || 'Article'}
+                        ) : articles.length > 0 ? (
+                            articles.map((article, i) => (
+                                <Link to={`/articles/${article.id}`} key={article.id} className="group">
+                                    <div className="rounded-3xl overflow-hidden mb-6 relative aspect-[4/3]">
+                                        <img
+                                            src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
+                                            alt={article.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900">
+                                            {article.category || 'Article'}
+                                        </div>
                                     </div>
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
-                                    {article.title}
-                                </h3>
-                                <p className="text-slate-500 text-sm line-clamp-2">{article.content?.replace(/<[^>]*>/g, '')}</p>
-                            </Link>
-                        ))}
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
+                                        {article.title}
+                                    </h3>
+                                    <p className="text-slate-500 text-sm line-clamp-2">{article.content?.replace(/<[^>]*>/g, '')}</p>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="md:col-span-3 py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-100 italic text-slate-300">
+                                No editorials found. Check back later!
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
