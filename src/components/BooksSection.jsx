@@ -69,60 +69,67 @@ const BooksSection = () => {
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6">
-                        {books.map((book, index) => (
-                            <motion.div
-                                key={book.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="bg-white border border-slate-100 rounded-[2rem] p-4 flex flex-col sm:flex-row gap-6 hover:shadow-xl hover:shadow-emerald-900/5 hover:border-emerald-100 transition-all group"
-                            >
-                                {/* Book Image */}
-                                <div className="w-full sm:w-40 h-48 sm:h-auto shrink-0 rounded-2xl overflow-hidden bg-slate-100 relative">
-                                    {book.image_url ? (
-                                        <img
-                                            src={book.image_url}
-                                            alt={book.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-emerald-50 text-emerald-200">
-                                            <FiBook size={40} />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex-grow flex flex-col justify-center py-2 pr-4">
-                                    <div className="mb-auto">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-2 block">Trending</span>
-                                        <h3 className="text-2xl font-bold text-slate-900 mb-1 leading-tight">{book.title}</h3>
-                                        <p className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-4">{book.author || "SUCF UNEC"}</p>
-                                    </div>
-
-                                    <div className="flex items-center justify-between mt-4">
-                                        <a
-                                            href={book.file_url}
-                                            download
-                                            className="text-slate-900 font-bold text-sm flex items-center gap-2 group/link hover:text-emerald-600 transition-colors"
-                                        >
-                                            Read Now <FiArrowRight className="group-hover/link:translate-x-1 transition-transform" />
-                                        </a>
-
-                                        {/* Admin Actions */}
-                                        {user?.isAdmin && (
-                                            <button
-                                                onClick={(e) => { e.preventDefault(); handleDelete(book.id); }}
-                                                className="text-red-400 hover:text-red-600 p-2"
-                                            >
-                                                <FiTrash2 />
-                                            </button>
+                        {books.length > 0 ? (
+                            books.map((book, index) => (
+                                <motion.div
+                                    key={book.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="bg-white border border-slate-100 rounded-[2rem] p-4 flex flex-col sm:flex-row gap-6 hover:shadow-xl hover:shadow-emerald-900/5 hover:border-emerald-100 transition-all group"
+                                >
+                                    {/* Book Image */}
+                                    <div className="w-full sm:w-40 h-48 sm:h-auto shrink-0 rounded-2xl overflow-hidden bg-slate-100 relative">
+                                        {book.image_url ? (
+                                            <img
+                                                src={book.image_url}
+                                                alt={book.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-emerald-50 text-emerald-200">
+                                                <FiBook size={40} />
+                                            </div>
                                         )}
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
+
+                                    {/* Content */}
+                                    <div className="flex-grow flex flex-col justify-center py-2 pr-4">
+                                        <div className="mb-auto">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-2 block">Trending</span>
+                                            <h3 className="text-2xl font-bold text-slate-900 mb-1 leading-tight">{book.title}</h3>
+                                            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-4">{book.author || "SUCF UNEC"}</p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between mt-4">
+                                            <a
+                                                href={book.file_url}
+                                                download
+                                                className="text-slate-900 font-bold text-sm flex items-center gap-2 group/link hover:text-emerald-600 transition-colors"
+                                            >
+                                                Read Now <FiArrowRight className="group-hover/link:translate-x-1 transition-transform" />
+                                            </a>
+
+                                            {/* Admin Actions */}
+                                            {user?.isAdmin && (
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); handleDelete(book.id); }}
+                                                    className="text-red-400 hover:text-red-600 p-2"
+                                                >
+                                                    <FiTrash2 />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="py-12 text-center bg-slate-50 rounded-[2rem] border border-dashed border-slate-200">
+                                <FiBook className="text-4xl text-slate-300 mx-auto mb-3" />
+                                <p className="text-slate-500 font-medium italic">No recommended books found in the library yet.</p>
+                            </div>
+                        )}
                     </div>
                 )}
 

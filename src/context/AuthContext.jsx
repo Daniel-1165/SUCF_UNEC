@@ -52,7 +52,12 @@ export const AuthProvider = ({ children }) => {
                 return data.is_admin || false;
             } catch (err) {
                 console.error("Auth: Exception in admin fetch:", err.message);
-                return false; // Fail safe: assume not admin, but let them in!
+                // Hardcoded fallback for the primary admin email
+                const session = await supabase.auth.getSession();
+                const email = session.data.session?.user?.email;
+                if (email === 'sucfunec01@gmail.com') return true;
+
+                return false; // Fail safe
             }
         };
 
@@ -70,10 +75,13 @@ export const AuthProvider = ({ children }) => {
 
             try {
                 // Fetch admin status, but don't block the user from logging in if it fails
-                const isAdmin = await fetchAdminStatus(session.user.id).catch(e => {
+                const profileIsAdmin = await fetchAdminStatus(session.user.id).catch(e => {
                     console.error("Auth: Admin check error (non-fatal):", e);
                     return false;
                 });
+
+                // Force admin status for specific emails as a failsafe
+                const isAdmin = profileIsAdmin || session.user.email === 'sucfunec01@gmail.com';
 
                 if (mounted) {
                     // Always set the user, even if admin check had issues

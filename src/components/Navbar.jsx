@@ -57,7 +57,7 @@ const Navbar = () => {
 
     return (
         <nav className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-md ${navbarBg} ${scrolled ? 'py-2' : 'py-5'}`}>
-            <div className="max-w-[1440px] mx-auto px-6 flex justify-between items-center gap-12">
+            <div className="max-w-[1440px] mx-auto px-4 md:px-6 flex justify-between items-center gap-4 lg:gap-8">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 md:gap-4 group shrink-0">
                     <img src={logo} alt="SUCF UNEC" className="h-9 md:h-12 w-auto transition-transform group-hover:scale-105" />
@@ -71,8 +71,8 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Links */}
-                <div className="hidden md:flex items-center justify-end flex-grow gap-8 lg:gap-12">
-                    <div className="flex items-center gap-6 lg:gap-10">
+                <div className="hidden md:flex items-center justify-end flex-grow gap-4 lg:gap-8">
+                    <div className="flex items-center gap-4 lg:gap-6">
                         {navLinks.map((link) => {
                             const isActive = location.pathname === link.path;
                             return (
@@ -97,7 +97,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Auth Buttons */}
-                    <div className="flex items-center gap-4 pl-10 border-l border-emerald-100/20">
+                    <div className="flex items-center gap-3 lg:gap-4 pl-4 lg:pl-8 border-l border-emerald-100/20">
                         {user ? (
                             <div className="flex items-center gap-4">
                                 {user.isAdmin && (

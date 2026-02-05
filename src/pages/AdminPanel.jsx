@@ -95,8 +95,6 @@ const AdminPanel = () => {
         event_date: '',
         event_time: '',
         location: '',
-        event_time: '',
-        location: '',
         bible_reference: '',
         description: '',
         flyer_url: '',

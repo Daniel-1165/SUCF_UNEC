@@ -101,9 +101,9 @@ const ArticleDetail = () => {
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-16">
+                <div className="grid lg:grid-cols-12 gap-10 xl:gap-16">
                     {/* Main Content Area */}
-                    <article className="lg:col-span-8">
+                    <article className="lg:col-span-8 overflow-hidden">
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ const ArticleDetail = () => {
 
                         {/* Rich Content - Enhanced Paragraph Styling */}
                         <div
-                            className="prose prose-xl md:prose-2xl max-w-none text-black leading-relaxed font-sans prose-emerald prose-p:mb-8 prose-p:leading-[1.8] prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600"
+                            className="prose prose-lg md:prose-xl max-w-[800px] text-black leading-relaxed font-sans prose-emerald prose-p:mb-8 prose-p:leading-[1.8] prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600 break-words"
                             dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 
@@ -174,25 +174,25 @@ const ArticleDetail = () => {
                     </article>
 
                     {/* Sidebar / More News Area */}
-                    <aside className="lg:col-span-4">
-                        <div className="sticky top-40 space-y-12">
+                    <aside className="lg:col-span-4 w-full">
+                        <div className="lg:sticky lg:top-40 space-y-12">
                             <div>
                                 <h3 className="text-xl font-black uppercase italic mb-8 flex items-center gap-3">
                                     <span className="w-8 h-1 bg-black" />
                                     More Stories
                                 </h3>
-                                <div className="space-y-8">
+                                <div className="space-y-6 bg-white border-2 border-slate-900/5 p-6 rounded-[2rem]">
                                     {otherNews.map((news) => (
-                                        <Link to={isNews ? `/news/${news.id}` : `/articles/${news.id}`} key={news.id} className="group block">
+                                        <Link to={isNews ? `/news/${news.id}` : `/articles/${news.id}`} key={news.id} className="group block last:border-0 border-b border-slate-100 pb-4 last:pb-0">
                                             <div className="flex gap-4">
                                                 {news.image_url && (
-                                                    <div className="w-20 h-20 shrink-0 bg-white grayscale group-hover:grayscale-0 transition-all overflow-hidden rounded-lg">
+                                                    <div className="w-16 h-16 shrink-0 bg-white grayscale group-hover:grayscale-0 transition-all overflow-hidden rounded-xl">
                                                         <img src={news.image_url} alt="" className="w-full h-full object-cover" />
                                                     </div>
                                                 )}
                                                 <div className="flex flex-col justify-center">
                                                     <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">{news.category || 'Update'}</span>
-                                                    <h4 className="text-sm font-black uppercase leading-tight group-hover:text-emerald-600 transition-colors line-clamp-2">
+                                                    <h4 className="text-[13px] font-black uppercase leading-[1.3] group-hover:text-emerald-600 transition-colors line-clamp-2">
                                                         {news.title}
                                                     </h4>
                                                 </div>
@@ -202,11 +202,10 @@ const ArticleDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Minimalist CTA */}
-                            <div className="bg-white border border-black/5 p-8 rounded-2xl shadow-sm">
+                            <div className="bg-white border-2 border-slate-900/5 p-8 rounded-[2rem] shadow-sm">
                                 <h4 className="text-lg font-black uppercase italic mb-4">Stay Connected</h4>
                                 <p className="text-sm text-black/60 mb-6">Never miss a word from the unique fellowship.</p>
-                                <Link to="/contact" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:text-emerald-600 transition-all">
+                                <Link to="/contact" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20">
                                     Join Our Community <FiChevronRight />
                                 </Link>
                             </div>

@@ -120,7 +120,10 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         return () => clearInterval(timer);
     }, []);
 
-    if (loading) return null;
+    // If loading, we still show the section with default values to prevent layout shift
+    // but we can add a subtle loading indicator if desired.
+    // if (loading) return null; 
+
 
     return (
         <div className="py-20 md:pt-32 pb-0 bg-white relative overflow-hidden">
