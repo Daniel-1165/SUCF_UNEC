@@ -9,6 +9,40 @@ import NewsSection from '../components/NewsSection';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 import SEO from '../components/SEO';
 import ImageLightbox from '../components/ImageLightbox';
+import { supabase } from '../supabaseClient';
+
+const DiagnosticBanner = () => {
+    const [status, setStatus] = useState('Checking...');
+    const [counts, setCounts] = useState({ news: 0, gallery: 0, articles: 0 });
+
+    useEffect(() => {
+        const checkConnection = async () => {
+            try {
+                const { count: newsCount } = await supabase.from('news').select('*', { count: 'exact', head: true });
+                const { count: galleryCount } = await supabase.from('gallery').select('*', { count: 'exact', head: true });
+                const { count: articlesCount } = await supabase.from('articles').select('*', { count: 'exact', head: true });
+
+                setCounts({ news: newsCount || 0, gallery: galleryCount || 0, articles: articlesCount || 0 });
+                setStatus('Connected ✅');
+            } catch (err) {
+                setStatus('Error: ' + err.message);
+            }
+        };
+        checkConnection();
+    }, []);
+
+    if (!import.meta.env.DEV) return null;
+
+    return (
+        <div className="fixed bottom-4 right-4 z-[9999] bg-slate-900/90 text-white p-4 rounded-2xl backdrop-blur-xl border border-white/10 shadow-2xl text-[10px] font-mono">
+            <p className="font-bold text-emerald-400 mb-2 uppercase tracking-widest">Supabase Diagnostics</p>
+            <p>Status: {status}</p>
+            <p>News: {counts.news}</p>
+            <p>Gallery: {counts.gallery}</p>
+            <p>Articles: {counts.articles}</p>
+        </div>
+    );
+};
 
 // Use the assets we have
 const heroImages = [
@@ -92,6 +126,7 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] text-slate-900 bg-dots-pattern overflow-x-hidden font-sans selection:bg-emerald-500 selection:text-white">
+            <DiagnosticBanner />
             <SEO
                 title="The Unique Fellowship"
                 description="Experience a community where spiritual growth meets academic excellence at the University of Nigeria, Enugu Campus."
