@@ -141,8 +141,8 @@ const Home = () => {
 
             {/* Hero Section */}
             <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-24 overflow-hidden">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-3xl -translate-x-1/2" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-3xl -translate-x-1/2 pointer-events-none" />
 
                 <div className="container mx-auto px-4 md:px-6 relative z-10">
                     <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
@@ -204,8 +204,8 @@ const Home = () => {
                         {/* Image/Carousel Section - Modern Card Style */}
                         <div className="lg:col-span-6 w-full relative h-[400px] md:h-[500px] lg:h-[650px] z-10 perspective-1000">
                             {/* Animated Background Elements */}
-                            <motion.div style={{ y: y1 }} className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-30 animate-pulse" />
-                            <motion.div style={{ y: y1 }} className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-300 rounded-full blur-3xl opacity-30 animate-pulse delay-700" />
+                            <motion.div style={{ y: y1 }} className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-30 animate-pulse pointer-events-none" />
+                            <motion.div style={{ y: y1 }} className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-300 rounded-full blur-3xl opacity-30 animate-pulse delay-700 pointer-events-none" />
 
                             <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-8 border-white shadow-2xl shadow-slate-200/50 bg-white">
                                 <AnimatePresence mode='wait'>
