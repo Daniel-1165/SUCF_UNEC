@@ -72,20 +72,31 @@ const Navbar = () => {
 
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center justify-end flex-grow gap-4 lg:gap-8">
-                    <div className="flex items-center gap-4 lg:gap-6">
+                    <div className="flex items-center gap-3 lg:gap-4">
                         {navLinks.map((link) => {
                             const isActive = location.pathname === link.path;
+                            const isHighlighted = link.name === 'Gallery' || link.name === 'Articles';
+
                             return (
                                 <Link
                                     key={link.name}
                                     to={link.path}
-                                    className={`text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-emerald-500 relative ${isActive
-                                        ? (isDarkPage ? 'text-white' : 'text-emerald-900')
-                                        : (isDarkPage ? 'text-gray-400' : 'text-gray-600')
+                                    className={`text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 relative
+                                        ${isHighlighted
+                                            ? `px-4 py-2 rounded-xl ${isActive
+                                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30'
+                                                : (isDarkPage
+                                                    ? 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+                                                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200')
+                                            }`
+                                            : `hover:text-emerald-500 ${isActive
+                                                ? (isDarkPage ? 'text-white' : 'text-emerald-900')
+                                                : (isDarkPage ? 'text-gray-400' : 'text-gray-600')
+                                            }`
                                         }`}
                                 >
                                     {link.name}
-                                    {isActive && (
+                                    {isActive && !isHighlighted && (
                                         <motion.span
                                             layoutId="navTab"
                                             className="absolute -bottom-2 left-0 w-full h-[2px] bg-emerald-500"
