@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sucf-unec.vercel.app/sitemap.xml
+Sitemap: https://sucfunec.org/sitemap.xml

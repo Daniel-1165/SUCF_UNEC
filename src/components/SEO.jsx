@@ -7,8 +7,8 @@ const SEO = ({ title, description, keywords, image, url }) => {
     const defaultDescription = "SUCF UNEC is a vibrant Christian community at the University of Nigeria, Enugu Campus, committed to spiritual growth and academic excellence.";
     const metaDescription = description || defaultDescription;
     const metaKeywords = keywords || "SUCF, UNEC, SUCF UNEC, Fellowship, University of Nigeria ENUGU, Christian Students Nigeria, Spiritual Growth Campus, The Unique Fellowship";
-    const metaImage = image || "https://sucf-unec.vercel.app/assets/logo.png";
-    const metaUrl = url || "https://sucf-unec.vercel.app/";
+    const metaImage = image || "https://sucfunec.org/assets/logo.png";
+    const metaUrl = url || "https://sucfunec.org/";
 
     return (
         <Helmet>
