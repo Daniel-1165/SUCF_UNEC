@@ -157,32 +157,41 @@ const Navbar = () => {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[320px] bg-[#0A1628] text-white shadow-2xl flex flex-col h-[100dvh]"
+                            className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[320px] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white shadow-2xl flex flex-col h-[100dvh] overflow-hidden"
                         >
+                            {/* Decorative overlay pattern */}
+                            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+                                backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                                backgroundSize: '32px 32px'
+                            }}></div>
+
                             {/* Header Section (Fixed height) */}
-                            <div className="p-6 pb-2 shrink-0">
+                            <div className="p-6 pb-4 shrink-0 relative z-10">
                                 <div className="flex justify-between items-center mb-6">
                                     <div className="flex items-center gap-2">
-                                        <img src={logo} alt="Logo" className="h-8 w-auto" />
+                                        <img src={logo} alt="Logo" className="h-9 w-auto drop-shadow-lg" />
                                         <div className="flex items-baseline">
-                                            <span className="text-sm font-black italic uppercase tracking-tighter leading-none font-heading text-white">SUCF</span>
-                                            <span className="text-sm font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-500 text-white px-1 ml-0.5 rounded-sm">UNEC</span>
+                                            <span className="text-base font-black italic uppercase tracking-tighter leading-none font-heading text-white">SUCF</span>
+                                            <span className="text-base font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-500 text-white px-1.5 ml-0.5 rounded-sm shadow-lg shadow-emerald-500/30">UNEC</span>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setIsOpen(false)}
-                                        className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all"
+                                        className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-all border border-white/10"
                                     >
                                         <FiX size={20} />
                                     </button>
                                 </div>
-                                <div className="h-px w-full bg-white/10 mb-6" />
+                                <p className="text-[10px] text-emerald-300 uppercase tracking-[0.3em] font-bold">Navigation Menu</p>
+                                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent mt-4" />
                             </div>
 
                             {/* Links Section (Expands to fill) */}
-                            <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar min-h-0">
+                            <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar min-h-0 relative z-10">
                                 {navLinks.map((link) => {
                                     const isActive = location.pathname === link.path;
+                                    const isTextOnly = link.name === 'Gallery' || link.name === 'Articles';
+
                                     return (
                                         <Link
                                             key={link.name}
@@ -190,11 +199,11 @@ const Navbar = () => {
                                             onClick={() => setIsOpen(false)}
                                             className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
                                                 ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
-                                                : 'text-white/60 hover:bg-white/5 hover:text-white'
-                                                }`}
+                                                : 'text-white/70 hover:bg-white/10 hover:text-white'
+                                                } ${isTextOnly ? 'justify-center border border-white/10 hover:border-white/20' : ''}`}
                                         >
-                                            <span className="text-xl">{link.icon}</span>
-                                            <span className="text-sm font-bold uppercase tracking-widest">
+                                            {!isTextOnly && <span className="text-xl">{link.icon}</span>}
+                                            <span className={`text-sm font-bold uppercase tracking-widest ${isTextOnly ? 'text-base' : ''}`}>
                                                 {link.name}
                                             </span>
                                         </Link>
@@ -203,11 +212,11 @@ const Navbar = () => {
 
                                 {user?.isAdmin && (
                                     <>
-                                        <div className="h-px w-full bg-white/5 my-4 mx-2" />
+                                        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-4" />
                                         <Link
                                             to="/admin"
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-emerald-400 hover:bg-emerald-400/5 transition-all"
+                                            className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-emerald-400 hover:bg-emerald-400/10 transition-all border border-emerald-400/20 hover:border-emerald-400/40"
                                         >
                                             <span className="text-xl"><FiSettings /></span>
                                             <span className="text-sm font-bold uppercase tracking-widest">Admin Panel</span>
@@ -217,21 +226,21 @@ const Navbar = () => {
                             </div>
 
                             {/* Bottom Section */}
-                            <div className="p-6 bg-black/20 border-t border-white/5">
+                            <div className="p-6 bg-black/30 backdrop-blur-sm border-t border-white/10 relative z-10">
                                 {user ? (
                                     <div className="space-y-4">
-                                        <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5">
-                                            <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-black shadow-lg">
+                                        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white font-black shadow-lg shadow-emerald-500/20">
                                                 {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
                                             </div>
-                                            <div className="overflow-hidden">
-                                                <p className="text-xs font-bold uppercase tracking-tight truncate">{user.user_metadata?.full_name || 'Member'}</p>
-                                                <p className="text-[10px] text-white/40 truncate italic">{user.email}</p>
+                                            <div className="overflow-hidden flex-1">
+                                                <p className="text-sm font-bold uppercase tracking-tight truncate text-white">{user.user_metadata?.full_name || 'Member'}</p>
+                                                <p className="text-[10px] text-white/50 truncate">{user.email}</p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={handleSignOut}
-                                            className="w-full flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-500/20"
+                                            className="w-full flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-500/30 hover:border-red-500"
                                         >
                                             <FiLogOut size={14} />
                                             Sign Out
@@ -242,7 +251,7 @@ const Navbar = () => {
                                         <Link
                                             to="/signin"
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center justify-center gap-2 bg-white/5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10"
+                                            className="flex items-center justify-center gap-2 bg-white/5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10 hover:border-white/20"
                                         >
                                             <FiLogIn size={14} />
                                             Log In
@@ -250,14 +259,14 @@ const Navbar = () => {
                                         <Link
                                             to="/signup"
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center justify-center gap-2 bg-emerald-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20"
+                                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-lg shadow-emerald-500/30"
                                         >
                                             <FiUserPlus size={14} />
                                             Join
                                         </Link>
                                     </div>
                                 )}
-                                <p className="text-center text-[9px] text-white/20 mt-6 uppercase tracking-[0.2em]">SUCF UNEC &copy; {new Date().getFullYear()}</p>
+                                <p className="text-center text-[9px] text-white/30 mt-6 uppercase tracking-[0.3em] font-bold">SUCF UNEC &copy; {new Date().getFullYear()}</p>
                             </div>
                         </motion.div>
                     </div>

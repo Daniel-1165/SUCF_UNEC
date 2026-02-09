@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiClock, FiUser, FiShare2, FiTag, FiCalendar, FiChevronRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabaseClient';
+import '../styles/quill-content.css';
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -146,9 +147,33 @@ const ArticleDetail = () => {
                             </motion.div>
                         )}
 
-                        {/* Rich Content - Enhanced Paragraph Styling */}
+                        {/* Rich Content - Enhanced Typography with Full Quill Support */}
+                        <style>{`
+                            .article-content .ql-size-small { font-size: 0.875rem; }
+                            .article-content .ql-size-large { font-size: 1.25rem; }
+                            .article-content .ql-size-huge { font-size: 1.5rem; }
+                            .article-content .ql-align-center { text-align: center; }
+                            .article-content .ql-align-right { text-align: right; }
+                            .article-content .ql-align-justify { text-align: justify; }
+                        `}</style>
                         <div
-                            className="prose prose-lg md:prose-xl max-w-[800px] text-black leading-relaxed font-sans prose-emerald prose-p:mb-8 prose-p:leading-[1.8] prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-a:text-emerald-600 break-words"
+                            className="article-content prose prose-lg md:prose-xl max-w-none text-slate-900 leading-relaxed
+                                prose-headings:font-black prose-headings:text-slate-900 prose-headings:tracking-tight
+                                prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-8
+                                prose-h2:text-3xl prose-h2:mb-5 prose-h2:mt-7
+                                prose-h3:text-2xl prose-h3:mb-4 prose-h3:mt-6
+                                prose-p:mb-6 prose-p:leading-[1.8] prose-p:text-slate-700
+                                prose-a:text-emerald-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                                prose-strong:text-slate-900 prose-strong:font-bold
+                                prose-em:text-slate-700 prose-em:italic
+                                prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
+                                prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6
+                                prose-li:mb-2 prose-li:text-slate-700
+                                prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-slate-600 prose-blockquote:my-6
+                                prose-code:bg-slate-100 prose-code:text-emerald-600 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono
+                                prose-pre:bg-slate-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-xl prose-pre:overflow-x-auto prose-pre:my-6
+                                prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8
+                                break-words"
                             dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 

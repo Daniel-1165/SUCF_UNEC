@@ -10,22 +10,25 @@ import 'react-quill-new/dist/quill.snow.css';
 const galleryCategories = ['Events', 'Worship', 'Fellowship', 'Outreach'];
 const articleCategories = ['Spiritual Growth', 'Academic', 'Prayer', 'Testimony'];
 
-// Quill editor configuration
+// Quill editor configuration - Enhanced with more formatting options
 const quillModules = {
     toolbar: [
-        [{ 'header': [1, 2, 3, false] }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
         [{ 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'blockquote', 'code-block'],
         [{ 'align': [] }],
+        ['link', 'blockquote', 'code-block'],
         ['clean']
     ]
 };
 
 const quillFormats = [
-    'header', 'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet', 'indent', 'link', 'blockquote', 'code-block', 'align'
+    'header', 'size', 'bold', 'italic', 'underline', 'strike',
+    'color', 'background', 'list', 'bullet', 'indent',
+    'link', 'blockquote', 'code-block', 'align'
 ];
 
 const AdminPanel = () => {
@@ -742,7 +745,7 @@ const AdminPanel = () => {
                                                 Cancel
                                             </button>
                                         )}
-                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                                        <button type="submit" disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
                                             <FiSave /> {editingArticleId ? 'Update Article' : 'Publish Article'}
                                         </button>
                                     </div>

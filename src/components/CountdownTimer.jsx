@@ -137,8 +137,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                     {/* LEFT: Flyer Section */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="w-full lg:w-5/12 mx-auto"
                     >
@@ -191,8 +190,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                     {/* RIGHT: Content & Countdown */}
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                         className="w-full lg:w-7/12 text-center lg:text-left"
                     >

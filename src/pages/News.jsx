@@ -139,8 +139,8 @@ const News = () => {
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-                                            <FiFileText className="text-4xl text-slate-700" />
+                                        <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                                            <FiFileText className="text-4xl text-slate-300" />
                                         </div>
                                     )}
                                     <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">
