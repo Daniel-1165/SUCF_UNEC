@@ -3,6 +3,7 @@ import { FiLinkedin, FiMail, FiInstagram, FiTwitter, FiEdit, FiPlus, FiTrash2, F
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 const Executives = () => {
     const { user } = useAuth();
@@ -130,6 +131,10 @@ const Executives = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient relative">
+            <SEO
+                title="Executives"
+                description="Meet the dedicated team of servants leading SUCF UNEC for the current academic session."
+            />
             <div className="container mx-auto px-6 text-center mb-24 max-w-2xl">
                 <motion.div
                     initial={{ opacity: 1, scale: 1 }}

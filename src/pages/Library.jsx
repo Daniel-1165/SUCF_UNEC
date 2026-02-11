@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient';
 import { motion } from 'framer-motion';
 import { FiDownload, FiBook, FiSearch, FiFilter, FiChevronRight } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 const Library = () => {
     const { user } = useAuth();
@@ -62,6 +63,10 @@ const Library = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-20 bg-[#F8FAFC] font-sans selection:bg-emerald-500 selection:text-white">
+            <SEO
+                title="Library"
+                description="Browse our collection of semester books, spiritual growth resources, and academic archives."
+            />
             <div className="container mx-auto px-6 max-w-7xl">
 
                 {/* Header & Search Section */}
