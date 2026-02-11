@@ -153,6 +153,9 @@ const ArticleDetail = () => {
                         <style>{`
                             .article-content {
                                 font-family: 'Playfair Display', serif;
+                                word-break: normal !important;
+                                overflow-wrap: break-word !important;
+                                hyphens: none !important;
                             }
                             .article-content p {
                                 font-family: 'Playfair Display', serif;
@@ -161,6 +164,9 @@ const ArticleDetail = () => {
                                 color: #1a1a1a;
                                 margin-bottom: 2rem;
                                 text-align: justify;
+                                word-break: normal !important;
+                                overflow-wrap: break-word !important;
+                                hyphens: none !important;
                             }
                             .article-content h2, .article-content h3 {
                                 font-family: 'Playfair Display', serif;
@@ -169,6 +175,9 @@ const ArticleDetail = () => {
                                 color: #000;
                                 margin-top: 3rem;
                                 margin-bottom: 1.5rem;
+                                word-break: normal !important;
+                                overflow-wrap: break-word !important;
+                                hyphens: none !important;
                             }
                             .article-content blockquote {
                                 font-family: 'Playfair Display', serif;
@@ -178,11 +187,14 @@ const ArticleDetail = () => {
                                 font-size: 1.5rem;
                                 margin: 3rem 0;
                                 color: #444;
+                                word-break: normal !important;
+                                overflow-wrap: break-word !important;
+                                hyphens: none !important;
                             }
                             @media (max-width: 768px) {
                                 .article-content p {
                                     font-size: 1.05rem;
-                                    text-align: left;
+                                    text-align: left !important;
                                 }
                             }
                         `}</style>
