@@ -152,3 +152,44 @@
     text-decoration-thickness: 2px;
     text-underline-offset: 2px;
 }
+
+/* Admin Editor Improvements */
+.admin-editor-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 450px;
+    background: white;
+    border-radius: 1rem;
+    overflow: visible !important;
+}
+
+.admin-editor-container .ql-toolbar {
+    position: sticky;
+    top: 80px;
+    z-index: 40 !important;
+    background: #f8fafc;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.admin-editor-container .ql-container {
+    border: none !important;
+    flex-grow: 1;
+    font-family: 'Inter', sans-serif;
+}
+
+.admin-editor-container .ql-editor {
+    min-height: 350px;
+    padding: 1.5rem;
+    font-size: 1rem;
+}
+
+.admin-editor-container .ql-editor.ql-blank::before {
+    left: 1.5rem;
+    color: #94a3b8;
+    font-style: normal;
+}

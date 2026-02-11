@@ -724,14 +724,14 @@ const AdminPanel = () => {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Content</label>
-                                        <div className="bg-gray-50 rounded-xl overflow-hidden border border-transparent focus-within:bg-white focus-within:border-emerald-500 transition-all">
+                                        <div className="admin-editor-container border border-gray-200">
                                             <ReactQuill
                                                 theme="snow"
                                                 value={articleForm.content}
                                                 onChange={(value) => setArticleForm({ ...articleForm, content: value })}
                                                 modules={quillModules}
                                                 formats={quillFormats}
-                                                className="h-64 mb-12"
+                                                className="admin-editor"
                                             />
                                         </div>
                                     </div>
@@ -894,14 +894,14 @@ const AdminPanel = () => {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Details (Full Content)</label>
-                                        <div className="bg-gray-50 rounded-xl overflow-hidden border border-transparent focus-within:bg-white focus-within:border-emerald-500 transition-all">
+                                        <div className="admin-editor-container border border-gray-200">
                                             <ReactQuill
                                                 theme="snow"
                                                 value={newsForm.content}
                                                 onChange={(value) => setNewsForm({ ...newsForm, content: value })}
                                                 modules={quillModules}
                                                 formats={quillFormats}
-                                                className="h-64 mb-12"
+                                                className="admin-editor"
                                             />
                                         </div>
                                     </div>
