@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlus, FiTrash2, FiCalculator, FiX, FiInfo } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiCalculator, FiX, FiInfo, FiArrowRight } from 'react-icons/fi';
 
 const GPACalculator = ({ isOpen, onClose }) => {
     const [courses, setCourses] = useState([

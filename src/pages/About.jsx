@@ -73,6 +73,46 @@ const About = () => {
 
             <AnthemSection />
 
+            {/* Academic Growth Section - Moved Up for Visibility */}
+            <section className="container mx-auto px-6 py-24 max-w-7xl">
+                <div className="zeni-card p-8 md:p-20 bg-[#00211F] relative overflow-hidden flex flex-col items-center text-center">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] -mr-48 -mt-48" />
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -ml-48 -mb-48" />
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="relative z-10 max-w-3xl"
+                    >
+                        <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-emerald-500/20">
+                            <FiAward className="animate-bounce" /> Academic Excellence
+                        </div>
+                        <h2 className="text-3xl md:text-7xl font-black text-white mb-6 md:mb-10 leading-tight tracking-tighter italic uppercase">
+                            Striving for <br />
+                            <span className="text-emerald-500">Distinction.</span>
+                        </h2>
+                        <p className="text-emerald-50/60 text-sm md:text-xl font-medium mb-12 leading-relaxed">
+                            Raising balanced Christians who are academically outstanding.
+                        </p>
+
+                        <button
+                            onClick={() => setIsCalcOpen(true)}
+                            className="group relative inline-flex items-center gap-4 md:gap-6 px-6 md:px-10 py-4 md:py-6 bg-white rounded-[1.5rem] md:rounded-[2rem] hover:bg-emerald-500 transition-all duration-500 shadow-2xl"
+                        >
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-[#00211F] text-white rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl group-hover:scale-110 transition-transform">
+                                <FiCalculator />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[#00211F] text-sm md:text-lg font-black uppercase tracking-tight leading-none group-hover:text-white transition-colors">GPA Calculator</p>
+                                <p className="hidden md:block text-[#00211F]/40 text-[10px] font-bold uppercase tracking-widest mt-1 group-hover:text-emerald-100">Plan your academic success</p>
+                            </div>
+                            <FiArrowRight className="text-xl md:text-2xl text-[#00211F] group-hover:text-white group-hover:translate-x-2 transition-all" />
+                        </button>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* Vision / Mission / Values Section */}
             <section className="container mx-auto px-6 mb-40 max-w-7xl">
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
@@ -212,45 +252,6 @@ const About = () => {
                 </div>
             </section>
 
-            {/* Academic Growth Section */}
-            <section className="container mx-auto px-6 py-32 max-w-7xl">
-                <div className="zeni-card p-12 md:p-20 bg-[#00211F] relative overflow-hidden flex flex-col items-center text-center">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -ml-48 -mb-48" />
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative z-10 max-w-3xl"
-                    >
-                        <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-emerald-500/20">
-                            <FiAward className="animate-bounce" /> Academic Excellence
-                        </div>
-                        <h2 className="text-4xl md:text-7xl font-black text-white mb-10 leading-tight tracking-tighter italic uppercase">
-                            Striving for <br />
-                            <span className="text-emerald-500">Distinction.</span>
-                        </h2>
-                        <p className="text-emerald-50/60 text-lg md:text-xl font-medium mb-12 leading-relaxed">
-                            We believe in raising balanced Christians who are not just spiritually sound, but academically outstanding. Our fellowship provides tools and support to help every member reach their full potential.
-                        </p>
-
-                        <button
-                            onClick={() => setIsCalcOpen(true)}
-                            className="group relative inline-flex items-center gap-6 px-10 py-6 bg-white rounded-[2rem] hover:bg-emerald-500 transition-all duration-500 shadow-2xl shadow-emerald-500/10"
-                        >
-                            <div className="w-14 h-14 bg-[#00211F] text-white rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                                <FiCalculator />
-                            </div>
-                            <div className="text-left">
-                                <p className="text-[#00211F] text-lg font-black uppercase tracking-tight leading-none group-hover:text-white transition-colors">Launch GPA Calculator</p>
-                                <p className="text-[#00211F]/40 text-[10px] font-bold uppercase tracking-widest mt-1 group-hover:text-emerald-100 transition-colors">Plan your path to academic success</p>
-                            </div>
-                            <FiArrowRight className="text-2xl text-[#00211F] group-hover:text-white group-hover:translate-x-2 transition-all" />
-                        </button>
-                    </motion.div>
-                </div>
-            </section>
 
             <GPACalculator isOpen={isCalcOpen} onClose={() => setIsCalcOpen(false)} />
         </div>
