@@ -137,7 +137,7 @@ const ArticleDetail = () => {
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="w-full relative overflow-hidden bg-white mb-16 shadow-xl grayscale hover:grayscale-0 transition-all duration-1000"
+                                className="w-full relative overflow-hidden bg-white mb-16 shadow-xl grayscale hover:grayscale-0 transition-all duration-1000 max-h-[300px] md:max-h-none aspect-video md:aspect-auto"
                             >
                                 <img
                                     src={item.image_url}

@@ -150,35 +150,35 @@ const Articles = () => {
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="zeni-card flex flex-col md:flex-row h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
+                                className="zeni-card flex flex-row h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
                             >
-                                <div className="h-52 md:h-auto md:w-1/3 overflow-hidden relative">
+                                <div className="w-1/3 md:w-1/3 overflow-hidden relative shrink-0">
                                     <img
                                         src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
                                         alt={article.title}
                                         className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
-                                    <div className="absolute top-6 left-6 bg-emerald-500/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-widest shadow-lg">
+                                    <div className="absolute top-2 left-2 md:top-6 md:left-6 bg-emerald-500/90 backdrop-blur-md px-2 py-0.5 md:px-4 md:py-1.5 rounded-full text-[7px] md:text-[9px] font-black text-white uppercase tracking-widest shadow-lg">
                                         {article.category || 'Word'}
                                     </div>
                                 </div>
 
-                                <div className="p-10 flex-grow flex flex-col justify-center">
-                                    <div className="flex items-center gap-4 text-[9px] font-black text-emerald-600 mb-6 uppercase tracking-widest opacity-60">
-                                        <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiUser /> {article.author_name || 'Admin'}</span>
-                                        <span className="flex items-center gap-2 px-2 py-1 bg-emerald-50 rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                <div className="p-4 md:p-10 flex-grow flex flex-col justify-center overflow-hidden">
+                                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[7px] md:text-[9px] font-black text-emerald-600 mb-2 md:mb-6 uppercase tracking-widest opacity-60">
+                                        <span className="flex items-center gap-1 md:gap-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-emerald-50 rounded-md md:rounded-lg"><FiUser /> {article.author_name || 'Admin'}</span>
+                                        <span className="flex items-center gap-1 md:gap-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-emerald-50 rounded-md md:rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                     </div>
 
-                                    <h2 className="text-2xl md:text-4xl font-black text-[#00211F] mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter">
+                                    <h2 className="text-sm md:text-2xl lg:text-4xl font-black text-[#00211F] mb-1 md:mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tighter line-clamp-2 md:line-clamp-none">
                                         {article.title}
                                     </h2>
 
-                                    <p className="text-[#00211F] opacity-40 text-sm mb-8 line-clamp-2 leading-relaxed font-medium">
+                                    <p className="hidden sm:block text-[#00211F] opacity-40 text-[10px] md:text-sm mb-3 md:mb-8 line-clamp-2 leading-relaxed font-medium">
                                         {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 150) + '...'}
                                     </p>
 
-                                    <div className="mt-auto pt-6 border-t border-[#F5F9F7] flex items-center gap-3 text-emerald-700 font-black text-[10px] uppercase tracking-[0.3em] group-hover:gap-5 transition-all">
-                                        Read Deeply <FiArrowRight className="text-lg" />
+                                    <div className="mt-auto pt-2 md:pt-6 border-t border-[#F5F9F7] flex items-center gap-2 md:gap-3 text-emerald-700 font-black text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] group-hover:gap-5 transition-all">
+                                        Read Deeply <FiArrowRight className="text-sm md:text-lg" />
                                     </div>
                                 </div>
                             </Link>

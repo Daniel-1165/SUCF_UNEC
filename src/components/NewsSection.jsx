@@ -14,7 +14,7 @@ const FeaturedNewsCard = ({ item }) => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="group relative h-[350px] sm:h-[400px] md:h-[500px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/50 cursor-pointer"
+            className="group relative h-[250px] sm:h-[400px] md:h-[500px] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/50 cursor-pointer"
         >
             {/* Background Image */}
             {item.image_url ? (

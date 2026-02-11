@@ -249,21 +249,23 @@ const Home = () => {
                             [1, 2, 3].map(i => <div key={i} className="h-96 bg-slate-200 rounded-3xl animate-pulse" />)
                         ) : articles.length > 0 ? (
                             articles.map((article, i) => (
-                                <Link to={`/articles/${article.id}`} key={article.id} className="group">
-                                    <div className="rounded-3xl overflow-hidden mb-6 relative aspect-video md:aspect-[4/3]">
+                                <Link to={`/articles/${article.id}`} key={article.id} className="group flex items-center gap-4 md:block">
+                                    <div className="rounded-2xl md:rounded-3xl overflow-hidden shrink-0 w-32 h-24 md:w-full md:h-auto mb-0 md:mb-6 relative aspect-video md:aspect-[4/3]">
                                         <img
                                             src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
                                             alt={article.title}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         />
-                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900">
+                                        <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-white/90 backdrop-blur px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-slate-900">
                                             {article.category || 'Article'}
                                         </div>
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
-                                        {article.title}
-                                    </h3>
-                                    <p className="text-slate-500 text-sm line-clamp-2">{article.content?.replace(/<[^>]*>/g, '')}</p>
+                                    <div className="flex-grow">
+                                        <h3 className="text-base md:text-xl font-bold text-slate-900 mb-1 md:mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
+                                            {article.title}
+                                        </h3>
+                                        <p className="text-slate-500 text-xs md:text-sm line-clamp-2 md:line-clamp-2">{article.content?.replace(/<[^>]*>/g, '')}</p>
+                                    </div>
                                 </Link>
                             ))
                         ) : (
