@@ -39,6 +39,16 @@ const About = () => {
 
     useEffect(() => {
         fetchExecutives();
+
+        // Handle scrolling to hash
+        if (window.location.hash === '#cgpa-calculator') {
+            setTimeout(() => {
+                const element = document.getElementById('cgpa-calculator');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 500);
+        }
     }, []);
 
     return (
@@ -73,43 +83,54 @@ const About = () => {
 
             <AnthemSection />
 
-            {/* Academic Growth Section - Moved Up for Visibility */}
-            <section className="container mx-auto px-6 py-24 max-w-7xl">
-                <div className="zeni-card p-8 md:p-20 bg-[#00211F] relative overflow-hidden flex flex-col items-center text-center">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -ml-48 -mb-48" />
+            {/* Academic Growth & CGPA Section - Extremely High Visibility */}
+            <section id="cgpa-calculator" className="container mx-auto px-6 py-12 max-w-7xl">
+                <div className="bg-emerald-600 rounded-[3rem] p-8 md:p-16 relative overflow-hidden shadow-2xl shadow-emerald-900/20">
+                    {/* Decorative Elements */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -mr-48 -mt-48" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[80px] -ml-32 -mb-32" />
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative z-10 max-w-3xl"
-                    >
-                        <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-emerald-500/20">
-                            <FiAward className="animate-bounce" /> Academic Excellence
-                        </div>
-                        <h2 className="text-3xl md:text-7xl font-black text-white mb-6 md:mb-10 leading-tight tracking-tighter italic uppercase">
-                            Striving for <br />
-                            <span className="text-emerald-500">Distinction.</span>
-                        </h2>
-                        <p className="text-emerald-50/60 text-sm md:text-xl font-medium mb-12 leading-relaxed">
-                            Raising balanced Christians who are academically outstanding.
-                        </p>
-
-                        <button
-                            onClick={() => setIsCalcOpen(true)}
-                            className="group relative inline-flex items-center gap-4 md:gap-6 px-6 md:px-10 py-4 md:py-6 bg-white rounded-[1.5rem] md:rounded-[2rem] hover:bg-emerald-500 transition-all duration-500 shadow-2xl"
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="flex-1 text-center md:text-left"
                         >
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-[#00211F] text-white rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-2xl group-hover:scale-110 transition-transform">
-                                <FiCalculator />
+                            <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-white/10">
+                                <FiAward className="animate-pulse" /> Student Tools
                             </div>
-                            <div className="text-left">
-                                <p className="text-[#00211F] text-sm md:text-lg font-black uppercase tracking-tight leading-none group-hover:text-white transition-colors">GPA Calculator</p>
-                                <p className="hidden md:block text-[#00211F]/40 text-[10px] font-bold uppercase tracking-widest mt-1 group-hover:text-emerald-100">Plan your academic success</p>
+                            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-none tracking-tighter italic uppercase">
+                                CGPA <span className="text-emerald-200">Calculator.</span>
+                            </h2>
+                            <p className="text-emerald-50/80 text-lg md:text-xl font-medium mb-8 leading-relaxed max-w-xl">
+                                We believe in academic excellence as a form of worship. Use our standard 5.0 scale calculator to track your progress and strive for distinction.
+                            </p>
+
+                            <button
+                                onClick={() => setIsCalcOpen(true)}
+                                className="group relative inline-flex items-center gap-4 px-8 py-5 bg-white text-emerald-900 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all shadow-xl hover:scale-105 active:scale-95"
+                            >
+                                <FiCalculator className="text-xl" />
+                                Start Calculating
+                                <FiArrowRight className="text-xl group-hover:translate-x-2 transition-transform" />
+                            </button>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className="w-full md:w-1/3 aspect-square bg-white/10 backdrop-blur-md rounded-[2.5rem] border border-white/20 flex items-center justify-center relative overflow-hidden group hover:rotate-2 transition-transform duration-500"
+                            onClick={() => setIsCalcOpen(true)}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+                            <FiCalculator className="text-[120px] text-white/40 group-hover:scale-120 transition-transform duration-700" />
+                            <div className="absolute bottom-6 left-6 right-6 text-center">
+                                <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Institutional Standard 5.0</p>
                             </div>
-                            <FiArrowRight className="text-xl md:text-2xl text-[#00211F] group-hover:text-white group-hover:translate-x-2 transition-all" />
-                        </button>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
