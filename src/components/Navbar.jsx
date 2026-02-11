@@ -201,7 +201,6 @@ const Navbar = () => {
                             <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar min-h-0 relative z-10">
                                 {navLinks.map((link) => {
                                     const isActive = location.pathname === link.path;
-                                    const isTextOnly = link.name === 'Gallery' || link.name === 'Articles';
 
                                     return (
                                         <Link
@@ -211,10 +210,10 @@ const Navbar = () => {
                                             className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
                                                 ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
                                                 : 'text-white/70 hover:bg-white/10 hover:text-white'
-                                                } ${isTextOnly ? 'justify-center border border-white/10 hover:border-white/20' : ''}`}
+                                                }`}
                                         >
-                                            {!isTextOnly && <span className="text-xl">{link.icon}</span>}
-                                            <span className={`text-sm font-bold uppercase tracking-widest ${isTextOnly ? 'text-base' : ''}`}>
+                                            <span className="text-xl">{link.icon}</span>
+                                            <span className="text-sm font-bold uppercase tracking-widest">
                                                 {link.name}
                                             </span>
                                         </Link>

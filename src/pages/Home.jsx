@@ -250,7 +250,7 @@ const Home = () => {
                         ) : articles.length > 0 ? (
                             articles.map((article, i) => (
                                 <Link to={`/articles/${article.id}`} key={article.id} className="group">
-                                    <div className="rounded-3xl overflow-hidden mb-6 relative aspect-[4/3]">
+                                    <div className="rounded-3xl overflow-hidden mb-6 relative aspect-video md:aspect-[4/3]">
                                         <img
                                             src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
                                             alt={article.title}

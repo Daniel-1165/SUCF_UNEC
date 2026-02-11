@@ -27,10 +27,10 @@
 }
 
 
-.article-content [style*="background-color"] {
-    /* Background colors will be inline styles from Quill */
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
+/* Ensure no accidental backgrounds from rich text editor */
+.article-content p,
+.article-content span {
+    background-color: transparent !important;
 }
 
 /* Better spacing for lists in articles */

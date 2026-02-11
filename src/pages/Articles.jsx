@@ -70,7 +70,7 @@ const Articles = () => {
     }, [searchQuery, selectedCategory]);
 
     return (
-        <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-600 selection:text-white">
+        <div className="pt-32 pb-20 min-h-screen zeni-mesh-gradient selection:bg-emerald-500/30 selection:text-emerald-900">
             <SEO
                 title="Edifying Reads"
                 description="Explore deep spiritual insights, testimonies, and academic exhortations from the SUCF UNEC community."
@@ -152,7 +152,7 @@ const Articles = () => {
                                 to={`/articles/${article.id}`}
                                 className="zeni-card flex flex-col md:flex-row h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
                             >
-                                <div className="h-64 md:h-auto md:w-1/3 overflow-hidden relative">
+                                <div className="h-52 md:h-auto md:w-1/3 overflow-hidden relative">
                                     <img
                                         src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
                                         alt={article.title}
