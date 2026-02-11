@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
 import NewsSection from '../components/NewsSection';
+import WeeklyPosts from '../components/WeeklyPosts';
 import { supabase } from '../supabaseClient';
 import { fadeInUp, staggerContainer, staggerItem } from '../utils/animations';
 import SEO from '../components/SEO';
@@ -280,6 +281,7 @@ const Home = () => {
             </section>
 
             <NewsSection />
+            <WeeklyPosts />
             <BooksSection />
 
             {/* Gallery Strip */}

@@ -155,8 +155,10 @@ const ArticleDetail = () => {
                                 font-family: 'Playfair Display', serif;
                                 word-break: normal !important;
                                 overflow-wrap: normal !important;
+                                word-wrap: normal !important;
                                 white-space: normal !important;
                                 hyphens: none !important;
+                                -webkit-hyphens: none !important;
                             }
                             .article-content p, .article-content span, .article-content div {
                                 font-family: 'Playfair Display', serif;
@@ -167,7 +169,9 @@ const ArticleDetail = () => {
                                 text-align: left; /* Changed from justify for better word handling */
                                 word-break: normal !important;
                                 overflow-wrap: normal !important;
+                                word-wrap: normal !important;
                                 hyphens: none !important;
+                                -webkit-hyphens: none !important;
                             }
                             .article-content h2, .article-content h3 {
                                 font-family: 'Playfair Display', serif;
@@ -178,7 +182,9 @@ const ArticleDetail = () => {
                                 margin-bottom: 1.5rem;
                                 word-break: normal !important;
                                 overflow-wrap: normal !important;
+                                word-wrap: normal !important;
                                 hyphens: none !important;
+                                -webkit-hyphens: none !important;
                             }
                             .article-content blockquote {
                                 font-family: 'Playfair Display', serif;

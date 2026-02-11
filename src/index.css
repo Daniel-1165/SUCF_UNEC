@@ -49,12 +49,17 @@
   h6,
   span,
   div,
+  li,
   .prose,
   .article-content {
     word-break: normal !important;
     overflow-wrap: normal !important;
+    word-wrap: normal !important;
     white-space: normal !important;
     hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+    -ms-hyphens: none !important;
   }
 }
 

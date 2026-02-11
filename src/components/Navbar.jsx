@@ -52,7 +52,7 @@ const Navbar = () => {
         ? (scrolled ? 'bg-black/90' : 'bg-transparent')
         : (scrolled ? 'bg-white/90 shadow-sm' : 'bg-transparent');
 
-    const logoTitleColor = isDarkPage ? 'text-white' : 'text-emerald-900';
+    const logoTitleColor = isDarkPage ? 'text-white' : 'text-emerald-600';
     const logoSubColor = isDarkPage ? 'text-emerald-400' : 'text-emerald-600';
 
     return (
@@ -90,7 +90,7 @@ const Navbar = () => {
                                                     : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200')
                                             }`
                                             : `hover:text-emerald-500 ${isActive
-                                                ? (isDarkPage ? 'text-white' : 'text-emerald-900')
+                                                ? (isDarkPage ? 'text-white' : 'text-emerald-600')
                                                 : (isDarkPage ? 'text-gray-400' : 'text-gray-600')
                                             }`
                                         }`}
@@ -129,7 +129,7 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <div className="flex items-center gap-3 lg:gap-4">
-                                <Link to="/signin" className={`text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-emerald-500 ${isDarkPage ? 'text-white' : 'text-emerald-900'}`}>
+                                <Link to="/signin" className={`text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-emerald-500 ${isDarkPage ? 'text-white' : 'text-emerald-600'}`}>
                                     Log In
                                 </Link>
                                 <Link to="/signup" className="px-5 lg:px-7 py-2.5 bg-emerald-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg hover:shadow-emerald-500/30">
@@ -145,11 +145,12 @@ const Navbar = () => {
                     className={`md:hidden p-3 rounded-2xl transition-all shadow-sm active:scale-95 border
                         ${isDarkPage
                             ? 'text-white bg-white/10 border-white/20 hover:bg-white/20'
-                            : 'text-emerald-900 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20'}`}
+                            : 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20'}`}
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? <FiX size={26} /> : <FiMenu size={26} />}
                 </button>
+
             </div>
 
             {/* Mobile Side Drawer */}

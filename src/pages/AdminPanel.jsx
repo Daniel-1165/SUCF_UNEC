@@ -41,7 +41,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
-        if (tab && ['gallery', 'articles', 'books', 'news', 'events', 'messages', 'users'].includes(tab)) {
+        if (tab && ['gallery', 'articles', 'books', 'news', 'events', 'messages', 'users', 'weekly_posts'].includes(tab)) {
             setActiveTab(tab);
         }
     }, [location]);
@@ -106,6 +106,14 @@ const AdminPanel = () => {
     const [editingEventId, setEditingEventId] = useState(null);
     const [contactMessages, setContactMessages] = useState([]);
 
+    // Weekly Posts State
+    const [weeklyPosts, setWeeklyPosts] = useState([]);
+    const [weeklyPostForm, setWeeklyPostForm] = useState({
+        image_url: '',
+        imageFile: null
+    });
+    const [editingWeeklyPostId, setEditingWeeklyPostId] = useState(null);
+
     // Users State
     const [userSearchTerm, setUserSearchTerm] = useState('');
     const [userResults, setUserResults] = useState([]);
@@ -137,6 +145,7 @@ const AdminPanel = () => {
             fetchNews();
             fetchFellowshipEvents();
             fetchContactMessages();
+            fetchWeeklyPosts();
 
             if (user?.user_metadata?.full_name && articleForm.author_name === 'Admin') {
                 setArticleForm(prev => ({ ...prev, author_name: user.user_metadata.full_name }));
@@ -211,6 +220,14 @@ const AdminPanel = () => {
             .select('*')
             .order('created_at', { ascending: false });
         if (!error) setContactMessages(data);
+    };
+
+    const fetchWeeklyPosts = async () => {
+        const { data, error } = await supabase
+            .from('weekly_posts')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (!error) setWeeklyPosts(data || []);
     };
 
     const handleMarkAsRead = async (id) => {
@@ -584,6 +601,60 @@ const AdminPanel = () => {
         if (!error) fetchFellowshipEvents();
     };
 
+    // --- WEEKLY POST ACTIONS ---
+    const handleWeeklyPostSubmit = async (e) => {
+        e.preventDefault();
+        setUploading(true);
+        try {
+            let finalImageUrl = weeklyPostForm.image_url;
+            if (weeklyPostForm.imageFile) {
+                finalImageUrl = await uploadFile(weeklyPostForm.imageFile, 'content-images', 'weekly-posts');
+            }
+
+            const { imageFile, ...submitData } = weeklyPostForm;
+            const dataToSave = { ...submitData, image_url: finalImageUrl };
+
+            if (editingWeeklyPostId) {
+                const { error } = await supabase
+                    .from('weekly_posts')
+                    .update(dataToSave)
+                    .eq('id', editingWeeklyPostId);
+                if (error) throw error;
+                alert("Weekly post updated!");
+            } else {
+                const { error } = await supabase.from('weekly_posts').insert([dataToSave]);
+                if (error) throw error;
+                alert("Weekly post published!");
+            }
+            resetWeeklyPostForm();
+            fetchWeeklyPosts();
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const resetWeeklyPostForm = () => {
+        setWeeklyPostForm({ image_url: '', imageFile: null });
+        setEditingWeeklyPostId(null);
+    };
+
+    const handleEditWeeklyPost = (post) => {
+        setWeeklyPostForm({
+            image_url: post.image_url || '',
+            imageFile: null
+        });
+        setEditingWeeklyPostId(post.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDeleteWeeklyPost = async (id) => {
+        if (!window.confirm("Delete this weekly post?")) return;
+        const { error } = await supabase.from('weekly_posts').delete().eq('id', id);
+        if (!error) fetchWeeklyPosts();
+    };
+
     if (!hasAuthorized.current && (authLoading || (user && user.isAdmin === undefined))) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -630,6 +701,9 @@ const AdminPanel = () => {
                             {contactMessages.some(m => m.status === 'unread') && (
                                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
                             )}
+                        </button>
+                        <button onClick={() => setActiveTab('weekly_posts')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'weekly_posts' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
+                            <FiFileText /> Weekly Posts
                         </button>
                     </div>
                 </div>
@@ -928,6 +1002,52 @@ const AdminPanel = () => {
                                         <div className="flex gap-2">
                                             <button onClick={() => handleEditNews(item)} className="p-3 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-all"><FiEdit /></button>
                                             <button onClick={() => handleDeleteNews(item.id)} className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><FiTrash2 /></button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ) : activeTab === 'weekly_posts' ? (
+                        <motion.div key="weekly_posts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+                            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2">
+                                    {editingWeeklyPostId ? <FiEdit className="text-emerald-500" /> : <FiPlus className="text-emerald-500" />}
+                                    {editingWeeklyPostId ? 'Edit Weekly Post' : 'Add Weekly Post'}
+                                </h3>
+                                <form onSubmit={handleWeeklyPostSubmit} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Weekly Flyer (Upload) {editingWeeklyPostId && '(Optional)'}</label>
+                                            <input type="file" accept="image/*" onChange={(e) => setWeeklyPostForm({ ...weeklyPostForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Or Image URL</label>
+                                            <input type="text" value={weeklyPostForm.image_url} onChange={(e) => setWeeklyPostForm({ ...weeklyPostForm, image_url: e.target.value })} placeholder="https://..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingWeeklyPostId && (
+                                            <button type="button" onClick={resetWeeklyPostForm} className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">Cancel</button>
+                                        )}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                                            <FiSave /> {editingWeeklyPostId ? 'Update Flyer' : 'Post Flyer'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {weeklyPosts.map((post) => (
+                                    <div key={post.id} className="group relative aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
+                                        {post.image_url ? (
+                                            <img src={post.image_url} alt="Weekly" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-200">
+                                                <FiImage size={48} />
+                                            </div>
+                                        )}
+                                        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                            <button onClick={() => handleEditWeeklyPost(post)} className="bg-white/90 text-emerald-600 p-2 rounded-full shadow-sm hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button>
+                                            <button onClick={() => handleDeleteWeeklyPost(post.id)} className="bg-white/90 text-red-500 p-2 rounded-full shadow-sm hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button>
                                         </div>
                                     </div>
                                 ))}
