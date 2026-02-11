@@ -118,7 +118,7 @@
     line-height: 1.8;
     color: #475569;
     word-break: normal !important;
-    overflow-wrap: break-word !important;
+    overflow-wrap: normal !important;
     hyphens: none !important;
 }
 
@@ -129,7 +129,7 @@
 .article-content h5,
 .article-content h6 {
     word-break: normal !important;
-    overflow-wrap: break-word !important;
+    overflow-wrap: normal !important;
     hyphens: none !important;
 }
 

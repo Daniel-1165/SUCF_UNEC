@@ -169,7 +169,7 @@ const Articles = () => {
                                         <span className="flex items-center gap-1 md:gap-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-emerald-50 rounded-md md:rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                     </div>
 
-                                    <h2 className="text-sm md:text-2xl lg:text-4xl font-black text-[#00211F] mb-1 md:mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tight line-clamp-2 md:line-clamp-none break-words">
+                                    <h2 className="text-sm md:text-2xl lg:text-4xl font-black text-[#00211F] mb-1 md:mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tight line-clamp-2 md:line-clamp-none break-normal">
                                         {article.title}
                                     </h2>
 

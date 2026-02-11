@@ -39,7 +39,7 @@
     font-family: var(--font-heading);
   }
 
-  /* Prevent mid-word breaking globally */
+  /* Force words to stay whole globally */
   p,
   h1,
   h2,
@@ -48,10 +48,13 @@
   h5,
   h6,
   span,
-  div {
-    word-break: normal;
-    overflow-wrap: break-word;
-    hyphens: none;
+  div,
+  .prose,
+  .article-content {
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    white-space: normal !important;
+    hyphens: none !important;
   }
 }
 

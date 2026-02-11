@@ -44,7 +44,7 @@ const About = () => {
     return (
         <div className="min-h-screen pt-32 pb-20 zeni-mesh-gradient">
             <SEO
-                title="About Us"
+                title="About"
                 description="Learn about the history, vision, and mission of SSUCF UNEC - raising balanced Christian students at the University of Nigeria, Enugu Campus."
             />
             {/* Header */}

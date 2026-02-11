@@ -154,18 +154,19 @@ const ArticleDetail = () => {
                             .article-content {
                                 font-family: 'Playfair Display', serif;
                                 word-break: normal !important;
-                                overflow-wrap: break-word !important;
+                                overflow-wrap: normal !important;
+                                white-space: normal !important;
                                 hyphens: none !important;
                             }
-                            .article-content p {
+                            .article-content p, .article-content span, .article-content div {
                                 font-family: 'Playfair Display', serif;
                                 font-size: 1.15rem;
                                 line-height: 1.8;
                                 color: #1a1a1a;
                                 margin-bottom: 2rem;
-                                text-align: justify;
+                                text-align: left; /* Changed from justify for better word handling */
                                 word-break: normal !important;
-                                overflow-wrap: break-word !important;
+                                overflow-wrap: normal !important;
                                 hyphens: none !important;
                             }
                             .article-content h2, .article-content h3 {
@@ -176,7 +177,7 @@ const ArticleDetail = () => {
                                 margin-top: 3rem;
                                 margin-bottom: 1.5rem;
                                 word-break: normal !important;
-                                overflow-wrap: break-word !important;
+                                overflow-wrap: normal !important;
                                 hyphens: none !important;
                             }
                             .article-content blockquote {
@@ -188,7 +189,7 @@ const ArticleDetail = () => {
                                 margin: 3rem 0;
                                 color: #444;
                                 word-break: normal !important;
-                                overflow-wrap: break-word !important;
+                                overflow-wrap: normal !important;
                                 hyphens: none !important;
                             }
                             @media (max-width: 768px) {
@@ -199,7 +200,7 @@ const ArticleDetail = () => {
                             }
                         `}</style>
                         <div
-                            className="article-content prose prose-lg max-w-none text-slate-900 leading-relaxed break-words"
+                            className="article-content prose prose-lg max-w-none text-slate-900 leading-relaxed break-normal"
                             dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 

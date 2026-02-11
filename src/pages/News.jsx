@@ -153,7 +153,7 @@ const News = () => {
                                         <span className="flex items-center gap-1"><FiCalendar /> {new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                     </div>
 
-                                    <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 break-words">
+                                    <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 break-normal">
                                         {item.title}
                                     </h3>
 
