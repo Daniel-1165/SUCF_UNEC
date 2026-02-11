@@ -142,10 +142,13 @@ const Navbar = () => {
 
                 {/* Mobile Toggle */}
                 <button
-                    className={`md:hidden p-2 rounded-xl transition-colors ${isDarkPage ? 'text-white hover:bg-white/10' : 'text-emerald-900 hover:bg-emerald-50'}`}
+                    className={`md:hidden p-3 rounded-2xl transition-all shadow-sm active:scale-95 border
+                        ${isDarkPage
+                            ? 'text-white bg-white/10 border-white/20 hover:bg-white/20'
+                            : 'text-emerald-900 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20'}`}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    {isOpen ? <FiX size={28} /> : <FiMenu size={28} />}
+                    {isOpen ? <FiX size={26} /> : <FiMenu size={26} />}
                 </button>
             </div>
 

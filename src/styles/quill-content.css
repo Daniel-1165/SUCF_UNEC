@@ -117,6 +117,20 @@
     margin-bottom: 1.5rem;
     line-height: 1.8;
     color: #475569;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
 }
 
 /* Images */

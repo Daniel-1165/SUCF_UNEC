@@ -85,7 +85,7 @@ const ArticleDetail = () => {
     }
 
     return (
-        <div className="pt-24 md:pt-32 pb-20 min-h-screen bg-white selection:bg-black selection:text-white">
+        <div className="pt-24 md:pt-32 pb-20 min-h-screen bg-[#F0F7F4] selection:bg-black selection:text-white">
             <div className="container mx-auto px-6 max-w-4xl">
                 {/* Minimalist Editorial Navigation */}
                 <div className="flex justify-between items-center mb-16 py-4 border-y border-black/5">
