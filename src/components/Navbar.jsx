@@ -178,7 +178,7 @@ const Navbar = () => {
 
                             {/* Header Section (Fixed height) */}
                             <div className="p-6 pb-4 shrink-0 relative z-10">
-                                <div className="flex justify-between items-center mb-6">
+                                <div className="flex justify-between items-center mb-6 px-1">
                                     <div className="flex items-center gap-2">
                                         <img src={logo} alt="Logo" className="h-9 w-auto drop-shadow-lg" />
                                         <div className="flex items-baseline">
@@ -193,7 +193,6 @@ const Navbar = () => {
                                         <FiX size={20} />
                                     </button>
                                 </div>
-                                <p className="text-[10px] text-emerald-300 uppercase tracking-[0.3em] font-bold">Navigation Menu</p>
                                 <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent mt-4" />
                             </div>
 

@@ -173,9 +173,11 @@ const Articles = () => {
                                         {article.title}
                                     </h2>
 
-                                    <p className="hidden sm:block text-[#00211F] opacity-40 text-[10px] md:text-sm mb-3 md:mb-8 line-clamp-2 leading-relaxed font-medium">
-                                        {article.excerpt || article.content?.replace(/<[^>]*>/g, '').substring(0, 150) + '...'}
-                                    </p>
+                                    {article.excerpt && (
+                                        <p className="hidden sm:block text-[#00211F] opacity-40 text-[10px] md:text-sm mb-3 md:mb-8 line-clamp-2 leading-relaxed font-medium">
+                                            {article.excerpt}
+                                        </p>
+                                    )}
 
                                     <div className="mt-auto pt-2 md:pt-6 border-t border-[#F5F9F7] flex items-center gap-2 md:gap-3 text-emerald-700 font-black text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] group-hover:gap-5 transition-all">
                                         Read Deeply <FiArrowRight className="text-sm md:text-lg" />
