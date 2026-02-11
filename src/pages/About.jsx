@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import AnthemSection from '../components/AnthemSection';
 import SEO from '../components/SEO';
 import GPACalculator from '../components/GPACalculator';
-import { FiCalculator } from 'react-icons/fi';
+import { FiBookOpen } from 'react-icons/fi';
 
 const About = () => {
     const [executives, setExecutives] = useState([]);
@@ -111,7 +111,7 @@ const About = () => {
                                 onClick={() => setIsCalcOpen(true)}
                                 className="group relative inline-flex items-center gap-4 px-8 py-5 bg-white text-emerald-900 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all shadow-xl hover:scale-105 active:scale-95"
                             >
-                                <FiCalculator className="text-xl" />
+                                <FiBookOpen className="text-xl" />
                                 Start Calculating
                                 <FiArrowRight className="text-xl group-hover:translate-x-2 transition-transform" />
                             </button>
@@ -125,7 +125,7 @@ const About = () => {
                             onClick={() => setIsCalcOpen(true)}
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                            <FiCalculator className="text-[120px] text-white/40 group-hover:scale-120 transition-transform duration-700" />
+                            <FiBookOpen className="text-[120px] text-white/40 group-hover:scale-120 transition-transform duration-700" />
                             <div className="absolute bottom-6 left-6 right-6 text-center">
                                 <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Institutional Standard 5.0</p>
                             </div>

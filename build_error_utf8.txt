@@ -1,0 +1,99 @@
+﻿
+> sucf-unec@0.0.0 build
+> vite build
+
+[36mvite v7.3.0 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 1253 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 7.71s
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: ([31mΓ£  
+  ù[39m Build failed in 7   
+ .71s:String) [], RemoteE    
+xception
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+[31merror during build:
+[31msrc/components/GPACalcul
+ator.jsx (3:27): 
+"FiCalculator" is not 
+exported by "node_modules/rea
+ct-icons/fi/index.mjs", 
+imported by "src/components/G
+PACalculator.jsx".[31m
+file: [36mC:/Users/Daniel/SU
+CF_UNEC/src/components/GPACal
+culator.jsx:3:27[31m
+[33m
+1: import React, { useState 
+} from 'react';
+2: import { motion, 
+AnimatePresence } from 
+'framer-motion';
+3: import { FiPlus, 
+FiTrash2, FiCalculator, FiX, 
+FiInfo, FiArrowRight } from 
+'react-icons/fi';
+                             
+ ^
+4: 
+5: const GPACalculator = ({ 
+isOpen, onClose }) => {
+[31m
+    at getRollupError (file:/
+//C:/Users/Daniel/SUCF_UNEC/n
+ode_modules/rollup/dist/es/sh
+ared/parseAst.js:401:41)
+    at error (file:///C:/User
+s/Daniel/SUCF_UNEC/node_modul
+es/rollup/dist/es/shared/pars
+eAst.js:397:42)
+    at Module.error (file:///
+C:/Users/Daniel/SUCF_UNEC/nod
+e_modules/rollup/dist/es/shar
+ed/node-entry.js:16994:16)
+    at Module.traceVariable (
+file:///C:/Users/Daniel/SUCF_
+UNEC/node_modules/rollup/dist
+/es/shared/node-entry.js:1745
+0:29)
+    at 
+ModuleScope.findVariable (fil
+e:///C:/Users/Daniel/SUCF_UNE
+C/node_modules/rollup/dist/es
+/shared/node-entry.js:15113:3
+9)
+    at ReturnValueScope.findV
+ariable (file:///C:/Users/Dan
+iel/SUCF_UNEC/node_modules/ro
+llup/dist/es/shared/node-entr
+y.js:5674:38)
+    at FunctionBodyScope.find
+Variable (file:///C:/Users/Da
+niel/SUCF_UNEC/node_modules/r
+ollup/dist/es/shared/node-ent
+ry.js:5674:38)
+    at Identifier.bind (file:
+///C:/Users/Daniel/SUCF_UNEC/
+node_modules/rollup/dist/es/s
+hared/node-entry.js:5448:40)
+    at CallExpression.bind (f
+ile:///C:/Users/Daniel/SUCF_U
+NEC/node_modules/rollup/dist/
+es/shared/node-entry.js:2813:
+28)
+    at CallExpression.bind (f
+ile:///C:/Users/Daniel/SUCF_U
+NEC/node_modules/rollup/dist/
+es/shared/node-entry.js:12148
+:15)[39m

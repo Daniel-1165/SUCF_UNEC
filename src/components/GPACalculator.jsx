@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlus, FiTrash2, FiCalculator, FiX, FiInfo, FiArrowRight } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiBookOpen, FiX, FiInfo, FiArrowRight } from 'react-icons/fi';
 
 const GPACalculator = ({ isOpen, onClose }) => {
     const [courses, setCourses] = useState([
@@ -74,7 +74,7 @@ const GPACalculator = ({ isOpen, onClose }) => {
                         <div className="p-8 bg-emerald-600 text-white flex justify-between items-center shrink-0">
                             <div>
                                 <h2 className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-3">
-                                    <FiCalculator /> GPA Calculator
+                                    <FiBookOpen /> GPA Calculator
                                 </h2>
                                 <p className="text-emerald-100 text-xs font-bold uppercase tracking-widest mt-1 opacity-80">Academic Stewardship</p>
                             </div>
