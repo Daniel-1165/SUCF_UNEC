@@ -70,20 +70,7 @@ const WeeklyPosts = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* Admin Plus Card */}
-                    {user?.isAdmin && (
-                        <motion.div
-                            whileHover={{ y: -5 }}
-                            className="bg-white/50 backdrop-blur-sm border-2 border-dashed border-emerald-200 rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center group cursor-pointer hover:bg-emerald-50 hover:border-emerald-500 transition-all min-h-[400px]"
-                            onClick={() => window.location.href = '/admin?tab=weekly_posts'}
-                        >
-                            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                                <FiPlus />
-                            </div>
-                            <h3 className="text-lg font-bold text-emerald-900">Add Weekly Flyer</h3>
-                            <p className="text-emerald-600/60 text-sm mt-2">Upload a new weekly image post</p>
-                        </motion.div>
-                    )}
+
 
                     {loading ? (
                         [1, 2].map(i => (
