@@ -261,23 +261,23 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
             </div>
 
             {/* Text Slider / Ticker */}
-            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-5 mt-24 overflow-hidden relative flex items-center">
+            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-5 mt-24 overflow-hidden relative">
                 <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50/50 to-transparent z-10"></div>
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50/50 to-transparent z-10"></div>
 
                 <motion.div
                     animate={{ x: [0, -2000] }}
                     transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-                    className="whitespace-nowrap flex items-center gap-12"
+                    className="whitespace-nowrap inline-flex items-center gap-8"
                 >
                     {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="flex items-center gap-4">
-                            <span className="text-xs font-bold text-slate-600 uppercase tracking-[0.2em] flex items-center gap-3">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                Join us at Architecture Auditorium for a Life Changing Session in God's Presence
+                        <React.Fragment key={i}>
+                            <span className="inline-flex items-center gap-3 text-xs font-bold text-slate-600 uppercase tracking-[0.2em]">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                                <span className="whitespace-nowrap">Join us at Architecture Auditorium for a Life Changing Session in God's Presence</span>
                             </span>
-                            <span className="text-slate-300">|</span>
-                        </div>
+                            <span className="text-slate-300 mx-4">|</span>
+                        </React.Fragment>
                     ))}
                 </motion.div>
             </div>
