@@ -101,112 +101,114 @@ const ArticleDetail = () => {
                 </div>
 
                 <div className="flex flex-col items-center">
-                    {/* Header Section - Inspired by Shanghai Editorial */}
-                    <header className="text-center mb-16 w-full max-w-3xl">
-                        <motion.span
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.4em] text-emerald-600 mb-6 block"
-                        >
-                            {item.category || (isNews ? 'Fellowship News' : 'Spiritual Insight')}
-                        </motion.span>
+                    {/* Header Section - Modern Forbes Style */}
+                    <header className="mb-8 w-full max-w-3xl">
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                                {item.category || (isNews ? 'News' : 'Article')}
+                            </span>
+                            <span className="text-gray-300">|</span>
+                            <span className="text-xs font-medium text-gray-500">
+                                {new Date(item.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                            </span>
+                        </div>
+
                         <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-4xl md:text-6xl lg:text-7xl font-serif text-black leading-[1.1] mb-8 tracking-tight font-light"
+                            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-[1.15] mb-6 tracking-tight font-sans"
                         >
                             {item.title}
                         </motion.h1>
 
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="flex flex-col items-center gap-4 mt-10"
-                        >
-                            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
-                                <FiUser size={18} />
+                        <div className="flex items-center gap-4 border-b border-gray-100 pb-8">
+                            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700">
+                                <FiUser size={16} />
                             </div>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Article By: <span className="text-black">{item.author_name || 'SUCF UNEC Admin'}</span></span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">— {new Date(item.created_at).getFullYear()} —</span>
-                        </motion.div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-bold text-gray-900">{item.author_name || 'SUCF UNEC Admin'}</span>
+                                <span className="text-xs text-gray-500">Editorial Team</span>
+                            </div>
+                        </div>
                     </header>
 
-                    {/* Featured Image - No more grayscale, cleaner fit */}
+                    {/* Featured Image - Reasonable Size */}
                     {item.image_url && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="w-full relative overflow-hidden bg-slate-50 mb-20 shadow-2xl rounded-sm"
-                        >
-                            <img
-                                src={item.image_url}
-                                alt={item.title}
-                                className="w-full h-auto object-cover"
-                            />
-                        </motion.div>
+                        <div className="w-full max-w-4xl mb-12">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="relative overflow-hidden rounded-lg bg-gray-100 aspect-video md:aspect-[21/9] max-h-[500px]"
+                            >
+                                <img
+                                    src={item.image_url}
+                                    alt={item.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </motion.div>
+                            <p className="mt-3 text-xs text-gray-500 italic">
+                                {item.title}
+                            </p>
+                        </div>
                     )}
 
                     {/* Main Content Area */}
-                    <article className="w-full max-w-2xl">
-                        {/* Rich Content - Enhanced Serif Typography */}
+                    <article className="w-full max-w-3xl">
                         <style>{`
                             .article-content {
-                                font-family: 'Playfair Display', serif;
-                                word-break: normal !important;
-                                overflow-wrap: normal !important;
-                                word-wrap: normal !important;
-                                white-space: normal !important;
-                                hyphens: none !important;
-                                -webkit-hyphens: none !important;
+                                font-family: 'Georgia', 'Merriweather', serif;
+                                color: #2d2d2d;
                             }
-                            .article-content p, .article-content span, .article-content div {
-                                font-family: 'Playfair Display', serif;
-                                font-size: 1.15rem;
+                            .article-content p {
+                                font-size: 1.125rem;
                                 line-height: 1.8;
-                                color: #1a1a1a;
                                 margin-bottom: 2rem;
-                                text-align: left; /* Changed from justify for better word handling */
-                                word-break: normal !important;
-                                overflow-wrap: normal !important;
-                                word-wrap: normal !important;
-                                hyphens: none !important;
-                                -webkit-hyphens: none !important;
                             }
-                            .article-content h2, .article-content h3 {
-                                font-family: 'Playfair Display', serif;
+                            .article-content h2 {
+                                font-family: system-ui, -apple-system, sans-serif;
+                                font-size: 1.8rem;
                                 font-weight: 700;
-                                font-style: italic;
-                                color: #000;
+                                color: #111;
                                 margin-top: 3rem;
-                                margin-bottom: 1.5rem;
-                                word-break: normal !important;
-                                overflow-wrap: normal !important;
-                                word-wrap: normal !important;
-                                hyphens: none !important;
-                                -webkit-hyphens: none !important;
+                                margin-bottom: 1rem;
+                                line-height: 1.3;
+                            }
+                            .article-content h3 {
+                                font-family: system-ui, -apple-system, sans-serif;
+                                font-size: 1.4rem;
+                                font-weight: 700;
+                                color: #111;
+                                margin-top: 2.5rem;
+                                margin-bottom: 1rem;
                             }
                             .article-content blockquote {
-                                font-family: 'Playfair Display', serif;
-                                border-left: 1px solid #000;
-                                padding-left: 2rem;
+                                border-left: 3px solid #059669;
+                                padding-left: 1.5rem;
                                 font-style: italic;
-                                font-size: 1.5rem;
-                                margin: 3rem 0;
-                                color: #444;
-                                word-break: normal !important;
-                                overflow-wrap: normal !important;
-                                hyphens: none !important;
+                                font-size: 1.25rem;
+                                color: #4b5563;
+                                margin: 2.5rem 0;
+                            }
+                            .article-content ul, .article-content ol {
+                                margin-bottom: 2rem;
+                                padding-left: 1.5rem;
+                            }
+                            .article-content li {
+                                margin-bottom: 0.5rem;
+                                font-size: 1.125rem;
                             }
                             @media (max-width: 768px) {
                                 .article-content p {
                                     font-size: 1.05rem;
-                                    text-align: left !important;
+                                    line-height: 1.7;
+                                }
+                                .article-content h2 {
+                                    font-size: 1.5rem;
                                 }
                             }
                         `}</style>
                         <div
-                            className="article-content prose prose-lg max-w-none text-slate-900 leading-relaxed break-normal"
+                            className="article-content"
                             dangerouslySetInnerHTML={{ __html: item.content }}
                         />
 

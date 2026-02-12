@@ -156,22 +156,26 @@ const News = () => {
                                     )}
                                 </div>
 
-                                <div className="p-5 md:p-6 flex-grow flex flex-col">
-                                    <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">
-                                        <FiCalendar className="text-xs" />
-                                        <span>{new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                <div className="p-6 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-center gap-2 text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">
+                                            <FiCalendar className="text-emerald-600" />
+                                            <span>{new Date(item.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                                        </div>
+
+                                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors leading-tight">
+                                            {item.title}
+                                        </h3>
+
+                                        <p className="text-gray-600 text-sm md:text-base mb-4 leading-relaxed line-clamp-3 font-serif antialiased">
+                                            {item.content?.replace(/<[^>]*>/g, '')}
+                                        </p>
                                     </div>
 
-                                    <h3 className="text-lg md:text-xl font-black text-slate-900 mb-2 md:mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight">
-                                        {item.title}
-                                    </h3>
-
-                                    <p className="text-slate-500 text-sm mb-4 md:mb-5 line-clamp-3 leading-relaxed flex-grow">
-                                        {item.content?.replace(/<[^>]*>/g, '')}
-                                    </p>
-
-                                    <div className="flex items-center gap-2 text-emerald-700 font-black text-[10px] md:text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
-                                        Read More <FiArrowRight className="text-xs" />
+                                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
+                                        <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
+                                            Read Update <FiArrowRight />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>

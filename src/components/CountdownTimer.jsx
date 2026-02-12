@@ -43,6 +43,9 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                     .limit(1)
                     .single();
 
+                console.log("Fetched Event Data:", data);
+                console.log("Fetch Error:", error);
+
                 if (data) {
                     setEvent(data);
                 } else if (propTargetDate) {
@@ -261,23 +264,23 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
             </div>
 
             {/* Text Slider / Ticker */}
-            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-5 mt-24 overflow-hidden relative">
+            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-4 mt-24 overflow-hidden relative flex">
                 <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50/50 to-transparent z-10"></div>
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50/50 to-transparent z-10"></div>
 
                 <motion.div
-                    animate={{ x: [0, -2000] }}
-                    transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-                    className="whitespace-nowrap inline-flex items-center gap-8"
+                    animate={{ x: [0, -1000] }}
+                    transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+                    className="flex items-center whitespace-nowrap"
                 >
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <React.Fragment key={i}>
-                            <span className="inline-flex items-center gap-3 text-xs font-bold text-slate-600 uppercase tracking-[0.2em]">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                        <div key={i} className="flex items-center mx-8 flex-shrink-0">
+                            <span className="text-xs font-bold text-slate-600 uppercase tracking-[0.2em] flex items-center gap-3">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                                <span className="whitespace-nowrap">Join us at Architecture Auditorium for a Life Changing Session in God's Presence</span>
+                                Join us at Architecture Auditorium for a Life Changing Session in God's Presence
                             </span>
-                            <span className="text-slate-300 mx-4">|</span>
-                        </React.Fragment>
+                            <span className="text-slate-300 ml-8">|</span>
+                        </div>
                     ))}
                 </motion.div>
             </div>
