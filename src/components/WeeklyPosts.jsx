@@ -50,8 +50,8 @@ const WeeklyPosts = () => {
         }
     };
 
-    // If no posts and not admin, don't show section
-    if (!loading && posts.length === 0 && !user?.isAdmin) {
+    // If no posts, don't show section at all
+    if (!loading && posts.length === 0) {
         return null;
     }
 

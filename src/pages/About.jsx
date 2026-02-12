@@ -83,55 +83,15 @@ const About = () => {
 
             <AnthemSection />
 
-            {/* Academic Growth & CGPA Section - Extremely High Visibility */}
-            <section id="cgpa-calculator" className="container mx-auto px-6 py-12 max-w-7xl">
-                <div className="bg-emerald-600 rounded-[3rem] p-8 md:p-16 relative overflow-hidden shadow-2xl shadow-emerald-900/20">
-                    {/* Decorative Elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[80px] -ml-32 -mb-32" />
-
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-                        <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="flex-1 text-center md:text-left"
-                        >
-                            <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-white/10">
-                                <FiAward className="animate-pulse" /> Student Tools
-                            </div>
-                            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-none tracking-tighter italic uppercase">
-                                CGPA <span className="text-emerald-200">Calculator.</span>
-                            </h2>
-                            <p className="text-emerald-50/80 text-lg md:text-xl font-medium mb-8 leading-relaxed max-w-xl">
-                                We believe in academic excellence as a form of worship. Use our standard 5.0 scale calculator to track your progress and strive for distinction.
-                            </p>
-
-                            <button
-                                onClick={() => setIsCalcOpen(true)}
-                                className="group relative inline-flex items-center gap-4 px-8 py-5 bg-white text-emerald-900 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all shadow-xl hover:scale-105 active:scale-95"
-                            >
-                                <FiBookOpen className="text-xl" />
-                                Start Calculating
-                                <FiArrowRight className="text-xl group-hover:translate-x-2 transition-transform" />
-                            </button>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="w-full md:w-1/3 aspect-square bg-white/10 backdrop-blur-md rounded-[2.5rem] border border-white/20 flex items-center justify-center relative overflow-hidden group hover:rotate-2 transition-transform duration-500"
-                            onClick={() => setIsCalcOpen(true)}
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                            <FiBookOpen className="text-[120px] text-white/40 group-hover:scale-120 transition-transform duration-700" />
-                            <div className="absolute bottom-6 left-6 right-6 text-center">
-                                <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Institutional Standard 5.0</p>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
+            {/* Academic Growth & CGPA Section - Simple Button */}
+            <section id="cgpa-calculator" className="container mx-auto px-6 py-8 max-w-7xl flex justify-center">
+                <button
+                    onClick={() => setIsCalcOpen(true)}
+                    className="inline-flex items-center gap-3 px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl active:scale-95"
+                >
+                    <FiBookOpen className="text-lg" />
+                    Calculate Your CGPA
+                </button>
             </section>
 
             {/* Vision / Mission / Values Section */}

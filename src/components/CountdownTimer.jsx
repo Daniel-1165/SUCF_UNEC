@@ -232,9 +232,9 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
                                     { label: 'Seconds', value: timeLeft.seconds }
                                 ].map((item, idx) => (
                                     <div key={idx} className="flex flex-col items-center">
-                                        <div className="w-16 h-16 md:w-24 md:h-24 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-2 relative overflow-hidden group">
+                                        <div className="w-14 h-14 md:w-20 md:h-20 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-2 relative overflow-hidden group">
                                             <div className="absolute inset-0 bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                                            <span className="text-2xl md:text-4xl font-bold text-white font-mono relative z-10">
+                                            <span className="text-xl md:text-3xl font-bold text-white font-mono relative z-10">
                                                 {String(item.value).padStart(2, '0')}
                                             </span>
                                         </div>
@@ -261,22 +261,22 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
             </div>
 
             {/* Text Slider / Ticker */}
-            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-3 mt-24 overflow-hidden relative">
-                <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10"></div>
+            <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-5 mt-24 overflow-hidden relative flex items-center">
+                <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50/50 to-transparent z-10"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50/50 to-transparent z-10"></div>
 
                 <motion.div
                     animate={{ x: [0, -2000] }}
                     transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-                    className="whitespace-nowrap flex gap-12 items-center"
+                    className="whitespace-nowrap flex items-center gap-12"
                 >
                     {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="flex items-center gap-4 opacity-70">
-                            <span className="text-[10px] md:text-xs font-bold text-slate-600 uppercase tracking-[0.2em] flex items-center gap-4">
+                        <div key={i} className="flex items-center gap-4">
+                            <span className="text-xs font-bold text-slate-600 uppercase tracking-[0.2em] flex items-center gap-3">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                 Join us at Architecture Auditorium for a Life Changing Session in God's Presence
                             </span>
-                            <span className="text-slate-300 px-4">|</span>
+                            <span className="text-slate-300">|</span>
                         </div>
                     ))}
                 </motion.div>

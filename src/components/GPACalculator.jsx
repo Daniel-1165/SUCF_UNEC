@@ -4,7 +4,15 @@ import { FiPlus, FiTrash2, FiBookOpen, FiX, FiInfo, FiArrowRight } from 'react-i
 
 const GPACalculator = ({ isOpen, onClose }) => {
     const [courses, setCourses] = useState([
-        { id: 1, name: '', units: '', grade: '5' }
+        { id: 1, name: '', units: '', grade: '5' },
+        { id: 2, name: '', units: '', grade: '5' },
+        { id: 3, name: '', units: '', grade: '5' },
+        { id: 4, name: '', units: '', grade: '5' },
+        { id: 5, name: '', units: '', grade: '5' },
+        { id: 6, name: '', units: '', grade: '5' },
+        { id: 7, name: '', units: '', grade: '5' },
+        { id: 8, name: '', units: '', grade: '5' },
+        { id: 9, name: '', units: '', grade: '5' }
     ]);
     const [result, setResult] = useState(null);
 

@@ -70,51 +70,51 @@ const Articles = () => {
     }, [searchQuery, selectedCategory]);
 
     return (
-        <div className="pt-32 pb-20 min-h-screen bg-[#F0F7F4] transition-colors duration-700 selection:bg-emerald-500/30 selection:text-emerald-900">
+        <div className="pt-24 md:pt-32 pb-20 min-h-screen bg-white selection:bg-emerald-500/30 selection:text-emerald-900">
             <SEO
                 title="Edifying Reads"
                 description="Explore deep spiritual insights, testimonies, and academic exhortations from the SUCF UNEC community."
             />
-            <div className="container mx-auto px-6 max-w-7xl">
-                <header className="text-center mb-16 md:mb-24 max-w-3xl mx-auto relative">
+            <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+                <header className="text-center mb-12 md:mb-16 max-w-3xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-900 text-[10px] font-black uppercase tracking-[0.2em] mb-6"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-900 text-[10px] font-black uppercase tracking-[0.2em] mb-4"
                     >
                         <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                         Wisdom & Revelation
                     </motion.div>
-                    <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-[#00211F] leading-none uppercase italic">
+                    <h1 className="text-4xl md:text-7xl font-black mb-4 md:mb-6 tracking-tighter text-[#00211F] leading-none uppercase italic">
                         Edifying <span className="text-emerald-600">Reads.</span>
                     </h1>
-                    <p className="text-[#00211F] opacity-40 text-lg md:text-xl font-medium leading-relaxed">
+                    <p className="text-[#00211F] opacity-40 text-base md:text-xl font-medium leading-relaxed">
                         Articles, Testimonies, and Words of Exhortation to build your spirit.
                     </p>
                 </header>
 
                 {/* Search and Filter Section */}
-                <div className="mb-12 space-y-6">
+                <div className="mb-10 md:mb-12 space-y-4 md:space-y-6">
                     {/* Search Bar */}
                     <div className="relative max-w-2xl mx-auto">
-                        <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-emerald-600/40" />
+                        <FiSearch className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-lg md:text-2xl text-emerald-600/40" />
                         <input
                             type="text"
-                            placeholder="Search articles by title or content..."
+                            placeholder="Search articles..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-white border-2 border-gray-200 focus:border-emerald-600 outline-none transition-all text-[#00211F] font-medium placeholder:text-gray-400"
+                            className="w-full pl-12 md:pl-16 pr-4 md:pr-6 py-3 md:py-5 rounded-full md:rounded-[2rem] bg-white border-2 border-gray-200 focus:border-emerald-600 outline-none transition-all text-[#00211F] font-medium placeholder:text-gray-400 text-sm md:text-base"
                         />
                     </div>
 
                     {/* Category Filter */}
-                    <div className="flex flex-wrap items-center justify-center gap-3">
-                        <FiFilter className="text-emerald-600/60" />
+                    <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                        <FiFilter className="text-emerald-600/60 hidden md:block" />
                         {categories.map(category => (
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
-                                className={`px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all ${selectedCategory === category
+                                className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-wider transition-all ${selectedCategory === category
                                     ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
                                     : 'bg-white text-gray-600 border border-gray-200 hover:border-emerald-600 hover:text-emerald-600'
                                     }`}
@@ -125,62 +125,75 @@ const Articles = () => {
                     </div>
 
                     {/* Results Count */}
-                    <p className="text-center text-sm font-medium text-gray-500">
+                    <p className="text-center text-xs md:text-sm font-medium text-gray-500">
                         Showing <span className="font-black text-emerald-600">{filteredArticles.length}</span> {filteredArticles.length === 1 ? 'article' : 'articles'}
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
+                <div className="space-y-6 md:space-y-8">
                     {paginatedArticles.map((article, index) => (
                         <motion.div
                             key={article.id}
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            transition={{ duration: 0.4, delay: index * 0.05 }}
                             className="relative group"
                         >
                             {user?.isAdmin && !article.id.toString().startsWith('s') && (
                                 <button
                                     onClick={(e) => handleDelete(e, article.id)}
-                                    className="absolute top-6 right-6 z-20 p-3 bg-red-600/90 backdrop-blur-md text-white rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:scale-110"
+                                    className="absolute top-3 right-3 md:top-4 md:right-4 z-20 p-2 md:p-3 bg-red-600/90 backdrop-blur-md text-white rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:scale-110"
                                 >
-                                    <FiTrash2 size={18} />
+                                    <FiTrash2 size={14} className="md:w-4 md:h-4" />
                                 </button>
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="zeni-card flex flex-row h-full group hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-700 overflow-hidden bg-white border-[#E8F3EF]"
+                                className="block bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-gray-100 hover:border-emerald-200 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-900/5"
                             >
-                                <div className="w-1/3 md:w-1/3 overflow-hidden relative shrink-0">
-                                    <img
-                                        src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
-                                    />
-                                    <div className="absolute top-2 left-2 md:top-6 md:left-6 bg-emerald-500/90 backdrop-blur-md px-2 py-0.5 md:px-4 md:py-1.5 rounded-full text-[7px] md:text-[9px] font-black text-white uppercase tracking-widest shadow-lg">
-                                        {article.category || 'Word'}
-                                    </div>
-                                </div>
-
-                                <div className="p-4 md:p-10 flex-grow flex flex-col justify-center overflow-hidden">
-                                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[7px] md:text-[9px] font-black text-emerald-600 mb-2 md:mb-6 uppercase tracking-widest opacity-60">
-                                        <span className="flex items-center gap-1 md:gap-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-emerald-50 rounded-md md:rounded-lg"><FiUser /> {article.author_name || 'Admin'}</span>
-                                        <span className="flex items-center gap-1 md:gap-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-emerald-50 rounded-md md:rounded-lg"><FiClock /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                <div className="flex flex-col">
+                                    {/* Image */}
+                                    <div className="relative w-full h-48 md:h-64 overflow-hidden bg-gray-100">
+                                        <img
+                                            src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
+                                            alt={article.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-emerald-600/95 backdrop-blur-sm px-3 py-1 md:px-4 md:py-1.5 rounded-full">
+                                            <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest">{article.category || 'Word'}</span>
+                                        </div>
                                     </div>
 
-                                    <h2 className="text-sm md:text-2xl lg:text-4xl font-black text-[#00211F] mb-1 md:mb-4 group-hover:text-emerald-600 transition-colors leading-tight italic uppercase tracking-tight line-clamp-2 md:line-clamp-none break-normal">
-                                        {article.title}
-                                    </h2>
+                                    {/* Content */}
+                                    <div className="p-5 md:p-8">
+                                        {/* Meta */}
+                                        <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                                            <span className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-emerald-600/70 uppercase tracking-wider">
+                                                <FiUser className="text-xs" /> {article.author_name || 'Admin'}
+                                            </span>
+                                            <span className="text-gray-300">•</span>
+                                            <span className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                                <FiClock className="text-xs" /> {new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </div>
 
-                                    {article.excerpt && (
-                                        <p className="hidden sm:block text-[#00211F] opacity-40 text-[10px] md:text-sm mb-3 md:mb-8 line-clamp-2 leading-relaxed font-medium">
-                                            {article.excerpt}
-                                        </p>
-                                    )}
+                                        {/* Title */}
+                                        <h2 className="text-xl md:text-3xl lg:text-4xl font-black text-[#00211F] mb-3 md:mb-4 group-hover:text-emerald-600 transition-colors leading-tight tracking-tight">
+                                            {article.title}
+                                        </h2>
 
-                                    <div className="mt-auto pt-2 md:pt-6 border-t border-[#F5F9F7] flex items-center gap-2 md:gap-3 text-emerald-700 font-black text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] group-hover:gap-5 transition-all">
-                                        Read Deeply <FiArrowRight className="text-sm md:text-lg" />
+                                        {/* Excerpt */}
+                                        {article.excerpt && (
+                                            <p className="text-[#00211F]/60 text-sm md:text-base mb-4 md:mb-6 line-clamp-2 leading-relaxed">
+                                                {article.excerpt}
+                                            </p>
+                                        )}
+
+                                        {/* Read More */}
+                                        <div className="flex items-center gap-2 text-emerald-700 font-black text-[10px] md:text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
+                                            Read Article <FiArrowRight className="text-sm" />
+                                        </div>
                                     </div>
                                 </div>
                             </Link>
@@ -190,20 +203,20 @@ const Articles = () => {
 
                 {/* Ultra-Sleek Pagination */}
                 {totalPages > 1 && (
-                    <div className="mt-24 flex items-center justify-center gap-12">
+                    <div className="mt-16 md:mt-24 flex items-center justify-center gap-8 md:gap-12">
                         <button
                             onClick={() => {
                                 setCurrentPage(p => Math.max(1, p - 1));
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
                             disabled={currentPage === 1}
-                            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
+                            className="group flex items-center gap-2 md:gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
                         >
-                            <FiArrowRight className="rotate-180 text-xl group-hover:-translate-x-2 transition-transform" />
-                            Prev
+                            <FiArrowRight className="rotate-180 text-lg md:text-xl group-hover:-translate-x-2 transition-transform" />
+                            <span className="hidden md:inline">Prev</span>
                         </button>
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 md:gap-3">
                             {[...Array(totalPages)].map((_, i) => (
                                 <button
                                     key={i}
@@ -211,7 +224,7 @@ const Articles = () => {
                                         setCurrentPage(i + 1);
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                     }}
-                                    className={`h-1 rounded-full transition-all duration-700 ${currentPage === i + 1 ? 'w-12 bg-emerald-600 shadow-lg shadow-emerald-500/20' : 'w-3 bg-slate-200 hover:bg-emerald-200'}`}
+                                    className={`h-1 rounded-full transition-all duration-700 ${currentPage === i + 1 ? 'w-8 md:w-12 bg-emerald-600 shadow-lg shadow-emerald-500/20' : 'w-2 md:w-3 bg-slate-200 hover:bg-emerald-200'}`}
                                 />
                             ))}
                         </div>
@@ -222,10 +235,10 @@ const Articles = () => {
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
                             disabled={currentPage === totalPages}
-                            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
+                            className="group flex items-center gap-2 md:gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 disabled:opacity-0 transition-all hover:text-emerald-600"
                         >
-                            Next
-                            <FiArrowRight className="text-xl group-hover:translate-x-2 transition-transform" />
+                            <span className="hidden md:inline">Next</span>
+                            <FiArrowRight className="text-lg md:text-xl group-hover:translate-x-2 transition-transform" />
                         </button>
                     </div>
                 )}
@@ -233,11 +246,11 @@ const Articles = () => {
                 {/* No Results Message */}
                 {filteredArticles.length === 0 && (
                     <div className="text-center py-20">
-                        <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <FiSearch className="text-4xl text-emerald-600/40" />
+                        <div className="w-20 h-20 md:w-24 md:h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FiSearch className="text-3xl md:text-4xl text-emerald-600/40" />
                         </div>
-                        <h3 className="text-2xl font-black text-[#00211F] mb-3">No Articles Found</h3>
-                        <p className="text-gray-500 font-medium">Try adjusting your search or filter criteria</p>
+                        <h3 className="text-xl md:text-2xl font-black text-[#00211F] mb-3">No Articles Found</h3>
+                        <p className="text-gray-500 font-medium text-sm md:text-base">Try adjusting your search or filter criteria</p>
                     </div>
                 )}
             </div>
