@@ -13,8 +13,10 @@ import SEO from '../components/SEO';
 
 // Use the assets we have
 const heroImages = [
-    '/assets/carousel/weekly_activities_schedule.jpg', // Updated first image
-    '/assets/main_flyer.jpg',
+    '/assets/carousel/weekly_activities_schedule.jpg',
+    '/assets/carousel/carousel_event_1.jpg',
+    '/assets/carousel/carousel_event_2.jpg',
+    '/assets/carousel/carousel_event_3.jpg',
     '/assets/carousel/weekly_prayers.jpg',
     '/assets/carousel/bible_study.jpg',
     '/assets/freshers_flyer.jpg',
