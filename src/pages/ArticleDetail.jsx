@@ -132,21 +132,17 @@ const ArticleDetail = () => {
                         </div>
                     </header>
 
-                    {/* Featured Image - Reasonable Size */}
+                    {/* Featured Image - Full View */}
                     {item.image_url && (
-                        <div className="w-full max-w-4xl mb-12">
-                            <motion.div
+                        <div className="w-full mb-12 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+                            <motion.img
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="relative overflow-hidden rounded-lg bg-gray-100 aspect-video md:aspect-[21/9] max-h-[500px]"
-                            >
-                                <img
-                                    src={item.image_url}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </motion.div>
-                            <p className="mt-3 text-xs text-gray-500 italic">
+                                src={item.image_url}
+                                alt={item.title}
+                                className="w-full h-auto max-h-[85vh] object-contain mx-auto"
+                            />
+                            <p className="p-3 text-center text-xs text-gray-500 italic bg-white/50 backdrop-blur">
                                 {item.title}
                             </p>
                         </div>
@@ -157,53 +153,68 @@ const ArticleDetail = () => {
                         <style>{`
                             .article-content {
                                 font-family: 'Georgia', 'Merriweather', serif;
-                                color: #2d2d2d;
+                                color: #1a1a1a;
                             }
                             .article-content p {
-                                font-size: 1.125rem;
-                                line-height: 1.8;
+                                font-size: 1.15rem;
+                                line-height: 1.9;
                                 margin-bottom: 2rem;
                             }
                             .article-content h2 {
                                 font-family: system-ui, -apple-system, sans-serif;
                                 font-size: 1.8rem;
-                                font-weight: 700;
-                                color: #111;
-                                margin-top: 3rem;
-                                margin-bottom: 1rem;
-                                line-height: 1.3;
+                                font-weight: 800;
+                                color: #000;
+                                margin-top: 3.5rem;
+                                margin-bottom: 1.2rem;
+                                line-height: 1.2;
+                                letter-spacing: -0.02em;
                             }
                             .article-content h3 {
                                 font-family: system-ui, -apple-system, sans-serif;
                                 font-size: 1.4rem;
                                 font-weight: 700;
-                                color: #111;
+                                color: #000;
                                 margin-top: 2.5rem;
                                 margin-bottom: 1rem;
                             }
+                            .article-content strong, .article-content b {
+                                color: #000;
+                                font-weight: 700;
+                            }
                             .article-content blockquote {
-                                border-left: 3px solid #059669;
+                                border-left: 4px solid #059669;
                                 padding-left: 1.5rem;
                                 font-style: italic;
                                 font-size: 1.25rem;
-                                color: #4b5563;
+                                color: #374151;
                                 margin: 2.5rem 0;
+                                background: #f9fafb;
+                                padding: 1.5rem;
+                                border-radius: 0 1rem 1rem 0;
                             }
                             .article-content ul, .article-content ol {
                                 margin-bottom: 2rem;
                                 padding-left: 1.5rem;
                             }
                             .article-content li {
-                                margin-bottom: 0.5rem;
-                                font-size: 1.125rem;
+                                margin-bottom: 0.75rem;
+                                font-size: 1.15rem;
+                            }
+                            .article-content img {
+                                max-width: 100%;
+                                height: auto;
+                                border-radius: 1rem;
+                                margin: 2rem 0;
+                                box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
                             }
                             @media (max-width: 768px) {
                                 .article-content p {
-                                    font-size: 1.05rem;
-                                    line-height: 1.7;
+                                    font-size: 1.1rem;
+                                    line-height: 1.75;
                                 }
                                 .article-content h2 {
-                                    font-size: 1.5rem;
+                                    font-size: 1.6rem;
                                 }
                             }
                         `}</style>
