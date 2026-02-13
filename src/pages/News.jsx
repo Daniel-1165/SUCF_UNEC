@@ -131,7 +131,7 @@ const News = () => {
                             className="bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-gray-100 hover:border-emerald-200 group transition-all hover:shadow-xl hover:shadow-emerald-900/5"
                         >
                             <Link to={`/news/${item.id}`} className="block h-full flex flex-col">
-                                <div className="relative aspect-video overflow-hidden bg-gray-100">
+                                <div className="relative h-48 md:h-56 overflow-hidden bg-gray-100 shrink-0">
                                     {item.image_url ? (
                                         <img
                                             src={item.image_url}
@@ -143,38 +143,36 @@ const News = () => {
                                             <FiFileText className="text-4xl text-slate-300" />
                                         </div>
                                     )}
-                                    <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-emerald-600/95 backdrop-blur-sm px-3 py-1 md:px-4 md:py-1.5 rounded-full">
-                                        <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest">{item.category || 'Update'}</span>
+                                    <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
+                                        <span className="text-[9px] font-black text-emerald-800 uppercase tracking-widest">{item.category || 'Update'}</span>
                                     </div>
                                     {user?.isAdmin && (
                                         <button
                                             onClick={(e) => handleDelete(e, item.id)}
-                                            className="absolute top-3 right-3 md:top-4 md:right-4 p-2 bg-red-500/90 backdrop-blur-sm text-white rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
+                                            className="absolute top-3 right-3 p-2 bg-red-500/90 backdrop-blur-sm text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-sm"
                                         >
                                             <FiTrash2 size={14} />
                                         </button>
                                     )}
                                 </div>
 
-                                <div className="p-6 flex-grow flex flex-col justify-between">
-                                    <div>
-                                        <div className="flex items-center gap-2 text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">
-                                            <FiCalendar className="text-emerald-600" />
-                                            <span>{new Date(item.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                                        </div>
-
-                                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors leading-tight">
-                                            {item.title}
-                                        </h3>
-
-                                        <p className="text-gray-600 text-sm md:text-base mb-4 leading-relaxed line-clamp-3 font-serif antialiased">
-                                            {item.content?.replace(/<[^>]*>/g, '')}
-                                        </p>
+                                <div className="p-5 md:p-6 flex-grow flex flex-col">
+                                    <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">
+                                        <FiCalendar className="text-emerald-600" />
+                                        <span>{new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                     </div>
 
-                                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
-                                        <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
-                                            Read Update <FiArrowRight />
+                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors leading-tight line-clamp-2">
+                                        {item.title}
+                                    </h3>
+
+                                    <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
+                                        {item.content?.replace(/<[^>]*>/g, '')}
+                                    </p>
+
+                                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                                        <div className="flex items-center gap-2 text-emerald-700 font-bold text-[10px] md:text-xs uppercase tracking-widest group-hover:translate-x-1 transition-all">
+                                            Read More <FiArrowRight />
                                         </div>
                                     </div>
                                 </div>

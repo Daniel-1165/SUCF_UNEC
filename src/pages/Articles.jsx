@@ -150,41 +150,45 @@ const Articles = () => {
                             )}
                             <Link
                                 to={`/articles/${article.id}`}
-                                className="block bg-white rounded-xl overflow-hidden group hover:shadow-lg transition-all duration-300 border-b border-gray-100 pb-6"
+                                className="block bg-white rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300 border border-gray-100"
                             >
-                                <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-                                    {/* Image - Reasonable Size */}
-                                    <div className="w-full md:w-1/3 aspect-[4/3] md:aspect-[3/2] overflow-hidden bg-gray-100 shrink-0 relative">
+                                <div className="flex flex-col md:flex-row h-full">
+                                    {/* Image Section */}
+                                    <div className="w-full md:w-2/5 h-48 md:h-auto relative overflow-hidden bg-gray-100 shrink-0">
                                         <img
                                             src={article.image_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop'}
                                             alt={article.title}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         />
-                                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200">
+                                        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
                                             <span className="text-[10px] font-bold text-gray-900 uppercase tracking-widest">{article.category || 'Word'}</span>
                                         </div>
                                     </div>
 
-                                    {/* Content - Forbes Style */}
-                                    <div className="flex-1 pr-6 md:pr-8 flex flex-col justify-center">
-                                        <div className="flex items-center gap-3 text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-                                            <span>{new Date(article.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                                    {/* Content Section */}
+                                    <div className="flex-1 p-5 md:p-8 flex flex-col">
+                                        <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                                            <FiClock className="text-emerald-500" />
+                                            <span>{new Date(article.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                             <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                                            <FiUser className="text-emerald-500" />
                                             <span>{article.author_name || 'Admin'}</span>
                                         </div>
 
-                                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors leading-[1.3] tracking-tight">
+                                        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors leading-tight">
                                             {article.title}
                                         </h2>
 
                                         {article.excerpt && (
-                                            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4 line-clamp-2 font-serif antialiased">
+                                            <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-4 line-clamp-3 md:line-clamp-2">
                                                 {article.excerpt}
                                             </p>
                                         )}
 
-                                        <div className="mt-auto flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all">
-                                            Read Article <FiArrowRight />
+                                        <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
+                                            <span className="text-emerald-700 font-bold text-[10px] md:text-xs uppercase tracking-widest group-hover:translate-x-1 transition-transform flex items-center gap-2">
+                                                Read Article <FiArrowRight />
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

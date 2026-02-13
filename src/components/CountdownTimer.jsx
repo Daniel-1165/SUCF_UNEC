@@ -98,14 +98,16 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         return false;
     };
 
-    // Countdown Logic - Strictly Weekly (0-7 days)
+    // Countdown Logic
     useEffect(() => {
+        if (!event) return;
+
         const timer = setInterval(() => {
             setIsLive(checkIfLive());
 
             const now = new Date();
-            // We always target the next upcoming Sunday 3PM for the weekly rhythm
-            const targetDate = getNextFellowshipDate();
+            // Use the specific event date if available, otherwise fallback to next Sunday
+            const targetDate = new Date(event.event_date);
             const difference = targetDate.getTime() - now.getTime();
 
             if (difference > 0) {
@@ -121,7 +123,7 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [event]);
 
     // If loading, we still show the section with default values to prevent layout shift
     // but we can add a subtle loading indicator if desired.
