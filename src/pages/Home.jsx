@@ -168,7 +168,7 @@ const Home = () => {
                                                 setCurrentSlide((prev) => (prev + 1) % heroImageCount);
                                             }
                                         }}
-                                        className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing z-10"
+                                        className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing z-10"
                                         alt="SUCF Moments"
                                     />
                                 </AnimatePresence>

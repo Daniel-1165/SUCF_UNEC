@@ -102,13 +102,24 @@ const CountdownTimer = ({ targetDate: propTargetDate, title: propTitle }) => {
     useEffect(() => {
         if (!event) return;
 
+        console.log("Initializing countdown for event:", event);
+
         const timer = setInterval(() => {
             setIsLive(checkIfLive());
 
             const now = new Date();
             // Use the specific event date if available, otherwise fallback to next Sunday
-            const targetDate = new Date(event.event_date);
+            let targetDate = new Date(event.event_date);
+
+            // Safety check: if targetDate is invalid, recalculate next Sunday
+            if (isNaN(targetDate.getTime())) {
+                console.warn("Invalid event date, falling back to auto-calculation");
+                targetDate = getNextFellowshipDate();
+            }
+
             const difference = targetDate.getTime() - now.getTime();
+
+            // console.log("Time difference:", difference); // Debugging
 
             if (difference > 0) {
                 setTimeLeft({
