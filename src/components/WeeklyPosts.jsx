@@ -65,7 +65,7 @@ const WeeklyPosts = () => {
                 <div className="flex justify-between items-end mb-12">
                     <div>
                         <span className="text-emerald-600 font-bold tracking-widest uppercase text-[10px] mb-2 block">Spiritual Nourishment</span>
-                        <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Weekly <span className="text-emerald-600">Posts.</span></h2>
+                        <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Weekly <span className="text-emerald-600">Spotlight.</span></h2>
                     </div>
                 </div>
 
@@ -99,11 +99,13 @@ const WeeklyPosts = () => {
                                 )}
 
                                 {post.image_url ? (
-                                    <img
-                                        src={post.image_url}
-                                        alt="Weekly Post"
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
+                                    <div className="absolute inset-0 w-full h-full bg-slate-100">
+                                        <img
+                                            src={post.image_url}
+                                            alt="Weekly Post"
+                                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
                                         <FiFileText size={48} />

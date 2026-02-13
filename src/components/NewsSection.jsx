@@ -18,11 +18,13 @@ const FeaturedNewsCard = ({ item }) => {
         >
             {/* Background Image */}
             {item.image_url ? (
-                <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <div className="absolute inset-0 w-full h-full bg-slate-900">
+                    <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                    />
+                </div>
             ) : (
                 <div className="w-full h-full bg-slate-900 flex items-center justify-center">
                     <FiFileText className="text-6xl text-slate-700" />

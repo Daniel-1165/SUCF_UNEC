@@ -13,7 +13,7 @@ import SEO from '../components/SEO';
 
 // Use the assets we have
 const heroImages = [
-    '/assets/carousel/group_photo.jpg',
+    '/assets/carousel/weekly_activities_schedule.jpg', // Updated first image
     '/assets/main_flyer.jpg',
     '/assets/carousel/weekly_prayers.jpg',
     '/assets/carousel/bible_study.jpg',
@@ -138,10 +138,21 @@ const Home = () => {
 
                             <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-white">
                                 <AnimatePresence mode='wait'>
+                                    {/* Background Blur Layer */}
+                                    <motion.div
+                                        key={`bg-${currentSlide}`}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 0.5 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="absolute inset-0 w-full h-full bg-cover bg-center blur-2xl scale-110"
+                                        style={{ backgroundImage: `url(${heroImages[currentSlide]})` }}
+                                    />
+
                                     <motion.img
                                         key={currentSlide}
                                         src={heroImages[currentSlide]}
-                                        initial={{ opacity: 0, scale: 1.1 }}
+                                        initial={{ opacity: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 0.5 }}
@@ -155,13 +166,13 @@ const Home = () => {
                                                 setCurrentSlide((prev) => (prev + 1) % heroImageCount);
                                             }
                                         }}
-                                        className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                                        className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing z-10"
                                         alt="SUCF Moments"
                                     />
                                 </AnimatePresence>
 
                                 {/* Overlay Interface UI */}
-                                <div className="absolute top-6 left-6 right-6 flex justify-between items-center text-white/90 z-10">
+                                <div className="absolute top-6 left-6 right-6 flex justify-between items-center text-white/90 z-20">
                                     <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
                                         Highlights
                                     </div>
@@ -251,13 +262,13 @@ const Home = () => {
                         ) : articles.length > 0 ? (
                             articles.map((article, i) => (
                                 <Link to={`/articles/${article.id}`} key={article.id} className="group flex items-center gap-4 md:block">
-                                    <div className="rounded-2xl md:rounded-3xl overflow-hidden shrink-0 w-32 h-24 md:w-full md:h-auto mb-0 md:mb-6 relative aspect-video md:aspect-[4/3]">
+                                    <div className="rounded-2xl md:rounded-3xl overflow-hidden shrink-0 w-32 h-24 md:w-full md:h-auto mb-0 md:mb-6 relative aspect-video md:aspect-[4/3] bg-slate-100">
                                         <img
                                             src={article.image_url || 'https://images.unsplash.com/photo-1507692049790-de58293a4697?q=80&w=2670&auto=format&fit=crop'}
                                             alt={article.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                                         />
-                                        <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-white/90 backdrop-blur px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-slate-900">
+                                        <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-white/90 backdrop-blur px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">
                                             {article.category || 'Article'}
                                         </div>
                                     </div>
