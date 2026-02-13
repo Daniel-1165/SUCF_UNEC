@@ -41,13 +41,11 @@ const Navbar = () => {
         { name: 'Activities', path: '/activities', icon: <FiCalendar /> },
         { name: 'Gallery', path: '/gallery', icon: <FiImage /> },
         { name: 'Library', path: '/library', icon: <FiBookOpen /> },
-        { name: 'News', path: '/news', icon: <FiFileText /> },
-        { name: 'Articles', path: '/articles', icon: <FiFileText /> },
         { name: 'Executives', path: '/executives', icon: <FiUsers /> },
         { name: 'Contact', path: '/contact', icon: <FiMail /> },
     ];
 
-    const isDarkPage = location.pathname.startsWith('/gallery') || location.pathname.startsWith('/articles');
+    const isDarkPage = location.pathname.startsWith('/gallery');
     const navbarBg = isDarkPage
         ? (scrolled ? 'bg-black/90' : 'bg-transparent')
         : (scrolled ? 'bg-white/90 shadow-sm' : 'bg-transparent');
@@ -75,7 +73,7 @@ const Navbar = () => {
                     <div className="flex items-center gap-3 lg:gap-4">
                         {navLinks.map((link) => {
                             const isActive = location.pathname === link.path;
-                            const isHighlighted = link.name === 'Gallery' || link.name === 'Articles';
+                            const isHighlighted = link.name === 'Gallery';
 
                             return (
                                 <Link

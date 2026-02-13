@@ -7,32 +7,27 @@ import { supabase } from './supabaseClient';
 
 import Home from './pages/Home';
 import Gallery from './pages/Gallery';
-import Articles from './pages/Articles';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Executives from './pages/Executives';
-import ArticleDetail from './pages/ArticleDetail';
 import Library from './pages/Library';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Debug from './pages/Debug';
-import News from './pages/News';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
 const DiagnosticBanner = () => {
   const [status, setStatus] = useState('Checking...');
-  const [counts, setCounts] = useState({ news: 0, gallery: 0, articles: 0 });
+  const [counts, setCounts] = useState({ gallery: 0 });
 
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        const { count: newsCount } = await supabase.from('news').select('*', { count: 'exact', head: true });
         const { count: galleryCount } = await supabase.from('gallery').select('*', { count: 'exact', head: true });
-        const { count: articlesCount } = await supabase.from('articles').select('*', { count: 'exact', head: true });
 
-        setCounts({ news: newsCount || 0, gallery: galleryCount || 0, articles: articlesCount || 0 });
+        setCounts({ gallery: galleryCount || 0 });
         setStatus('Connected ✅');
       } catch (err) {
         setStatus('Error: ' + err.message);
@@ -47,7 +42,7 @@ const DiagnosticBanner = () => {
     <div className="fixed bottom-4 right-4 z-[9999] bg-slate-900/90 text-white p-4 rounded-2xl backdrop-blur-xl border border-white/10 shadow-2xl text-[10px] font-mono">
       <p className="font-bold text-emerald-400 mb-2 uppercase tracking-widest">Supabase Diagnostics</p>
       <p>Status: {status}</p>
-      <p>News: {counts.news} | Gallery: {counts.gallery} | Art: {counts.articles}</p>
+      <p>Gallery: {counts.gallery}</p>
     </div>
   );
 };
@@ -69,10 +64,6 @@ function App() {
         <Route path="/activities" element={<Activities />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/library" element={<Library />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/articles/:id" element={<ArticleDetail />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/news/:id" element={<ArticleDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/executives" element={<Executives />} />
 
