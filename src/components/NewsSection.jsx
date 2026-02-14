@@ -99,11 +99,20 @@ const NewsSection = () => {
                                     <div className="lg:col-span-7">
                                         <Link to={`/news/${currentNews[0]?.id}`} className="group relative block aspect-[16/10] md:aspect-auto md:h-[500px] rounded-[2.5rem] overflow-hidden bg-slate-100 shadow-2xl shadow-blue-900/10 transition-all duration-700 hover:-translate-y-2">
                                             {currentNews[0]?.image_url ? (
-                                                <img
-                                                    src={currentNews[0].image_url}
-                                                    alt={currentNews[0].title}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                                                />
+                                                <>
+                                                    <div className="absolute inset-0 z-0">
+                                                        <img
+                                                            src={currentNews[0].image_url}
+                                                            className="w-full h-full object-cover blur-2xl opacity-30 scale-110"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </div>
+                                                    <img
+                                                        src={currentNews[0].image_url}
+                                                        alt={currentNews[0].title}
+                                                        className="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000"
+                                                    />
+                                                </>
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
                                                     <FiClock size={80} />
@@ -167,8 +176,8 @@ const NewsSection = () => {
                                 <div className="lg:col-span-12 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {currentNews.map((item) => (
                                         <Link key={item.id} to={`/news/${item.id}`} className="group bg-slate-50 p-6 rounded-[2rem] border border-transparent hover:border-blue-100 hover:bg-white hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500">
-                                            <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-200">
-                                                {item.image_url && <img src={item.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />}
+                                            <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-100 flex items-center justify-center p-2">
+                                                {item.image_url && <img src={item.image_url} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700" />}
                                             </div>
                                             <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-3 block">{formatDate(item.created_at)}</span>
                                             <h3 className="text-xl font-bold text-slate-900 line-clamp-2 leading-tight mb-4 tracking-tight group-hover:text-blue-600 transition-colors">

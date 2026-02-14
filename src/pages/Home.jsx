@@ -58,6 +58,18 @@ const Home = () => {
 
     const [currentSlide, setCurrentSlide] = React.useState(0);
     const heroImageCount = heroImages.length;
+    const [aspectRatio, setAspectRatio] = useState(4 / 5); // Default fallback
+
+    useEffect(() => {
+        const img = new Image();
+        img.src = heroImages[0];
+        img.onload = () => {
+            // Prevent division by zero just in case
+            if (img.height > 0) {
+                setAspectRatio(img.width / img.height);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -113,25 +125,17 @@ const Home = () => {
                             </motion.div>
                         </motion.div>
 
-                        {/* Image/Carousel Section - Futuristic Card Style */}
-                        <div className="lg:col-span-6 w-full relative h-[400px] md:h-[500px] lg:h-[700px] z-10">
+                        {/* Image/Carousel Section - Refined for Flyer Ratio */}
+                        <div className="lg:col-span-6 w-full relative z-10">
                             {/* Abstract Deco Elements */}
                             <div className="absolute top-10 right-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-3xl" />
                             <div className="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl" />
 
-                            <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-white">
+                            <div
+                                style={{ aspectRatio: aspectRatio }}
+                                className="relative max-w-[500px] mx-auto lg:ml-auto lg:mr-0 rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-slate-100"
+                            >
                                 <AnimatePresence mode='wait'>
-                                    {/* Background Blur Layer */}
-                                    <motion.div
-                                        key={`bg-${currentSlide}`}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 0.5 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.5 }}
-                                        className="absolute inset-0 w-full h-full bg-cover bg-center blur-2xl scale-110"
-                                        style={{ backgroundImage: `url(${heroImages[currentSlide]})` }}
-                                    />
-
                                     <motion.img
                                         key={currentSlide}
                                         src={heroImages[currentSlide]}

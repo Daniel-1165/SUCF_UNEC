@@ -137,7 +137,7 @@ const Articles = () => {
                                         <img
                                             src={article.image_url}
                                             alt={article.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-slate-300">

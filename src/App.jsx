@@ -67,17 +67,17 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/activities" element={<Activities />} />
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/library" element={<Library />} />
+
         <Route path="/contact" element={<Contact />} />
         <Route path="/executives" element={<Executives />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/articles/:id" element={<ArticleDetail />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/news/:id" element={<NewsDetail />} />
 
-        {/* Protected Routes (Empty for now as most are public, but keeping the structure) */}
+
         <Route element={<ProtectedRoute />}>
-          {/* Add truly private routes here if any */}
+          <Route path="/library" element={<Library />} />
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/articles/:id" element={<ArticleDetail />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/news/:id" element={<NewsDetail />} />
         </Route>
       </Routes>
       <Footer />
