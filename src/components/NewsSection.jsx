@@ -51,7 +51,7 @@ const NewsSection = () => {
                             <span className="text-xs font-black text-blue-600 uppercase tracking-[0.3em]">Updates</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter">
-                            Latest <span className="italic font-serif text-blue-100/100" style={{ WebkitTextStroke: '1px #2563eb', color: 'transparent' }}>Fellowship</span> News
+                            Latest <span className="italic font-serif text-red-600">Fellowship</span> News
                         </h2>
                     </div>
 
@@ -123,7 +123,7 @@ const NewsSection = () => {
                                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
 
                                             {/* Overlay Text Content */}
-                                            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
+                                            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 z-20">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full">Top News</span>
                                                     <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{formatDate(currentNews[0]?.created_at)}</span>

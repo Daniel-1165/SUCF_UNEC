@@ -61,7 +61,7 @@ const News = () => {
                         transition={{ delay: 0.1 }}
                         className="text-4xl md:text-6xl font-black text-slate-900 mb-4"
                     >
-                        Fellowship <span className="text-blue-600">News</span>
+                        <span className="text-red-600">Fellowship</span> <span className="text-blue-600">News</span>
                     </motion.h1>
 
                     <motion.p
