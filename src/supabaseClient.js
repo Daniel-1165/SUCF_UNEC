@@ -70,7 +70,7 @@ export const supabase = (supabaseUrl && supabaseAnonKey)
 
 // Test connection on initialization (only in dev mode)
 if (import.meta.env.DEV && supabaseUrl && supabaseAnonKey) {
-    supabase.from('news')
+    supabase.from('gallery')
         .select('count', { count: 'exact', head: true })
         .then(({ error }) => {
             if (error) {

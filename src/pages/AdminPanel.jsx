@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend } from 'react-icons/fi';
+import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend, FiFileText } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -35,7 +35,7 @@ const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'articles', 'books', 'news', 'events', 'users'
+    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'books', 'events', 'messages', 'users', 'weekly_posts'
 
     // Handle initial tab from URL
     useEffect(() => {
@@ -590,7 +590,7 @@ const AdminPanel = () => {
                                 ))}
                             </div>
                         </motion.div>
-                    ) : activeTab === 'articles' ? (
+                    ) : activeTab === 'books' ? (
 
                         <motion.div key="books" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
                             <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">

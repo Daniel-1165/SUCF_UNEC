@@ -16,7 +16,7 @@ async function verifyBackend() {
     console.log('📡 Test 1: Basic Connection');
     try {
         const { error } = await supabase
-            .from('news')
+            .from('gallery')
             .select('count', { count: 'exact', head: true });
 
         if (error) {
@@ -89,32 +89,6 @@ async function verifyBackend() {
         allPassed = false;
     }
 
-    // Test 4: News Data
-    console.log('\n📰 Test 4: News Data Fetch');
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(3);
-
-        if (error) {
-            console.log('   ❌ FAILED:', error.message);
-            allPassed = false;
-        } else {
-            console.log('   ✅ PASSED: Can fetch news data');
-            console.log('   📊 Found', data.length, 'news item(s)');
-            if (data.length > 0) {
-                console.log('   📄 Latest news:');
-                data.forEach((item, idx) => {
-                    console.log(`      ${idx + 1}. ${item.title}`);
-                });
-            }
-        }
-    } catch (err) {
-        console.log('   ❌ FAILED:', err.message);
-        allPassed = false;
-    }
 
     // Test 5: Authentication System
     console.log('\n🔑 Test 5: Authentication System');
@@ -141,7 +115,7 @@ async function verifyBackend() {
     console.log('\n🛡️  Test 6: Row Level Security Policies');
     try {
         // Try to read from all main tables
-        const tables = ['news', 'articles', 'gallery', 'books'];
+        const tables = ['gallery', 'books'];
         let rlsPassed = true;
 
         for (const table of tables) {
