@@ -41,6 +41,7 @@ const Navbar = () => {
         { name: 'Activities', path: '/activities', icon: <FiCalendar /> },
         { name: 'Gallery', path: '/gallery', icon: <FiImage /> },
         { name: 'Library', path: '/library', icon: <FiBookOpen /> },
+        { name: 'Articles', path: '/articles', icon: <FiFileText /> },
         { name: 'Executives', path: '/executives', icon: <FiUsers /> },
         { name: 'Contact', path: '/contact', icon: <FiMail /> },
     ];

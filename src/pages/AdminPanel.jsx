@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend, FiFileText } from 'react-icons/fi';
+import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend, FiFileText, FiNewspaper } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -35,13 +35,13 @@ const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'books', 'events', 'messages', 'users', 'weekly_posts'
+    const [activeTab, setActiveTab] = useState('gallery'); // 'gallery', 'books', 'events', 'messages', 'users', 'weekly_posts', 'articles', 'news'
 
     // Handle initial tab from URL
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
-        if (tab && ['gallery', 'books', 'events', 'messages', 'users', 'weekly_posts'].includes(tab)) {
+        if (tab && ['gallery', 'books', 'events', 'messages', 'users', 'weekly_posts', 'articles', 'news'].includes(tab)) {
             setActiveTab(tab);
         }
     }, [location]);
@@ -90,6 +90,28 @@ const AdminPanel = () => {
     });
     const [editingWeeklyPostId, setEditingWeeklyPostId] = useState(null);
 
+    // Articles State
+    const [articles, setArticles] = useState([]);
+    const [articleForm, setArticleForm] = useState({
+        title: '',
+        content: '',
+        author: '',
+        category: 'Faith',
+        image_url: '',
+        imageFile: null
+    });
+    const [editingArticleId, setEditingArticleId] = useState(null);
+
+    // News State
+    const [newsItems, setNewsItems] = useState([]);
+    const [newsForm, setNewsForm] = useState({
+        title: '',
+        content: '',
+        image_url: '',
+        imageFile: null
+    });
+    const [editingNewsId, setEditingNewsId] = useState(null);
+
     // Users State
     const [userSearchTerm, setUserSearchTerm] = useState('');
     const [userResults, setUserResults] = useState([]);
@@ -120,6 +142,8 @@ const AdminPanel = () => {
             fetchFellowshipEvents();
             fetchContactMessages();
             fetchWeeklyPosts();
+            fetchArticles();
+            fetchNews();
         }
     }, [user, authLoading, navigate]);
 
@@ -170,6 +194,22 @@ const AdminPanel = () => {
             .select('*')
             .order('created_at', { ascending: false });
         if (!error) setWeeklyPosts(data || []);
+    };
+
+    const fetchArticles = async () => {
+        const { data, error } = await supabase
+            .from('articles')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (!error) setArticles(data || []);
+    };
+
+    const fetchNews = async () => {
+        const { data, error } = await supabase
+            .from('news')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (!error) setNewsItems(data || []);
     };
 
     const handleMarkAsRead = async (id) => {
@@ -487,6 +527,125 @@ const AdminPanel = () => {
         if (!error) fetchWeeklyPosts();
     };
 
+    // --- ARTICLES ACTIONS ---
+    const handleArticleSubmit = async (e) => {
+        e.preventDefault();
+        setUploading(true);
+        try {
+            let finalImageUrl = articleForm.image_url;
+            if (articleForm.imageFile) {
+                finalImageUrl = await uploadFile(articleForm.imageFile, 'content-images', 'articles');
+            }
+
+            const { imageFile, ...submitData } = articleForm;
+
+            if (editingArticleId) {
+                const { error } = await supabase
+                    .from('articles')
+                    .update({ ...submitData, image_url: finalImageUrl })
+                    .eq('id', editingArticleId);
+                if (error) throw error;
+                alert("Article updated!");
+            } else {
+                const { error } = await supabase.from('articles').insert([
+                    { ...submitData, image_url: finalImageUrl }
+                ]);
+                if (error) throw error;
+                alert("Article published!");
+            }
+
+            resetArticleForm();
+            fetchArticles();
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const resetArticleForm = () => {
+        setArticleForm({ title: '', content: '', author: '', category: 'Faith', image_url: '', imageFile: null });
+        setEditingArticleId(null);
+    };
+
+    const handleEditArticle = (article) => {
+        setArticleForm({
+            title: article.title,
+            content: article.content || '',
+            author: article.author || '',
+            category: article.category || 'Faith',
+            image_url: article.image_url || '',
+            imageFile: null
+        });
+        setEditingArticleId(article.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDeleteArticle = async (id) => {
+        if (!window.confirm("Delete this article?")) return;
+        const { error } = await supabase.from('articles').delete().eq('id', id);
+        if (!error) fetchArticles();
+    };
+
+    // --- NEWS ACTIONS ---
+    const handleNewsSubmit = async (e) => {
+        e.preventDefault();
+        setUploading(true);
+        try {
+            let finalImageUrl = newsForm.image_url;
+            if (newsForm.imageFile) {
+                finalImageUrl = await uploadFile(newsForm.imageFile, 'content-images', 'news');
+            }
+
+            const { imageFile, ...submitData } = newsForm;
+
+            if (editingNewsId) {
+                const { error } = await supabase
+                    .from('news')
+                    .update({ ...submitData, image_url: finalImageUrl })
+                    .eq('id', editingNewsId);
+                if (error) throw error;
+                alert("News updated!");
+            } else {
+                const { error } = await supabase.from('news').insert([
+                    { ...submitData, image_url: finalImageUrl }
+                ]);
+                if (error) throw error;
+                alert("News published!");
+            }
+
+            resetNewsForm();
+            fetchNews();
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const resetNewsForm = () => {
+        setNewsForm({ title: '', content: '', image_url: '', imageFile: null });
+        setEditingNewsId(null);
+    };
+
+    const handleEditNews = (news) => {
+        setNewsForm({
+            title: news.title,
+            content: news.content || '',
+            image_url: news.image_url || '',
+            imageFile: null
+        });
+        setEditingNewsId(news.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDeleteNews = async (id) => {
+        if (!window.confirm("Delete this news item?")) return;
+        const { error } = await supabase.from('news').delete().eq('id', id);
+        if (!error) fetchNews();
+    };
+
+
     if (!hasAuthorized.current && (authLoading || (user && user.isAdmin === undefined))) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -530,6 +689,12 @@ const AdminPanel = () => {
                         </button>
                         <button onClick={() => setActiveTab('weekly_posts')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'weekly_posts' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
                             <FiFileText /> Weekly Posts
+                        </button>
+                        <button onClick={() => setActiveTab('articles')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'articles' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
+                            <FiFileText /> Articles
+                        </button>
+                        <button onClick={() => setActiveTab('news')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'news' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
+                            <FiNewspaper /> News
                         </button>
                     </div>
                 </div>
@@ -746,6 +911,64 @@ const AdminPanel = () => {
                                             <button onClick={() => handleEditWeeklyPost(post)} className="bg-white/90 text-emerald-600 p-2 rounded-full shadow-sm hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button>
                                             <button onClick={() => handleDeleteWeeklyPost(post.id)} className="bg-white/90 text-red-500 p-2 rounded-full shadow-sm hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button>
                                         </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ) : activeTab === 'articles' ? (
+                        <motion.div key="articles" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+                            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2">
+                                    {editingArticleId ? <FiEdit className="text-emerald-500" /> : <FiPlus className="text-emerald-500" />}
+                                    {editingArticleId ? 'Edit Article' : 'Create New Article'}
+                                </h3>
+                                <form onSubmit={handleArticleSubmit} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Article Title</label><input type="text" required value={articleForm.title} onChange={(e) => setArticleForm({ ...articleForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Author</label><input type="text" value={articleForm.author} onChange={(e) => setArticleForm({ ...articleForm, author: e.target.value })} placeholder="Optional" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Category</label><select value={articleForm.category} onChange={(e) => setArticleForm({ ...articleForm, category: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all text-sm font-bold text-emerald-900">{['Faith', 'Campus Life', 'Testimonies', 'Events', 'Other'].map(cat => <option key={cat} value={cat}>{cat}</option>)}</select></div>
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Featured Image</label><input type="file" accept="image/*" onChange={(e) => setArticleForm({ ...articleForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
+                                    </div>
+                                    <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Article Content</label><ReactQuill theme="snow" value={articleForm.content} onChange={(content) => setArticleForm({ ...articleForm, content })} modules={quillModules} formats={quillFormats} className="bg-white rounded-xl" style={{ minHeight: '300px' }} /></div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingArticleId && (<button type="button" onClick={resetArticleForm} className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">Cancel</button>)}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 disabled:opacity-50">{uploading ? 'PROCESSING...' : <><FiSave /> {editingArticleId ? 'Update Article' : 'Publish Article'}</>}</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {articles.map((article) => (
+                                    <div key={article.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden group hover:shadow-xl transition-all flex flex-col">
+                                        <div className="aspect-video bg-gray-50 relative">{article.image_url ? <img src={article.image_url} alt={article.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-200"><FiFileText className="text-6xl" /></div>}<div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all"><button onClick={() => handleEditArticle(article)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button><button onClick={() => handleDeleteArticle(article.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button></div></div>
+                                        <div className="p-6"><span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider rounded-full mb-3">{article.category}</span><h4 className="font-bold text-emerald-900 line-clamp-2 mb-2">{article.title}</h4><p className="text-xs text-gray-400">{article.author || 'Anonymous'} • {new Date(article.created_at).toLocaleDateString()}</p></div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ) : activeTab === 'news' ? (
+                        <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+                            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl font-bold text-emerald-900 mb-6 flex items-center gap-2">
+                                    {editingNewsId ? <FiEdit className="text-emerald-500" /> : <FiPlus className="text-emerald-500" />}
+                                    {editingNewsId ? 'Edit News' : 'Create News Update'}
+                                </h3>
+                                <form onSubmit={handleNewsSubmit} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Title</label><input type="text" required value={newsForm.title} onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Featured Image</label><input type="file" accept="image/*" onChange={(e) => setNewsForm({ ...newsForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
+                                    </div>
+                                    <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Content</label><ReactQuill theme="snow" value={newsForm.content} onChange={(content) => setNewsForm({ ...newsForm, content })} modules={quillModules} formats={quillFormats} className="bg-white rounded-xl" style={{ minHeight: '300px' }} /></div>
+                                    <div className="flex justify-end gap-3">
+                                        {editingNewsId && (<button type="button" onClick={resetNewsForm} className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">Cancel</button>)}
+                                        <button disabled={uploading} className="bg-emerald-900 text-white px-10 py-3 rounded-xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 disabled:opacity-50">{uploading ? 'PROCESSING...' : <><FiSave /> {editingNewsId ? 'Update News' : 'Publish News'}</>}</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {newsItems.map((news) => (
+                                    <div key={news.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden group hover:shadow-xl transition-all flex flex-col">
+                                        <div className="aspect-video bg-gray-50 relative">{news.image_url ? <img src={news.image_url} alt={news.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-200"><FiNewspaper className="text-6xl" /></div>}<div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all"><button onClick={() => handleEditNews(news)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button><button onClick={() => handleDeleteNews(news.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button></div></div>
+                                        <div className="p-6"><h4 className="font-bold text-emerald-900 line-clamp-2 mb-2">{news.title}</h4><p className="text-xs text-gray-400">{new Date(news.created_at).toLocaleDateString()}</p></div>
                                     </div>
                                 ))}
                             </div>

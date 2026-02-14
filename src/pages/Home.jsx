@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CountdownTimer from '../components/CountdownTimer';
 import BooksSection from '../components/BooksSection';
 import WeeklyPosts from '../components/WeeklyPosts';
+import ArticlesSection from '../components/ArticlesSection';
+import NewsSection from '../components/NewsSection';
 import { supabase } from '../supabaseClient';
 import { fadeInUp, staggerContainer, staggerItem } from '../utils/animations';
 import SEO from '../components/SEO';
@@ -226,6 +228,12 @@ const Home = () => {
 
             <WeeklyPosts />
             <BooksSection />
+
+            {/* Articles Section */}
+            <ArticlesSection />
+
+            {/* News Section */}
+            <NewsSection />
 
             {/* Gallery Strip */}
             <section className="py-20 overflow-hidden bg-white">

@@ -15,6 +15,10 @@ import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Debug from './pages/Debug';
 import AdminPanel from './pages/AdminPanel';
+import Articles from './pages/Articles';
+import ArticleDetail from './pages/ArticleDetail';
+import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -66,6 +70,10 @@ function App() {
         <Route path="/library" element={<Library />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/executives" element={<Executives />} />
+        <Route path="/articles" element={<Articles />} />
+        <Route path="/articles/:id" element={<ArticleDetail />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
 
         {/* Protected Routes (Empty for now as most are public, but keeping the structure) */}
         <Route element={<ProtectedRoute />}>
