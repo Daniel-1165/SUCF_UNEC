@@ -227,11 +227,10 @@ const Home = () => {
             </section>
 
             <WeeklyPosts />
-            <BooksSection />
-
             {/* Articles Section */}
             <ArticlesSection />
 
+            <BooksSection />
             {/* News Section */}
             <NewsSection />
 

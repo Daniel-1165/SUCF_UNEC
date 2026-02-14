@@ -13,9 +13,9 @@ export default {
                 'mustard-gold': '#f59e0b',
             },
             fontFamily: {
-                'sans': ['Inter', 'system-ui', 'sans-serif'],
-                'serif': ['"Space Grotesk"', 'sans-serif'], // Using Space Grotesk for headings/serif slots
-                'heading': ['"Space Grotesk"', 'sans-serif'],
+                'sans': ['"Outfit"', 'Inter', 'system-ui', 'sans-serif'],
+                'serif': ['"Libre Baskerville"', 'serif'],
+                'heading': ['"Outfit"', 'sans-serif'],
             },
             boxShadow: {
                 'zeni': '0 8px 30px rgba(0, 0, 0, 0.04)',

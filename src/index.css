@@ -18,13 +18,14 @@
   /* Sharp black */
 
   /* Typography */
-  --font-main: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Space Grotesk', sans-serif;
+  --font-main: 'Outfit', system-ui, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-serif: 'Libre Baskerville', serif;
 }
 
 @layer base {
   body {
-    background-color: var(--bg-main);
+    background-color: white;
     color: var(--text-main);
     overflow-x: hidden;
     font-family: var(--font-main);
@@ -39,27 +40,59 @@
     font-family: var(--font-heading);
   }
 
-  /* Force words to stay whole globally */
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  span,
-  div,
-  li,
-  .prose,
-  .article-content {
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-    word-wrap: normal !important;
+  /* Robust Text Drawing Fixes (No mid-word breaks) */
+  .article-body-content,
+  .news-body-content {
     white-space: normal !important;
+    word-wrap: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
     hyphens: none !important;
-    -webkit-hyphens: none !important;
-    -moz-hyphens: none !important;
-    -ms-hyphens: none !important;
+    /* FIXED: Prevents "oppor-tunities" hyphenation */
+    text-wrap: pretty;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    font-family: var(--font-serif) !important;
+    /* Elegant Fine Font */
+    font-optical-sizing: auto;
+  }
+
+  .article-body-content p,
+  .news-body-content p {
+    margin-bottom: 2.2rem !important;
+    line-height: 1.85 !important;
+    white-space: normal !important;
+    font-size: 1.1rem !important;
+    color: #1e293b !important;
+    /* Darker slate for readability */
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) {
+
+    .article-body-content p,
+    .news-body-content p {
+      font-size: 1.4rem !important;
+    }
+  }
+
+  .article-body-content h1,
+  .news-body-content h1,
+  .article-body-content h2,
+  .news-body-content h2,
+  .article-body-content h3,
+  .news-body-content h3 {
+    margin-top: 4rem !important;
+    margin-bottom: 2rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .article-body-content a,
+  .news-body-content a {
+    @apply text-emerald-600 font-bold border-b-2 border-emerald-100 hover:border-emerald-500 transition-all;
   }
 }
 

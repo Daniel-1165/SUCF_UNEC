@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend, FiFileText, FiNewspaper } from 'react-icons/fi';
+import { FiImage, FiUpload, FiTrash2, FiPlus, FiSave, FiX, FiBook, FiEdit, FiCalendar, FiMessageSquare, FiCheckCircle, FiUsers, FiSearch, FiSend, FiFileText } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -94,6 +94,7 @@ const AdminPanel = () => {
     const [articles, setArticles] = useState([]);
     const [articleForm, setArticleForm] = useState({
         title: '',
+        excerpt: '',
         content: '',
         author: '',
         category: 'Faith',
@@ -106,6 +107,7 @@ const AdminPanel = () => {
     const [newsItems, setNewsItems] = useState([]);
     const [newsForm, setNewsForm] = useState({
         title: '',
+        excerpt: '',
         content: '',
         image_url: '',
         imageFile: null
@@ -564,13 +566,14 @@ const AdminPanel = () => {
     };
 
     const resetArticleForm = () => {
-        setArticleForm({ title: '', content: '', author: '', category: 'Faith', image_url: '', imageFile: null });
+        setArticleForm({ title: '', excerpt: '', content: '', author: '', category: 'Faith', image_url: '', imageFile: null });
         setEditingArticleId(null);
     };
 
     const handleEditArticle = (article) => {
         setArticleForm({
             title: article.title,
+            excerpt: article.excerpt || '',
             content: article.content || '',
             author: article.author || '',
             category: article.category || 'Faith',
@@ -624,13 +627,14 @@ const AdminPanel = () => {
     };
 
     const resetNewsForm = () => {
-        setNewsForm({ title: '', content: '', image_url: '', imageFile: null });
+        setNewsForm({ title: '', excerpt: '', content: '', image_url: '', imageFile: null });
         setEditingNewsId(null);
     };
 
     const handleEditNews = (news) => {
         setNewsForm({
             title: news.title,
+            excerpt: news.excerpt || '',
             content: news.content || '',
             image_url: news.image_url || '',
             imageFile: null
@@ -694,7 +698,7 @@ const AdminPanel = () => {
                             <FiFileText /> Articles
                         </button>
                         <button onClick={() => setActiveTab('news')} className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'news' ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}>
-                            <FiNewspaper /> News
+                            <FiFileText /> News
                         </button>
                     </div>
                 </div>
@@ -925,6 +929,7 @@ const AdminPanel = () => {
                                 <form onSubmit={handleArticleSubmit} className="space-y-6">
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Article Title</label><input type="text" required value={articleForm.title} onChange={(e) => setArticleForm({ ...articleForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Short Excerpt (Shows on Home Page)</label><textarea rows="2" value={articleForm.excerpt} onChange={(e) => setArticleForm({ ...articleForm, excerpt: e.target.value })} placeholder="Optional: Summary of the article..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Author</label><input type="text" value={articleForm.author} onChange={(e) => setArticleForm({ ...articleForm, author: e.target.value })} placeholder="Optional" className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
                                         <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Category</label><select value={articleForm.category} onChange={(e) => setArticleForm({ ...articleForm, category: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all text-sm font-bold text-emerald-900">{['Faith', 'Campus Life', 'Testimonies', 'Events', 'Other'].map(cat => <option key={cat} value={cat}>{cat}</option>)}</select></div>
                                         <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Featured Image</label><input type="file" accept="image/*" onChange={(e) => setArticleForm({ ...articleForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
@@ -955,6 +960,7 @@ const AdminPanel = () => {
                                 <form onSubmit={handleNewsSubmit} className="space-y-6">
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Title</label><input type="text" required value={newsForm.title} onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all" /></div>
+                                        <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Short Excerpt (Shows on Home Page)</label><textarea rows="2" value={newsForm.excerpt} onChange={(e) => setNewsForm({ ...newsForm, excerpt: e.target.value })} placeholder="Optional: Summary of the news update..." className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-emerald-500 rounded-xl py-3 px-4 outline-none transition-all resize-none"></textarea></div>
                                         <div className="md:col-span-2"><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Featured Image</label><input type="file" accept="image/*" onChange={(e) => setNewsForm({ ...newsForm, imageFile: e.target.files[0] })} className="w-full text-sm text-gray-500 py-2.5 px-4 border-2 border-dashed border-gray-100 rounded-xl hover:border-emerald-500 transition-colors cursor-pointer bg-white" /></div>
                                     </div>
                                     <div><label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">News Content</label><ReactQuill theme="snow" value={newsForm.content} onChange={(content) => setNewsForm({ ...newsForm, content })} modules={quillModules} formats={quillFormats} className="bg-white rounded-xl" style={{ minHeight: '300px' }} /></div>
@@ -967,7 +973,7 @@ const AdminPanel = () => {
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {newsItems.map((news) => (
                                     <div key={news.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden group hover:shadow-xl transition-all flex flex-col">
-                                        <div className="aspect-video bg-gray-50 relative">{news.image_url ? <img src={news.image_url} alt={news.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-200"><FiNewspaper className="text-6xl" /></div>}<div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all"><button onClick={() => handleEditNews(news)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button><button onClick={() => handleDeleteNews(news.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button></div></div>
+                                        <div className="aspect-video bg-gray-50 relative">{news.image_url ? <img src={news.image_url} alt={news.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-200"><FiFileText className="text-6xl" /></div>}<div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all"><button onClick={() => handleEditNews(news)} className="p-3 bg-white/90 text-emerald-600 rounded-xl shadow-lg hover:bg-emerald-600 hover:text-white transition-all"><FiEdit /></button><button onClick={() => handleDeleteNews(news.id)} className="p-3 bg-white/90 text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all"><FiTrash2 /></button></div></div>
                                         <div className="p-6"><h4 className="font-bold text-emerald-900 line-clamp-2 mb-2">{news.title}</h4><p className="text-xs text-gray-400">{new Date(news.created_at).toLocaleDateString()}</p></div>
                                     </div>
                                 ))}

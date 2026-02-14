@@ -34,13 +34,7 @@ const News = () => {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
 
-    const truncateText = (text, maxLength = 150) => {
-        if (!text) return '';
-        const strippedText = text.replace(/<[^>]*>/g, '');
-        return strippedText.length > maxLength
-            ? strippedText.substring(0, maxLength) + '...'
-            : strippedText;
-    };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 pt-32 pb-20">
@@ -109,10 +103,13 @@ const News = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col"
+                                className="group bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-row md:flex-col h-auto md:h-full border border-slate-50"
                             >
                                 {/* News Image */}
-                                <Link to={`/news/${item.id}`} className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                                <Link
+                                    to={`/news/${item.id}`}
+                                    className="relative w-[120px] sm:w-[150px] md:w-full aspect-square md:aspect-[16/10] overflow-hidden bg-slate-100 shrink-0"
+                                >
                                     {item.image_url ? (
                                         <img
                                             src={item.image_url}
@@ -121,45 +118,48 @@ const News = () => {
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                            <FiClock size={48} />
+                                            <FiClock size={24} className="md:hidden" />
+                                            <FiClock size={48} className="hidden md:block" />
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"></div>
 
                                     {/* News Badge */}
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
+                                    <div className="absolute top-2 left-2 md:top-4 md:left-4">
+                                        <span className="px-2 py-0.5 md:px-3 md:py-1 bg-blue-500 text-white text-[8px] md:text-xs font-bold uppercase tracking-wider rounded-full">
                                             News
                                         </span>
                                     </div>
                                 </Link>
 
                                 {/* News Content */}
-                                <div className="p-6 flex-1 flex flex-col">
+                                <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col justify-center md:justify-start overflow-hidden">
                                     {/* Meta Info */}
-                                    <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
-                                        <FiCalendar size={12} />
+                                    <div className="flex items-center gap-2 text-[8px] md:text-xs text-slate-400 mb-1 md:mb-3">
+                                        <FiCalendar size={12} className="text-blue-500" />
                                         <span>{formatDate(item.created_at)}</span>
                                     </div>
 
                                     {/* Title */}
                                     <Link to={`/news/${item.id}`}>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                                        <h3 className="text-sm sm:text-base md:text-xl font-black text-slate-900 mb-1 md:mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight tracking-tight">
                                             {item.title}
                                         </h3>
                                     </Link>
 
-                                    {/* Excerpt */}
-                                    <p className="text-sm text-slate-600 mb-4 line-clamp-3 flex-1">
-                                        {truncateText(item.content, 120)}
-                                    </p>
+                                    {/* Excerpt - ONLY if explicitly provided */}
+                                    {item.excerpt && (
+                                        <p className="text-[10px] md:text-sm text-slate-500 mb-2 md:mb-4 line-clamp-2 flex-1 font-serif italic italic text-slate-400">
+                                            {item.excerpt}
+                                        </p>
+                                    )}
 
                                     {/* Read More Link */}
                                     <Link
                                         to={`/news/${item.id}`}
-                                        className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm uppercase tracking-wider hover:gap-3 transition-all group"
+                                        className="inline-flex items-center gap-2 text-[8px] md:text-sm text-blue-600 font-bold uppercase tracking-wider hover:gap-3 transition-all group"
                                     >
-                                        Read More
+                                        Full Story
                                         <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                                     </Link>
                                 </div>

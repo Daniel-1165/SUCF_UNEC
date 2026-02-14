@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { FiArrowRight, FiCalendar, FiClock } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const NewsSection = () => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 3;
 
     useEffect(() => {
         fetchNews();
@@ -17,8 +19,7 @@ const NewsSection = () => {
             const { data, error } = await supabase
                 .from('news')
                 .select('*')
-                .order('created_at', { ascending: false })
-                .limit(3);
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
             setNews(data || []);
@@ -34,124 +35,155 @@ const NewsSection = () => {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
 
-    const truncateText = (text, maxLength = 100) => {
-        if (!text) return '';
-        const strippedText = text.replace(/<[^>]*>/g, '');
-        return strippedText.length > maxLength
-            ? strippedText.substring(0, maxLength) + '...'
-            : strippedText;
-    };
+    const currentNews = news.slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage);
+    const totalPages = Math.ceil(news.length / itemsPerPage);
 
     if (!loading && news.length === 0) return null;
 
     return (
-        <section className="py-20 bg-gradient-to-br from-blue-50/50 via-white to-blue-50/30 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-
+        <section className="py-24 bg-white relative overflow-hidden">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 {/* Section Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full mb-4">
-                            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                            <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">Latest Updates</span>
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                    <div className="max-w-xl">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className="w-8 h-[2px] bg-blue-600"></span>
+                            <span className="text-xs font-black text-blue-600 uppercase tracking-[0.3em]">Updates</span>
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-black text-slate-900">
-                            Fellowship <span className="text-blue-600">News</span>
+                        <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter">
+                            Latest <span className="italic font-serif text-blue-100/100" style={{ WebkitTextStroke: '1px #2563eb', color: 'transparent' }}>Fellowship</span> News
                         </h2>
-                        <p className="text-slate-600 mt-2">Stay updated with our latest announcements</p>
                     </div>
-                    <Link
-                        to="/news"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 group"
-                    >
-                        View All News
-                        <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </Link>
+
+                    <div className="flex items-center gap-4">
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
+                                <button
+                                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                                    disabled={currentPage === 0}
+                                    className="p-3 rounded-xl hover:bg-white hover:shadow-md text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all group"
+                                >
+                                    <FiArrowRight className="rotate-180 group-active:scale-90" />
+                                </button>
+                                <div className="h-4 w-[1px] bg-slate-200"></div>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">
+                                    {currentPage + 1} <span className="opacity-30">/</span> {totalPages}
+                                </span>
+                                <div className="h-4 w-[1px] bg-slate-200"></div>
+                                <button
+                                    onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+                                    disabled={currentPage === totalPages - 1}
+                                    className="p-3 rounded-xl hover:bg-white hover:shadow-md text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all group"
+                                >
+                                    <FiArrowRight className="group-active:scale-90" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* News Grid */}
-                {loading ? (
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm animate-pulse">
-                                <div className="aspect-[16/10] bg-slate-200"></div>
-                                <div className="p-6 space-y-3">
-                                    <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-                                    <div className="h-3 bg-slate-200 rounded w-full"></div>
-                                    <div className="h-3 bg-slate-200 rounded w-5/6"></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {news.map((item, index) => (
-                            <motion.article
-                                key={item.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col"
-                            >
-                                {/* News Image */}
-                                <Link to={`/news/${item.id}`} className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                                    {item.image_url ? (
-                                        <img
-                                            src={item.image_url}
-                                            alt={item.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                            <FiClock size={48} />
+                {/* News content grid */}
+                <div className="grid lg:grid-cols-12 gap-12">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentPage}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="lg:col-span-12 grid lg:grid-cols-12 gap-12"
+                        >
+                            {/* Hero News (Overlay Style) - Only for 1st item on 1st page */}
+                            {currentPage === 0 ? (
+                                <>
+                                    <div className="lg:col-span-7">
+                                        <Link to={`/news/${currentNews[0]?.id}`} className="group relative block aspect-[16/10] md:aspect-auto md:h-[500px] rounded-[2.5rem] overflow-hidden bg-slate-100 shadow-2xl shadow-blue-900/10 transition-all duration-700 hover:-translate-y-2">
+                                            {currentNews[0]?.image_url ? (
+                                                <img
+                                                    src={currentNews[0].image_url}
+                                                    alt={currentNews[0].title}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
+                                                    <FiClock size={80} />
+                                                </div>
+                                            )}
+
+                                            {/* Gradient Overlay */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
+
+                                            {/* Overlay Text Content */}
+                                            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full">Top News</span>
+                                                    <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{formatDate(currentNews[0]?.created_at)}</span>
+                                                </div>
+                                                <h3 className="text-2xl md:text-4xl font-black text-white mb-4 line-clamp-3 leading-[1.1] tracking-tight group-hover:text-blue-400 transition-colors">
+                                                    {currentNews[0]?.title}
+                                                </h3>
+                                                <div className="flex items-center gap-2 text-blue-400 font-black text-xs uppercase tracking-[0.2em] group-hover:gap-4 transition-all">
+                                                    Read Full Story <FiArrowRight />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
+
+                                    {/* Small List Items (Timeline Style) */}
+                                    <div className="lg:col-span-5 flex flex-col justify-center space-y-12">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse shadow-lg shadow-red-600/40"></div>
+                                            <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Latest Feed</h4>
                                         </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        <div className="relative pl-8 space-y-12 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-[1px] before:bg-slate-100">
+                                            {currentNews.slice(1).map((item) => (
+                                                <Link key={item.id} to={`/news/${item.id}`} className="group relative block">
+                                                    {/* Dot indicator */}
+                                                    <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full border-2 border-white bg-slate-200 group-hover:bg-blue-600 group-hover:scale-125 transition-all"></div>
 
-                                    {/* News Badge */}
-                                    <div className="absolute top-4 left-4">
-                                        <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                                            News
-                                        </span>
+                                                    <div className="flex gap-6">
+                                                        <div className="flex-1">
+                                                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{formatDate(item.created_at)}</span>
+                                                            <h5 className="text-lg font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors tracking-tight">
+                                                                {item.title}
+                                                            </h5>
+                                                        </div>
+                                                        <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-50 shrink-0 shadow-sm">
+                                                            {item.image_url && <img src={item.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            ))}
+
+                                            {/* History Link */}
+                                            <Link to="/news" className="inline-flex items-center gap-3 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-blue-600 transition-all group">
+                                                See Full History <FiArrowRight className="group-hover:translate-x-1" />
+                                            </Link>
+                                        </div>
                                     </div>
-                                </Link>
-
-                                {/* News Content */}
-                                <div className="p-6 flex-1 flex flex-col">
-                                    {/* Meta Info */}
-                                    <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
-                                        <FiCalendar size={12} />
-                                        <span>{formatDate(item.created_at)}</span>
-                                    </div>
-
-                                    {/* Title */}
-                                    <Link to={`/news/${item.id}`}>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
-                                            {item.title}
-                                        </h3>
-                                    </Link>
-
-                                    {/* Excerpt */}
-                                    <p className="text-sm text-slate-600 mb-4 line-clamp-3 flex-1">
-                                        {truncateText(item.content, 100)}
-                                    </p>
-
-                                    {/* Read More Link */}
-                                    <Link
-                                        to={`/news/${item.id}`}
-                                        className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm uppercase tracking-wider hover:gap-3 transition-all group"
-                                    >
-                                        Read More
-                                        <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                                    </Link>
+                                </>
+                            ) : (
+                                /* Standard List for other pages */
+                                <div className="lg:col-span-12 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {currentNews.map((item) => (
+                                        <Link key={item.id} to={`/news/${item.id}`} className="group bg-slate-50 p-6 rounded-[2rem] border border-transparent hover:border-blue-100 hover:bg-white hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500">
+                                            <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-200">
+                                                {item.image_url && <img src={item.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />}
+                                            </div>
+                                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-3 block">{formatDate(item.created_at)}</span>
+                                            <h3 className="text-xl font-bold text-slate-900 line-clamp-2 leading-tight mb-4 tracking-tight group-hover:text-blue-600 transition-colors">
+                                                {item.title}
+                                            </h3>
+                                            <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest group-hover:text-blue-600 transition-colors flex items-center gap-2">
+                                                Full Update <FiArrowRight className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                            </div>
+                                        </Link>
+                                    ))}
                                 </div>
-                            </motion.article>
-                        ))}
-                    </div>
-                )}
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
             </div>
         </section>
     );
