@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { FiArrowLeft, FiCalendar, FiClock, FiFileText } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiClock, FiFileText, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 
