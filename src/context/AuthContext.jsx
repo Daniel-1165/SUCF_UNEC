@@ -10,49 +10,47 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const fetchAdminStatus = async (userId, email) => {
+        if (!userId) return false;
+
+        // Primary Admin Failsafe: Instant check for core admin
+        if (email === 'sucfunec01@gmail.com') return true;
+
+        try {
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Admin check timed out")), 3000)
+            );
+
+            const queryPromise = supabase
+                .from('profiles')
+                .select('is_admin')
+                .eq('id', userId)
+                .single();
+
+            const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+
+            if (error) {
+                if (error.code !== 'PGRST116') {
+                    console.warn("Auth: Admin status check failed:", error.message);
+                }
+                return false;
+            }
+            return data?.is_admin || false;
+        } catch (err) {
+            console.error("Auth: Exception in admin fetch:", err.message);
+            return false;
+        }
+    };
+
     useEffect(() => {
         let mounted = true;
 
-        // Safety Timeout: Force app to load if Supabase hangs indefinitely
         const safetyTimer = setTimeout(() => {
             if (mounted && loading) {
                 console.warn("Auth: Safety timeout triggered! App forced to continue.");
                 setLoading(false);
             }
         }, 8000);
-
-        const fetchAdminStatus = async (userId, email) => {
-            if (!userId) return false;
-
-            // Primary Admin Failsafe: Instant check for core admin
-            if (email === 'sucfunec01@gmail.com') return true;
-
-            try {
-                // Admin Status Check with 3s Timeout
-                const timeoutPromise = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error("Admin check timed out")), 3000)
-                );
-
-                const queryPromise = supabase
-                    .from('profiles')
-                    .select('is_admin')
-                    .eq('id', userId)
-                    .single();
-
-                const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
-
-                if (error) {
-                    if (error.code !== 'PGRST116') {
-                        console.warn("Auth: Admin status check failed:", error.message);
-                    }
-                    return false;
-                }
-                return data?.is_admin || false;
-            } catch (err) {
-                console.error("Auth: Exception in admin fetch:", err.message);
-                return false;
-            }
-        };
 
         const updateAuthState = async (session) => {
             if (!mounted) return;
@@ -104,7 +102,6 @@ export const AuthProvider = ({ children }) => {
 
         initializeAuth();
 
-        // Real-time Authentication State Listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log(`Auth: External event -> ${event}`);
             if (event === 'SIGNED_OUT') {
@@ -122,6 +119,32 @@ export const AuthProvider = ({ children }) => {
         };
     }, []);
 
+    // Subscription to profile changes for the current user
+    useEffect(() => {
+        if (!user?.id) return;
+
+        const profileSubscription = supabase
+            .channel(`public:profiles:id=eq.${user.id}`)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` }, payload => {
+                console.log("Auth: Profile update detected:", payload.new);
+                if (payload.new.is_admin !== undefined) {
+                    setUser(prev => prev ? { ...prev, isAdmin: payload.new.is_admin } : null);
+                }
+            })
+            .subscribe();
+
+        return () => {
+            if (profileSubscription) supabase.removeChannel(profileSubscription);
+        };
+    }, [user?.id]);
+
+    const refreshAdminStatus = async () => {
+        if (!user) return false;
+        const isAdmin = await fetchAdminStatus(user.id, user.email);
+        setUser(prev => prev ? { ...prev, isAdmin } : null);
+        return isAdmin;
+    };
+
     const value = {
         signUp: (data) => supabase.auth.signUp(data),
         signIn: (data) => supabase.auth.signInWithPassword(data),
@@ -138,6 +161,7 @@ export const AuthProvider = ({ children }) => {
                 return { error: err };
             }
         },
+        refreshAdminStatus,
         user,
         loading,
         isAuthenticated: !!user,
