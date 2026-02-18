@@ -69,13 +69,13 @@ const SignIn = () => {
     };
 
     return (
-        <div className="min-h-screen zeni-mesh-gradient flex items-center justify-center p-6 pt-32 selection:bg-emerald-600 selection:text-white">
+        <div className="min-h-screen zeni-mesh-gradient flex items-center justify-center p-6 pt-24 md:pt-32 selection:bg-emerald-600 selection:text-white">
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-full max-w-md"
             >
-                <div className="zeni-card p-12 relative overflow-hidden">
+                <div className="zeni-card p-8 sm:p-12 relative overflow-hidden">
                     {/* Header */}
                     <div className="mb-10 text-center">
                         <motion.div
@@ -85,7 +85,7 @@ const SignIn = () => {
                         >
                             <FiMail size={32} />
                         </motion.div>
-                        <h1 className="text-4xl font-black text-[#00211F] italic uppercase tracking-tighter mb-2 leading-none">Welcome Back.</h1>
+                        <h1 className="text-2xl sm:text-4xl font-black text-[#00211F] italic uppercase tracking-tighter mb-2 leading-none">Welcome Back.</h1>
                         <p className="text-[#00211F] opacity-40 font-bold italic uppercase text-[10px] tracking-widest">Unique Fellowship on Campus</p>
                     </div>
 
@@ -103,7 +103,7 @@ const SignIn = () => {
                                 name="email"
                                 required
                                 onChange={handleChange}
-                                className="w-full px-8 py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                                className="w-full px-6 py-4 sm:px-8 sm:py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
                                 placeholder="name@example.com"
                             />
                         </div>
@@ -115,7 +115,7 @@ const SignIn = () => {
                                 name="password"
                                 required
                                 onChange={handleChange}
-                                className="w-full px-8 py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                                className="w-full px-6 py-4 sm:px-8 sm:py-5 bg-emerald-50/30 border border-emerald-500/10 rounded-[2rem] text-[#00211F] font-bold focus:outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -123,7 +123,7 @@ const SignIn = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#00211F] text-white py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10 disabled:opacity-50 mt-4 group"
+                            className="w-full bg-[#00211F] text-white py-4 sm:py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-900/10 disabled:opacity-50 mt-4 group"
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
@@ -139,7 +139,7 @@ const SignIn = () => {
                         </button>
                     </form>
 
-                    <div className="mt-12 pt-8 border-t border-[#F5F9F7] text-center">
+                    <div className="mt-8 sm:mt-12 pt-8 border-t border-[#F5F9F7] text-center">
                         <p className="text-[#00211F] opacity-60 text-[10px] font-black uppercase tracking-widest leading-loose">
                             New to the family? <br />
                             <Link to="/signup" className="text-emerald-600 hover:text-emerald-700 transition-colors">Apply for membership</Link>

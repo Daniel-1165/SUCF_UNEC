@@ -58,14 +58,14 @@ const SignUp = () => {
     };
 
     return (
-        <div className="min-h-screen pt-32 pb-20 bg-gray-50 flex items-center justify-center px-6">
+        <div className="min-h-screen pt-24 md:pt-32 pb-20 bg-gray-50 flex items-center justify-center px-6">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full bg-white rounded-[2.5rem] p-10 shadow-xl border border-gray-100"
+                className="max-w-md w-full bg-white rounded-[2.5rem] p-6 sm:p-10 shadow-xl border border-gray-100"
             >
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-serif font-bold text-emerald-900 mb-2">Join the Family</h2>
+                <div className="text-center mb-6 sm:mb-10">
+                    <h2 className="text-2xl sm:text-3xl font-serif font-bold text-emerald-900 mb-2">Join the Family</h2>
                     <p className="text-gray-500 text-sm">Create your account to access the Den.</p>
                 </div>
 
