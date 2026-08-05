@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FiArrowRight, FiBookOpen, FiHeart, FiGlobe, FiLifeBuoy } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
@@ -104,36 +104,37 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
               <div className="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl" />
 
               <div className="relative max-w-[500px] mx-auto lg:ml-auto lg:mr-0 aspect-[4/5] rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-slate-100">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentSlide}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.2}
-                    onDragEnd={(e, { offset }) => {
-                      const swipeThreshold = 50;
-                      if (offset.x > swipeThreshold) {
-                        setCurrentSlide((prev) => (prev - 1 + heroImageCount) % heroImageCount);
-                      } else if (offset.x < -swipeThreshold) {
-                        setCurrentSlide((prev) => (prev + 1) % heroImageCount);
-                      }
-                    }}
-                    className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-10"
-                  >
+                {/* All slides stay mounted and crossfade via opacity. Mounting and
+                    unmounting (AnimatePresence mode="wait") left a gap where neither
+                    image was painted, which read as a flash of the card background. */}
+                <motion.div
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={(e, { offset }) => {
+                    const swipeThreshold = 50;
+                    if (offset.x > swipeThreshold) {
+                      setCurrentSlide((prev) => (prev - 1 + heroImageCount) % heroImageCount);
+                    } else if (offset.x < -swipeThreshold) {
+                      setCurrentSlide((prev) => (prev + 1) % heroImageCount);
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-10"
+                >
+                  {heroImages.map((src, idx) => (
                     <Image
-                      src={heroImages[currentSlide]}
-                      alt="SUCF Moments"
+                      key={src}
+                      src={src}
+                      alt=""
                       fill
-                      priority
+                      priority={idx === 0}
                       sizes="(max-width: 1024px) 90vw, 500px"
-                      className="object-cover pointer-events-none select-none"
+                      className={`object-cover pointer-events-none select-none transition-opacity duration-700 ease-in-out ${
+                        idx === currentSlide ? "opacity-100" : "opacity-0"
+                      }`}
                     />
-                  </motion.div>
-                </AnimatePresence>
+                  ))}
+                </motion.div>
 
                 {/* Overlay Interface UI */}
                 <div className="absolute top-6 left-6 right-6 flex justify-between items-center text-white/90 z-20">

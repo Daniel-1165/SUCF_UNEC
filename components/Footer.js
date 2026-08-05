@@ -9,31 +9,31 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="bg-emerald-950 text-white pt-16 pb-12 relative overflow-hidden">
+    <footer className="bg-emerald-950 text-white pt-10 pb-8 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-900/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2" />
 
       <div className="page-container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
-          <div className="lg:col-span-4 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 mb-8">
+          <div className="lg:col-span-4 space-y-4">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight mb-2">SUCF UNEC</h2>
+              <h2 className="text-lg font-bold tracking-tight mb-1">SUCF UNEC</h2>
               <p className="text-emerald-500/80 text-[10px] uppercase font-bold tracking-[0.3em]">
                 The Unique Fellowship
               </p>
             </div>
-            <p className="text-emerald-100/60 text-sm leading-relaxed max-w-xs font-medium">
+            <p className="text-emerald-100/60 text-xs leading-relaxed max-w-xs">
               Committed to reaching children, young people, and families, nurturing them
               through Bible engagement to become committed Christians of influence.
             </p>
-            <div className="flex gap-4 pt-2">
+            <div className="flex gap-2 pt-1">
               {socials.map((social, i) => (
                 <a
                   key={i}
                   href={social.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg hover:bg-emerald-600 hover:border-emerald-500 hover:scale-110 transition-all duration-500"
+                  className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-sm hover:bg-emerald-600 hover:border-emerald-500 hover:scale-110 transition-all duration-500"
                 >
                   {social.icon}
                 </a>
@@ -43,10 +43,10 @@ export default function Footer() {
 
           <div className="lg:col-span-4 grid grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500 mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-500 mb-3">
                 Navigation
               </h3>
-              <ul className="space-y-3 text-sm font-bold text-emerald-100/70">
+              <ul className="space-y-2 text-xs font-medium text-emerald-100/70">
                 <li>
                   <Link href="/" className="hover:text-white transition-colors">
                     Home
@@ -75,10 +75,10 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500 mb-6">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-500 mb-3">
                 Meetings
               </h3>
-              <ul className="space-y-4 text-sm text-emerald-100/70">
+              <ul className="space-y-2 text-xs text-emerald-100/70">
                 <li>
                   <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600/50">
                     Sunday
@@ -95,7 +95,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="lg:col-span-4 space-y-8">
+          <div className="lg:col-span-4 space-y-5">
             <div className="space-y-4 px-2">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500/50">
                 Support Ministry
@@ -135,7 +135,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-5 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-bold text-emerald-100/20 uppercase tracking-[0.2em]">
             &copy; {new Date().getFullYear()} SUCF UNEC • The Unique Fellowship
           </p>
