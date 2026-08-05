@@ -16,9 +16,35 @@ import {
   FiMail,
   FiUsers,
   FiSettings,
+  FiChevronDown,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Desktop nav: nine links read as clutter, so related destinations are grouped
+// behind two dropdowns. Mobile keeps every link visible — a drawer has the room.
+const navGroups = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Activities", path: "/activities" },
+  { name: "Gallery", path: "/gallery" },
+  {
+    name: "Resources",
+    items: [
+      { name: "Articles", path: "/articles", blurb: "Faith and campus writing" },
+      { name: "Library", path: "/library", blurb: "Books to borrow and read" },
+      { name: "News", path: "/news", blurb: "Fellowship announcements" },
+    ],
+  },
+  {
+    name: "More",
+    items: [
+      { name: "Executives", path: "/executives", blurb: "Who leads the fellowship" },
+      { name: "Contact", path: "/contact", blurb: "Reach the team" },
+    ],
+  },
+];
+
+// Flat list for the mobile drawer.
 const navLinks = [
   { name: "Home", path: "/", icon: <FiHome /> },
   { name: "About", path: "/about", icon: <FiInfo /> },
@@ -37,6 +63,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -59,6 +86,17 @@ export default function Navbar() {
     };
   }, []);
 
+  // Close any open dropdown when the route changes or Escape is pressed.
+  useEffect(() => {
+    setOpenMenu(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpenMenu(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const isDarkPage = pathname.startsWith("/gallery");
   const navbarBg = isDarkPage
     ? scrolled
@@ -68,8 +106,8 @@ export default function Navbar() {
       ? "bg-white/90 shadow-sm"
       : "bg-transparent";
 
-  const logoTitleColor = isDarkPage ? "text-white" : "text-emerald-600";
-  const logoSubColor = isDarkPage ? "text-emerald-400" : "text-emerald-600";
+  const logoTitleColor = isDarkPage ? "text-white" : "text-neutral-900";
+  const logoSubColor = isDarkPage ? "text-white/50" : "text-neutral-500";
 
   return (
     <nav
@@ -86,83 +124,135 @@ export default function Navbar() {
             priority
           />
           <div className="flex flex-col">
-            <div className="flex items-baseline">
-              <span
-                className={`text-lg md:text-xl font-black italic uppercase tracking-tighter leading-none font-heading ${logoTitleColor}`}
-              >
-                SUCF
-              </span>
-              <span className="text-lg md:text-xl font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-600 text-white px-1 ml-0.5 rounded-sm">
-                UNEC
-              </span>
-            </div>
+            <span
+              className={`text-base md:text-lg font-semibold tracking-tight leading-none ${logoTitleColor}`}
+            >
+              SUCF <span className="text-emerald-700">UNEC</span>
+            </span>
             <p
-              className={`hidden lg:block text-[9px] tracking-[0.3em] font-black uppercase ${logoSubColor}`}
+              className={`hidden lg:block mt-1 text-[10px] tracking-[0.18em] font-medium uppercase ${logoSubColor}`}
             >
               Unique Fellowship
             </p>
           </div>
         </Link>
 
-        <div className="hidden md:flex items-center justify-end flex-grow gap-4 lg:gap-8">
-          <div className="flex items-center gap-3 lg:gap-4">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.path;
-              const isHighlighted = link.name === "Gallery";
+        <div className="hidden md:flex items-center justify-end flex-grow gap-2 lg:gap-4">
+          <div className="flex items-center gap-1">
+            {navGroups.map((group) => {
+              const linkBase = isDarkPage
+                ? "text-white/70 hover:text-white"
+                : "text-neutral-600 hover:text-neutral-900";
+              const activeText = isDarkPage ? "text-white" : "text-neutral-900";
+
+              if (!group.items) {
+                const isActive = pathname === group.path;
+                return (
+                  <Link
+                    key={group.name}
+                    href={group.path}
+                    className={`relative rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
+                      isActive ? activeText : linkBase
+                    }`}
+                  >
+                    {group.name}
+                    {isActive && (
+                      <motion.span
+                        layoutId="navTab"
+                        className="absolute inset-x-3 -bottom-0.5 h-px bg-emerald-700"
+                      />
+                    )}
+                  </Link>
+                );
+              }
+
+              const isActive = group.items.some((i) => pathname.startsWith(i.path));
+              const isOpenMenu = openMenu === group.name;
 
               return (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className={`text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 relative
-                    ${
-                      isHighlighted
-                        ? `px-4 py-2 rounded-xl ${
-                            isActive
-                              ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30"
-                              : isDarkPage
-                                ? "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                                : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200"
-                          }`
-                        : `hover:text-emerald-500 ${
-                            isActive
-                              ? isDarkPage
-                                ? "text-white"
-                                : "text-emerald-600"
-                              : isDarkPage
-                                ? "text-gray-400"
-                                : "text-gray-600"
-                          }`
-                    }`}
+                <div
+                  key={group.name}
+                  className="relative"
+                  onMouseEnter={() => setOpenMenu(group.name)}
+                  onMouseLeave={() => setOpenMenu(null)}
                 >
-                  {link.name}
-                  {isActive && !isHighlighted && (
-                    <motion.span
-                      layoutId="navTab"
-                      className="absolute -bottom-2 left-0 w-full h-[2px] bg-emerald-500"
+                  <button
+                    type="button"
+                    onClick={() => setOpenMenu(isOpenMenu ? null : group.name)}
+                    aria-expanded={isOpenMenu}
+                    aria-haspopup="true"
+                    className={`relative flex items-center gap-1 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
+                      isActive || isOpenMenu ? activeText : linkBase
+                    }`}
+                  >
+                    {group.name}
+                    <FiChevronDown
+                      className={`text-xs transition-transform duration-200 ${
+                        isOpenMenu ? "rotate-180" : ""
+                      }`}
                     />
-                  )}
-                </Link>
+                    {isActive && (
+                      <motion.span
+                        layoutId="navTab"
+                        className="absolute inset-x-3 -bottom-0.5 h-px bg-emerald-700"
+                      />
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {isOpenMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 4 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full w-64 pt-2"
+                      >
+                        <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white p-1.5 shadow-lg shadow-neutral-900/5">
+                          {group.items.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.path}
+                              onClick={() => setOpenMenu(null)}
+                              className={`block rounded-lg px-3 py-2.5 transition-colors ${
+                                pathname.startsWith(item.path)
+                                  ? "bg-neutral-50"
+                                  : "hover:bg-neutral-50"
+                              }`}
+                            >
+                              <span className="block text-[13px] font-medium text-neutral-900">
+                                {item.name}
+                              </span>
+                              <span className="mt-0.5 block text-[11px] text-neutral-500">
+                                {item.blurb}
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
           </div>
+
           {isSignedIn && (
             <Link
               href="/admin"
-              className="flex items-center gap-2 text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] px-4 py-2 bg-emerald-100 text-emerald-900 rounded-lg hover:bg-emerald-200 transition-all"
+              className="rounded-lg bg-neutral-900 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-neutral-700"
             >
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
               Admin
             </Link>
           )}
         </div>
 
         <button
-          className={`md:hidden p-3 rounded-2xl transition-all shadow-sm active:scale-95 border
+          className={`md:hidden p-2.5 rounded-xl transition-all shadow-sm active:scale-95 border
             ${
               isDarkPage
                 ? "text-white bg-white/10 border-white/20 hover:bg-white/20"
-                : "text-emerald-600 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20"
+                : "text-neutral-700 bg-neutral-100 border-neutral-200 hover:bg-neutral-200"
             }`}
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}

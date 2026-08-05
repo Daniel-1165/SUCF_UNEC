@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiBookOpen, FiHeart, FiGlobe, FiLifeBuoy } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
@@ -35,6 +35,7 @@ const pillars = [
 export default function HomeView({ event, weeklyPosts, articles, news, books, galleryImages }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const heroImageCount = heroImages.length;
+  const nextSlide = (currentSlide + 1) % heroImageCount;
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
   }, [heroImageCount]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900 bg-grid-pattern overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-white text-neutral-900 overflow-x-hidden font-sans">
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-20 overflow-hidden">
         <div className="page-container">
@@ -61,7 +62,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
                 variants={fadeInUp}
                 className="inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm"
               >
-                <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="bg-emerald-700 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
                   New
                 </span>
                 <span className="text-xs font-medium text-neutral-800">Academic Session {currentYear}</span>
@@ -82,7 +83,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
 
               <motion.p
                 variants={fadeInUp}
-                className="text-lg text-neutral-800 max-w-md font-medium leading-relaxed border-l-4 border-emerald-500 pl-4"
+                className="text-base text-neutral-600 max-w-md leading-relaxed"
               >
                 Experience a community where spiritual growth meets academic excellence. Welcome to the family.
               </motion.p>
@@ -90,76 +91,96 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2 w-full">
                 <Link
                   href="/activities"
-                  className="flex-1 sm:flex-none justify-center px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm uppercase tracking-wide hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/10 flex items-center gap-3"
+                  className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
                 >
                   Join a Gathering <FiArrowRight />
                 </Link>
               </motion.div>
             </motion.div>
 
-            {/* Image/Carousel Section */}
+            {/* Image/Carousel Section — a main card with the next slide peeking
+                above it, so the queue is visible rather than hidden. Slides move
+                top-to-bottom: the preview card descends into the main frame. */}
             <div className="lg:col-span-6 w-full relative z-10">
-              {/* Abstract Deco Elements */}
-              <div className="absolute top-10 right-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-3xl" />
-              <div className="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl" />
-
-              <div className="relative max-w-[500px] mx-auto lg:ml-auto lg:mr-0 aspect-[4/5] rounded-[2.5rem] overflow-hidden border-[8px] border-white shadow-2xl shadow-slate-200 transform md:rotate-2 hover:rotate-0 transition-all duration-700 bg-slate-100">
-                {/* All slides stay mounted and crossfade via opacity. Mounting and
-                    unmounting (AnimatePresence mode="wait") left a gap where neither
-                    image was painted, which read as a flash of the card background. */}
-                <motion.div
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.2}
-                  onDragEnd={(e, { offset }) => {
-                    const swipeThreshold = 50;
-                    if (offset.x > swipeThreshold) {
-                      setCurrentSlide((prev) => (prev - 1 + heroImageCount) % heroImageCount);
-                    } else if (offset.x < -swipeThreshold) {
-                      setCurrentSlide((prev) => (prev + 1) % heroImageCount);
-                    }
-                  }}
-                  className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-10"
-                >
+              <div className="relative mx-auto max-w-[460px] lg:ml-auto lg:mr-0 pt-14">
+                {/* Peek card — shows what's coming next */}
+                <div className="absolute right-6 top-0 z-20 h-32 w-44 overflow-hidden rounded-2xl border border-white bg-neutral-100 shadow-lg shadow-neutral-900/10 sm:h-36 sm:w-52">
                   {heroImages.map((src, idx) => (
                     <Image
-                      key={src}
+                      key={`peek-${src}`}
                       src={src}
                       alt=""
                       fill
-                      priority={idx === 0}
-                      sizes="(max-width: 1024px) 90vw, 500px"
-                      className={`object-cover pointer-events-none select-none transition-opacity duration-700 ease-in-out ${
-                        idx === currentSlide ? "opacity-100" : "opacity-0"
+                      sizes="208px"
+                      className={`object-cover transition-opacity duration-500 ${
+                        idx === nextSlide ? "opacity-100" : "opacity-0"
                       }`}
                     />
                   ))}
-                </motion.div>
+                  <span className="absolute bottom-2 left-2 rounded-full bg-white/85 px-2 py-0.5 text-[10px] font-medium text-neutral-700 backdrop-blur">
+                    Up next
+                  </span>
+                </div>
 
-                {/* Overlay Interface UI */}
-                <div className="absolute top-6 left-6 right-6 flex justify-between items-center text-white/90 z-20">
-                  <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-wider">
-                    Highlights
-                  </div>
-                  <div className="flex gap-1">
+                {/* Main frame */}
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100 shadow-xl shadow-neutral-900/5">
+                  <motion.div
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragEnd={(e, { offset }) => {
+                      const swipeThreshold = 50;
+                      if (offset.x > swipeThreshold) {
+                        setCurrentSlide((prev) => (prev - 1 + heroImageCount) % heroImageCount);
+                      } else if (offset.x < -swipeThreshold) {
+                        setCurrentSlide((prev) => (prev + 1) % heroImageCount);
+                      }
+                    }}
+                    className="absolute inset-0 z-10 h-full w-full cursor-grab active:cursor-grabbing"
+                  >
+                    {/* Each slide descends into place and the outgoing one continues
+                        downward, giving a single top-to-bottom direction of travel. */}
+                    <AnimatePresence initial={false}>
+                      <motion.div
+                        key={currentSlide}
+                        initial={{ y: "-100%" }}
+                        animate={{ y: "0%" }}
+                        exit={{ y: "100%" }}
+                        transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
+                        className="absolute inset-0"
+                      >
+                        <Image
+                          src={heroImages[currentSlide]}
+                          alt=""
+                          fill
+                          priority
+                          sizes="(max-width: 1024px) 90vw, 460px"
+                          className="object-cover pointer-events-none select-none"
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+                  </motion.div>
+
+                  {/* Progress ticks */}
+                  <div className="absolute bottom-5 left-5 z-20 flex gap-1">
                     {heroImages.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${
-                          idx === currentSlide ? "w-8 bg-emerald-400" : "w-2 bg-white/40"
+                        className={`h-1 rounded-full transition-all duration-300 ${
+                          idx === currentSlide ? "w-6 bg-white" : "w-1.5 bg-white/50"
                         }`}
                       />
                     ))}
                   </div>
-                </div>
 
-                {/* Arrow Link */}
-                <Link
-                  href="/activities"
-                  className="absolute bottom-6 right-6 w-14 h-14 bg-white/90 backdrop-blur-xl rounded-full shadow-lg border border-white/50 flex items-center justify-center text-slate-900 hover:bg-emerald-600 hover:text-white transition-all z-20 group"
-                >
-                  <FiArrowRight className="text-xl group-hover:scale-110 transition-transform" />
-                </Link>
+                  <Link
+                    href="/activities"
+                    aria-label="See our activities"
+                    className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-md backdrop-blur transition-colors hover:bg-emerald-700 hover:text-white"
+                  >
+                    <FiArrowRight />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
