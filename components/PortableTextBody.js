@@ -48,11 +48,25 @@ const components = {
   },
 };
 
-export default function PortableTextBody({ value, className }) {
+// Callers may pass extra Portable Text component overrides (e.g. heading
+// renderers that add anchor ids for a table of contents). They are merged on
+// top of the defaults above, so the shared image/link renderers keep working
+// even when a page only overrides `block`.
+function mergeComponents(overrides) {
+  if (!overrides) return components;
+  return {
+    ...components,
+    ...overrides,
+    types: { ...components.types, ...overrides.types },
+    marks: { ...components.marks, ...overrides.marks },
+  };
+}
+
+export default function PortableTextBody({ value, className, components: overrides }) {
   if (!value) return null;
   return (
     <div className={className}>
-      <PortableText value={value} components={components} />
+      <PortableText value={value} components={mergeComponents(overrides)} />
     </div>
   );
 }

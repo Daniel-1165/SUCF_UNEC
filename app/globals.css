@@ -47,22 +47,22 @@ body {
     max-width: none !important;
   }
 
-  /* Editorial reading defaults. Line-height 1.7 and a 1.5em paragraph gap
-     are comfortable for long-form; the previous 1.85 / 2.2rem / 22px combo
-     read as double-spaced. Margins use `em` so they scale with the text. */
+  /* Small, quiet editorial body text: 15px mobile / 16px desktop with a 1.65
+     line-height and a 1.4em paragraph gap. Margins use `em` so they scale
+     with the text rather than fighting it. */
   .article-body-content p,
   .news-body-content p {
-    margin-bottom: 1.5em;
-    line-height: 1.7;
-    font-size: 1.0625rem;
+    margin-bottom: 1.4em;
+    line-height: 1.65;
+    font-size: 0.9375rem;
     color: #262626;
-    letter-spacing: -0.005em;
+    letter-spacing: -0.003em;
   }
 
   @media (min-width: 768px) {
     .article-body-content p,
     .news-body-content p {
-      font-size: 1.125rem;
+      font-size: 1rem;
     }
   }
 
