@@ -29,7 +29,7 @@ Add these in Vercel under **Settings → Environment Variables**. Values come fr
 | `AUTH0_CLIENT_ID` | From the Auth0 application |
 | `AUTH0_CLIENT_SECRET` | From the Auth0 application |
 | `AUTH0_SECRET` | Generate with `openssl rand -hex 32` |
-| `APP_BASE_URL` | Production URL, e.g. `https://sucfunec.vercel.app` |
+| `APP_BASE_URL` | `https://sucf-unec.vercel.app` in production; `http://localhost:3000` locally |
 | `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | Contact form |
 | `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | Contact form |
 | `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | Contact form |
@@ -40,15 +40,15 @@ Add these in Vercel under **Settings → Environment Variables**. Values come fr
 
 In the Auth0 application's **Settings**, add your production domain alongside localhost:
 
-- **Allowed Callback URLs**: `https://YOUR-DOMAIN/auth/callback`
-- **Allowed Logout URLs**: `https://YOUR-DOMAIN`
-- **Allowed Web Origins**: `https://YOUR-DOMAIN`
+- **Allowed Callback URLs**: `http://localhost:3000/auth/callback, https://sucf-unec.vercel.app/auth/callback`
+- **Allowed Logout URLs**: `http://localhost:3000, https://sucf-unec.vercel.app`
+- **Allowed Web Origins**: `http://localhost:3000, https://sucf-unec.vercel.app`
 
 Skipping this is the most common cause of login failing in production while working locally.
 
 ## 4. Allow the production domain in Sanity
 
-sanity.io/manage → your project → **API → CORS Origins** → add your production URL. Without it, Sanity Studio at `/studio` won't load on the live site.
+sanity.io/manage → your project → **API → CORS Origins** → add `https://sucf-unec.vercel.app`. Without it, Sanity Studio at `/studio` won't load on the live site.
 
 ## After deploying
 
