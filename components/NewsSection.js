@@ -51,50 +51,35 @@ export default function NewsSection({ news = [] }) {
         >
           {/* Hero News (Overlay Style) */}
           <div className="lg:col-span-7">
-            <Link
-              href={`/news/${lead.slug}`}
-              className="group relative block rounded-[2.5rem] overflow-hidden bg-slate-100 shadow-2xl shadow-blue-900/10 transition-all duration-700 hover:-translate-y-2"
-              // Card takes the image's own ratio, so nothing is cropped or
-              // letterboxed no matter what shape gets uploaded later.
-              style={{ aspectRatio: lead.mainImage?.aspectRatio || 16 / 10 }}
-            >
-              {lead.mainImage ? (
-                <Image
-                  src={urlFor(lead.mainImage).width(1200).url()}
-                  alt={lead.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  placeholder={lead.mainImage.lqip ? "blur" : "empty"}
-                  blurDataURL={lead.mainImage.lqip}
-                  className="relative z-10 object-cover group-hover:scale-105 transition-transform duration-1000"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
-                  <FiClock size={80} />
-                </div>
-              )}
-
-              {/* Gradient Overlay — must sit ABOVE the z-10 image, or it can't
-                  darken it and the white text below becomes unreadable. */}
-              <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/10"></div>
-
-              {/* Overlay Text Content */}
-              <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 z-30">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
-                    Top News
-                  </span>
-                  <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">
-                    {formatDate(lead.publishedAt)}
-                  </span>
-                </div>
-                <h3 className="h2 text-white mb-4 line-clamp-3 group-hover:text-blue-400 transition-colors">
-                  {lead.title}
-                </h3>
-                <div className="flex items-center gap-2 text-blue-400 font-black text-xs uppercase tracking-[0.2em] group-hover:gap-4 transition-all">
-                  Read Full Story <FiArrowRight />
-                </div>
+            {/* Caption sits under the image rather than over it — the dark
+                gradient that used to make overlaid text readable was dulling
+                the photo itself. */}
+            <Link href={`/news/${lead.slug}`} className="group block">
+              <div
+                className="relative overflow-hidden rounded-2xl bg-neutral-100"
+                style={{ aspectRatio: lead.mainImage?.aspectRatio || 16 / 10 }}
+              >
+                {lead.mainImage ? (
+                  <Image
+                    src={urlFor(lead.mainImage).width(1200).url()}
+                    alt={lead.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    placeholder={lead.mainImage.lqip ? "blur" : "empty"}
+                    blurDataURL={lead.mainImage.lqip}
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-neutral-50 text-neutral-300">
+                    <FiClock size={40} />
+                  </div>
+                )}
               </div>
+
+              <p className="mt-4 text-[11px] text-neutral-500">{formatDate(lead.publishedAt)}</p>
+              <h3 className="mt-1 line-clamp-2 text-base font-semibold leading-snug tracking-tight text-neutral-900 transition-colors group-hover:text-emerald-700 sm:text-lg">
+                {lead.title}
+              </h3>
             </Link>
           </div>
 

@@ -20,7 +20,7 @@ export default function AnthemSection() {
             <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
             <span className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.3em]">Our Heritage</span>
           </div>
-          <h2 className="h2 font-serif text-neutral-900 mb-6">The Anthem.</h2>
+          <h2 className="h3 font-serif text-neutral-900 mb-4">The Anthem.</h2>
           <div className="w-24 h-1 bg-amber-500/30 mx-auto rounded-full"></div>
         </motion.div>
 
@@ -36,7 +36,7 @@ export default function AnthemSection() {
           <div className="absolute bottom-10 left-10 w-8 h-8 border-b-2 border-l-2 border-amber-500/30 rounded-bl-2xl" />
           <div className="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-amber-500/30 rounded-br-2xl" />
 
-          <div className="space-y-8 font-serif text-lg md:text-2xl leading-relaxed text-neutral-800 italic">
+          <div className="space-y-4 font-serif text-sm md:text-base leading-snug text-neutral-700 italic">
             <p>
               <span className="text-neutral-900 font-bold not-italic">SUCF the Unique Family</span>
               <br />

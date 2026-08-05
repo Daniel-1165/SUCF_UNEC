@@ -106,35 +106,30 @@ export default function Navbar() {
       ? "bg-white/90 shadow-sm"
       : "bg-transparent";
 
-  const logoTitleColor = isDarkPage ? "text-white" : "text-neutral-900";
-  const logoSubColor = isDarkPage ? "text-white/50" : "text-neutral-500";
 
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-md ${navbarBg} ${scrolled ? "py-2" : "py-5"}`}
     >
       <div className="max-w-[1440px] mx-auto px-4 md:px-6 flex justify-between items-center gap-4 lg:gap-8">
-        <Link href="/" className="flex items-center gap-2 md:gap-4 group shrink-0">
+        {/* The mark already reads "SUCF", so the wordmark drops it and tucks a
+            slanted UNEC tab under the logo instead of repeating the name. */}
+        <Link
+          href="/"
+          aria-label="SUCF UNEC — home"
+          className="group flex shrink-0 flex-col items-center leading-none"
+        >
           <Image
             src="/assets/logo.png"
             alt="SUCF UNEC"
             width={48}
             height={48}
-            className="h-9 md:h-12 w-auto transition-transform group-hover:scale-105"
+            className="h-9 w-auto transition-transform duration-300 group-hover:scale-105 md:h-11"
             priority
           />
-          <div className="flex flex-col">
-            <span
-              className={`text-base md:text-lg font-semibold tracking-tight leading-none ${logoTitleColor}`}
-            >
-              SUCF <span className="text-emerald-700">UNEC</span>
-            </span>
-            <p
-              className={`hidden lg:block mt-1 text-[10px] tracking-[0.18em] font-medium uppercase ${logoSubColor}`}
-            >
-              Unique Fellowship
-            </p>
-          </div>
+          <span className="-mt-0.5 -rotate-3 rounded-[3px] bg-emerald-700 px-1.5 py-[2px] text-[9px] font-semibold uppercase tracking-[0.22em] text-white shadow-sm transition-transform duration-300 group-hover:rotate-0 md:text-[10px]">
+            UNEC
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center justify-end flex-grow gap-2 lg:gap-4">

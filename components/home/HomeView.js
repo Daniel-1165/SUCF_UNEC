@@ -56,7 +56,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
-              className="lg:col-span-6 flex flex-col items-start text-left space-y-6 md:space-y-8 z-20 w-full"
+              className="lg:col-span-6 flex flex-col items-center text-center space-y-5 md:space-y-6 z-20 w-full"
             >
               <motion.div
                 variants={fadeInUp}
@@ -70,25 +70,21 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
 
               <motion.h1
                 variants={fadeInUp}
-                className="h1 text-neutral-900"
+                className="text-2xl font-semibold leading-[1.15] tracking-tight text-neutral-900 sm:text-3xl md:text-4xl"
               >
-                The{" "}
-                <span className="inline-block decoration-4 decoration-emerald-200 underline-offset-4">
-                  Unique
-                </span>{" "}
+                The Unique Fellowship
                 <br />
-                Fellowship <br />
                 on Campus.
               </motion.h1>
 
               <motion.p
                 variants={fadeInUp}
-                className="text-base text-neutral-600 max-w-md leading-relaxed"
+                className="max-w-sm text-sm leading-relaxed text-neutral-600"
               >
                 Experience a community where spiritual growth meets academic excellence. Welcome to the family.
               </motion.p>
 
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-2 w-full">
+              <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-3 pt-1">
                 <Link
                   href="/activities"
                   className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
@@ -117,9 +113,6 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
                       }`}
                     />
                   ))}
-                  <span className="absolute bottom-2 left-2 rounded-full bg-white/85 px-2 py-0.5 text-[10px] font-medium text-neutral-700 backdrop-blur">
-                    Up next
-                  </span>
                 </div>
 
                 {/* Main frame */}

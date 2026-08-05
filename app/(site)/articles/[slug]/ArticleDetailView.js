@@ -354,7 +354,7 @@ export default function ArticleDetailView({ article, relatedArticles }) {
                   placeholder={article.mainImage.lqip ? "blur" : "empty"}
                   blurDataURL={article.mainImage.lqip}
                   priority
-                  className="h-auto max-h-[70vh] w-full object-contain"
+                  className="h-auto max-h-[52vh] w-full object-contain"
                 />
               </motion.figure>
             )}
@@ -392,7 +392,7 @@ export default function ArticleDetailView({ article, relatedArticles }) {
               </div>
             )}
 
-            <div className="mt-10">
+            <div className="mt-10 sm:px-6 lg:px-10">
               <PortableTextBody
                 value={article.body}
                 className="article-body-content"
