@@ -4,27 +4,14 @@ import { auth0, auth0Configured } from "@/lib/auth0";
 // Auth0's middleware owns the /auth/* routes (login, logout, callback) and
 // refreshes the session cookie. Without credentials it's skipped entirely so
 // the public site still works.
+//
+// Note /admin is intentionally NOT redirected here: the page renders its own
+// in-app sign-in card when there's no session, which keeps the user on the
+// site rather than bouncing them straight out to Auth0. The page itself only
+// reveals admin content once a session exists, so it is still gated.
 export async function middleware(request) {
   if (!auth0Configured) return NextResponse.next();
-
-  const authRes = await auth0.middleware(request);
-
-  // Let Auth0 handle its own /auth/* endpoints.
-  if (request.nextUrl.pathname.startsWith("/auth")) {
-    return authRes;
-  }
-
-  // Gate the admin area.
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const session = await auth0.getSession(request);
-    if (!session) {
-      return NextResponse.redirect(
-        new URL(`/auth/login?returnTo=${request.nextUrl.pathname}`, request.url)
-      );
-    }
-  }
-
-  return authRes;
+  return auth0.middleware(request);
 }
 
 export const config = {
