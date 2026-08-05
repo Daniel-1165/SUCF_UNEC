@@ -1,0 +1,259 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Inter is the only typeface in this project. All three slots point at it
+     so existing font-sans/font-heading/font-serif classes keep working
+     without a find-and-replace. */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
+  --font-serif: var(--font-inter);
+
+  --color-primary-green: #064e3b;
+  --color-vibrant-green: #10b981;
+  --color-light-green: #ecfdf5;
+  --color-mustard-gold: #f59e0b;
+
+  --shadow-zeni: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --shadow-zeni-hover: 0 20px 60px rgba(0, 0, 0, 0.08);
+  --shadow-zeni-dark: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+@layer base {
+  .article-body-content,
+  .news-body-content {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    text-wrap: pretty;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Editorial reading defaults. Line-height 1.7 and a 1.5em paragraph gap
+     are comfortable for long-form; the previous 1.85 / 2.2rem / 22px combo
+     read as double-spaced. Margins use `em` so they scale with the text. */
+  .article-body-content p,
+  .news-body-content p {
+    margin-bottom: 1.5em;
+    line-height: 1.7;
+    font-size: 1.0625rem;
+    color: #262626;
+    letter-spacing: -0.005em;
+  }
+
+  @media (min-width: 768px) {
+    .article-body-content p,
+    .news-body-content p {
+      font-size: 1.125rem;
+    }
+  }
+
+  .article-body-content h1,
+  .news-body-content h1,
+  .article-body-content h2,
+  .news-body-content h2,
+  .article-body-content h3,
+  .news-body-content h3 {
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: #171717;
+  }
+
+  .article-body-content h2,
+  .news-body-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .article-body-content h3,
+  .news-body-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .article-body-content ul,
+  .news-body-content ul,
+  .article-body-content ol,
+  .news-body-content ol {
+    margin-bottom: 1.5em;
+    padding-left: 1.5em;
+    line-height: 1.7;
+  }
+
+  .article-body-content ul,
+  .news-body-content ul {
+    list-style: disc;
+  }
+
+  .article-body-content ol,
+  .news-body-content ol {
+    list-style: decimal;
+  }
+
+  .article-body-content li,
+  .news-body-content li {
+    margin-bottom: 0.5em;
+  }
+
+  .article-body-content blockquote,
+  .news-body-content blockquote {
+    margin: 2em 0;
+    padding-left: 1.25em;
+    border-left: 3px solid var(--color-vibrant-green);
+    font-style: italic;
+    color: #404040;
+  }
+
+  /* Inline images placed between paragraphs in Sanity Studio */
+  .article-body-content figure,
+  .news-body-content figure {
+    margin: 2.5em 0;
+  }
+
+  .article-body-content figure img,
+  .news-body-content figure img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+  }
+
+  .article-body-content figcaption,
+  .news-body-content figcaption {
+    margin-top: 0.75em;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #525252;
+    text-align: center;
+  }
+
+  .article-body-content a,
+  .news-body-content a {
+    @apply text-emerald-600 font-bold border-b-2 border-emerald-100 hover:border-emerald-500 transition-all;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-base transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-emerald-800 text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-700;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl rounded-[2rem];
+  }
+
+  .section-tag {
+    @apply inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 mb-6 text-[10px] font-bold text-emerald-900 tracking-widest uppercase;
+  }
+
+  .zeni-card {
+    @apply bg-white rounded-[2.5rem] md:rounded-[3rem] border border-gray-200 shadow-zeni hover:shadow-zeni-hover transition-all duration-700;
+  }
+
+  .zeni-card-dark {
+    @apply bg-[#00211F] text-white rounded-[2.5rem] md:rounded-[3rem] border border-white/5 shadow-zeni transition-all duration-700;
+  }
+
+  /* Restrained, consistent type scale — use these instead of ad hoc
+     text-5xl/text-8xl/text-9xl combinations. */
+  .h1 {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1];
+  }
+
+  .h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-[1.15];
+  }
+
+  .h3 {
+    @apply text-xl md:text-2xl font-semibold tracking-tight;
+  }
+
+  /* Consistent page container and section rhythm — use on every page's
+     top-level wrapper / major sections instead of one-off max-w / py values.
+
+     NOTE: deliberately does NOT use Tailwind's `container` utility. Under
+     Tailwind v4, `@apply container` injects a max-width rule at every
+     breakpoint (40/48/64/80/96rem), which then fights `max-w-6xl` — six
+     competing max-widths on one element. Plain w-full + max-w-6xl is
+     mobile-first and predictable. */
+  .page-container {
+    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-py {
+    @apply py-12 sm:py-16 md:py-24;
+  }
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-900;
+}
+
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+}
+
+.zeni-mesh-gradient {
+  background-color: #f8fafc;
+  background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(5, 150, 105, 0.05) 0px, transparent 50%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
