@@ -1,15 +1,15 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { auth0, auth0Configured } from "@/lib/auth0";
 
-export default async function SiteLayout({ children }) {
-  // Resolve the session server-side and pass a plain boolean down, so the
-  // client Navbar can show the Admin link without needing an auth provider.
-  const session = auth0Configured ? await auth0.getSession() : null;
-
+// Deliberately does NOT read the Auth0 session here. Touching session cookies
+// in this layout opts every public page out of static generation, turning the
+// whole site dynamic just to decide whether to render one Admin link. The
+// Navbar resolves that client-side from /api/auth-state instead, so these
+// pages stay statically rendered with ISR.
+export default function SiteLayout({ children }) {
   return (
     <div className="min-h-full flex flex-col">
-      <Navbar isSignedIn={Boolean(session)} />
+      <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

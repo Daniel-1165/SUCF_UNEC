@@ -33,15 +33,30 @@ const navLinks = [
 
 
 
-export default function Navbar({ isSignedIn = false }) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Resolved client-side so the public pages can stay statically rendered.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth-state")
+      .then((r) => (r.ok ? r.json() : { isSignedIn: false }))
+      .then((d) => {
+        if (!cancelled) setIsSignedIn(Boolean(d.isSignedIn));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const isDarkPage = pathname.startsWith("/gallery");
