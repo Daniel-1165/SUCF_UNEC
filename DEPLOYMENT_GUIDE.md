@@ -1,212 +1,60 @@
-# 🚀 Deployment Guide - SUCF UNEC Website
+# Deployment Guide
 
-## ✅ Pre-Deployment Checklist
+The site is a Next.js 16 (App Router) app using Sanity for content and Auth0 for admin login.
 
-All items below have been completed:
+## Before deploying
 
-- [x] Fixed Google Search issue (Vercel → SUCF UNEC)
-- [x] Updated all URLs to use sucfunec.org
-- [x] Verified mobile navbar includes Gallery & Articles
-- [x] Tested all search functionalities
-- [x] Verified all buttons and links
-- [x] Build completed successfully
-- [x] No build errors
+- [ ] `pnpm run build` passes locally
+- [ ] A Sanity project exists with its dataset set to **public** read
+- [ ] An Auth0 application exists (Regular Web Application)
 
----
+## 1. Import into Vercel
 
-## 📦 Build Status
+1. vercel.com → **Add New → Project** → import `Daniel-1165/SUCF_UNEC`.
+2. Vercel auto-detects Next.js. **Leave the build settings alone.** In particular, do not add a `vercel.json` with SPA rewrites — the old Vite app needed one that rewrote every route to `/index.html`, and that breaks Next.js routing entirely (it was removed for this reason).
+3. Set the Install Command to `pnpm install` if not auto-detected.
 
-**Build Time**: 40.50s  
-**Status**: ✅ SUCCESS  
-**Bundle Size**: 
-- CSS: 131.18 kB (gzipped: 18.61 kB)
-- JS: 887.49 kB (gzipped: 250.77 kB)
+Do not commit the `.next` folder. Vercel builds it on their servers; a committed copy would be stale output from a local machine.
 
----
+## 2. Environment variables
 
-## 🌐 Deployment Steps
+Add these in Vercel under **Settings → Environment Variables**. Values come from your local `.env` — see `.env.example` for the template.
 
-### Option 1: Deploy via Vercel CLI (Recommended)
+| Variable | Notes |
+| --- | --- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | From sanity.io/manage |
+| `NEXT_PUBLIC_SANITY_DATASET` | `production` |
+| `SANITY_API_TOKEN` | Only needed for write scripts; safe to omit for the site |
+| `AUTH0_DOMAIN` | e.g. `dev-abc123.us.auth0.com` (no `https://`) |
+| `AUTH0_CLIENT_ID` | From the Auth0 application |
+| `AUTH0_CLIENT_SECRET` | From the Auth0 application |
+| `AUTH0_SECRET` | Generate with `openssl rand -hex 32` |
+| `APP_BASE_URL` | Production URL, e.g. `https://sucfunec.vercel.app` |
+| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | Contact form |
+| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | Contact form |
+| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | Contact form |
 
-```bash
-# Install Vercel CLI if not already installed
-npm i -g vercel
+**Never commit real values** — `.env` is gitignored deliberately.
 
-# Login to Vercel
-vercel login
+## 3. Point Auth0 at the production URL
 
-# Deploy to production
-vercel --prod
-```
+In the Auth0 application's **Settings**, add your production domain alongside localhost:
 
-### Option 2: Deploy via Vercel Dashboard
+- **Allowed Callback URLs**: `https://YOUR-DOMAIN/auth/callback`
+- **Allowed Logout URLs**: `https://YOUR-DOMAIN`
+- **Allowed Web Origins**: `https://YOUR-DOMAIN`
 
-1. Go to [vercel.com](https://vercel.com)
-2. Click "Import Project"
-3. Connect your GitHub repository
-4. Vercel will auto-detect Vite configuration
-5. Click "Deploy"
+Skipping this is the most common cause of login failing in production while working locally.
 
-### Option 3: Push to GitHub (Auto-Deploy)
+## 4. Allow the production domain in Sanity
 
-If you have Vercel connected to your GitHub repo:
+sanity.io/manage → your project → **API → CORS Origins** → add your production URL. Without it, Sanity Studio at `/studio` won't load on the live site.
 
-```bash
-git add .
-git commit -m "fix: Update SEO URLs to sucfunec.org and verify all functionalities"
-git push origin main
-```
+## After deploying
 
-Vercel will automatically deploy the changes.
+- `/` — content loads from Sanity
+- `/studio` — sign in and edit content
+- `/admin` — redirects to Auth0 login
+- `/contact` — submit a test message and confirm delivery
 
----
-
-## 🔍 Post-Deployment Verification
-
-### 1. Test the Live Site
-
-Visit `https://sucfunec.org` and verify:
-
-- [ ] Homepage loads correctly
-- [ ] All navigation links work
-- [ ] Mobile menu shows Gallery & Articles
-- [ ] Search bars function on Library, Articles, News pages
-- [ ] Filter buttons work correctly
-- [ ] Book download/read buttons work
-- [ ] Article/News "Read More" links work
-- [ ] Pagination works on all pages
-
-### 2. Update Google Search Console
-
-1. Go to [Google Search Console](https://search.google.com/search-console)
-2. Select your property (sucfunec.org)
-3. Go to "Sitemaps" in the left menu
-4. Submit the sitemap: `https://sucfunec.org/sitemap.xml`
-5. Click "Request Indexing" for the homepage
-6. Wait 24-48 hours for Google to re-index
-
-### 3. Test SEO Meta Tags
-
-Use these tools to verify:
-
-1. **Facebook Debugger**: https://developers.facebook.com/tools/debug/
-   - Enter: `https://sucfunec.org`
-   - Should show "SUCF UNEC | The Unique Fellowship"
-
-2. **Twitter Card Validator**: https://cards-dev.twitter.com/validator
-   - Enter: `https://sucfunec.org`
-   - Should show correct title and image
-
-3. **Google Rich Results Test**: https://search.google.com/test/rich-results
-   - Enter: `https://sucfunec.org`
-   - Verify structured data
-
----
-
-## 🔧 Environment Variables
-
-Ensure these are set in Vercel:
-
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-To set in Vercel:
-1. Go to your project settings
-2. Click "Environment Variables"
-3. Add the variables above
-4. Redeploy if needed
-
----
-
-## 📊 Performance Optimization (Optional)
-
-The build warning suggests the JS bundle is large (887 kB). Consider these optimizations later:
-
-1. **Code Splitting**:
-   ```javascript
-   // Use React.lazy for route-based splitting
-   const Library = React.lazy(() => import('./pages/Library'));
-   ```
-
-2. **Image Optimization**:
-   - Use WebP format for images
-   - Implement lazy loading for images
-   - Use Vercel Image Optimization
-
-3. **Bundle Analysis**:
-   ```bash
-   npm install --save-dev rollup-plugin-visualizer
-   ```
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: Site still shows "Vercel" in Google
-
-**Solution**: 
-- Google takes 24-48 hours to re-index
-- Force re-indexing via Search Console
-- Clear browser cache
-
-### Issue: Mobile menu not showing
-
-**Solution**:
-- Clear browser cache
-- Hard refresh (Ctrl + Shift + R)
-- Check browser console for errors
-
-### Issue: Search not working
-
-**Solution**:
-- Verify Supabase connection
-- Check environment variables
-- Look for console errors
-
----
-
-## 📱 Mobile Testing
-
-Test on these devices/browsers:
-
-- [ ] iPhone Safari
-- [ ] Android Chrome
-- [ ] iPad Safari
-- [ ] Desktop Chrome
-- [ ] Desktop Firefox
-- [ ] Desktop Edge
-
----
-
-## ✅ Final Checklist
-
-Before marking as complete:
-
-- [ ] Site deployed successfully
-- [ ] All pages load without errors
-- [ ] Mobile menu works (Gallery & Articles visible)
-- [ ] Search bars functional
-- [ ] Filters working
-- [ ] Links and buttons working
-- [ ] Sitemap submitted to Google
-- [ ] Meta tags verified
-- [ ] Performance acceptable
-
----
-
-## 📞 Support
-
-If you encounter any issues:
-
-1. Check the browser console for errors
-2. Verify Supabase connection
-3. Check Vercel deployment logs
-4. Review the FIXES_APPLIED.md document
-
----
-
-**Deployment Date**: February 9, 2026  
-**Version**: 1.0.0  
-**Status**: ✅ Ready for Production
+Content edits appear on the live site within about a minute (60-second revalidation).
