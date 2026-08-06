@@ -32,7 +32,7 @@ const pillars = [
   { icon: <FiLifeBuoy />, title: "Righteousness" },
 ];
 
-export default function HomeView({ event, weeklyPosts, articles, news, books, galleryImages }) {
+export default function HomeView({ event, weeklyPosts, reflections, articles, news, books, galleryImages }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const heroImageCount = heroImages.length;
   const nextSlide = (currentSlide + 1) % heroImageCount;
@@ -214,7 +214,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
         </div>
       </section>
 
-      <WeeklyPosts posts={weeklyPosts} />
+      <WeeklyPosts posts={weeklyPosts} reflections={reflections} />
 
       <ArticlesSection articles={articles} />
 

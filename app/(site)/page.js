@@ -6,6 +6,7 @@ import {
   getNews,
   getBooks,
   getGalleryImages,
+  getReflections,
 } from "@/lib/sanity/queries";
 
 export const metadata = {
@@ -15,22 +16,24 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [event, weeklyPosts, articles, news, books, galleryImages] = await Promise.all([
+  const [event, weeklyPosts, articles, news, books, galleryImages, reflections] = await Promise.all([
     getUpcomingFellowshipEvent(),
     getWeeklyPosts(),
     getArticles(),
     getNews(),
     getBooks(),
     getGalleryImages(),
+    getReflections(),
   ]);
 
   return (
     <HomeView
       event={event}
       weeklyPosts={weeklyPosts}
+      reflections={reflections}
       articles={(articles || []).slice(0, 4)}
       news={(news || []).slice(0, 3)}
-      books={(books || []).slice(0, 4)}
+      books={(books || []).slice(0, 6)}
       galleryImages={(galleryImages || []).slice(0, 6)}
     />
   );
