@@ -259,7 +259,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 32, stiffness: 320 }}
-              className="absolute top-0 right-0 bottom-0 flex h-[100dvh] w-[88%] max-w-[340px] flex-col overflow-hidden rounded-l-3xl bg-white text-neutral-900 shadow-2xl"
+              className="absolute top-0 right-0 bottom-0 flex h-[100dvh] w-[88%] max-w-[340px] flex-col overflow-hidden rounded-l-2xl bg-white text-neutral-900 shadow-xl"
             >
               <div className="flex shrink-0 items-center justify-between px-6 pt-6 pb-4">
                 <span className="text-lg font-semibold tracking-tight">Menu</span>

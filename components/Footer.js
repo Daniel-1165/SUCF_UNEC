@@ -80,13 +80,13 @@ export default function Footer() {
               </h3>
               <ul className="space-y-2 text-xs text-emerald-100/70">
                 <li>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600/50">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-emerald-500/70">
                     Sunday
                   </p>
                   <p className="font-bold text-white text-xs">3:00 PM</p>
                 </li>
                 <li>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600/50">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-emerald-500/70">
                     Thursday
                   </p>
                   <p className="font-bold text-white text-xs">5:00 PM</p>
@@ -97,7 +97,7 @@ export default function Footer() {
 
           <div className="lg:col-span-4 space-y-5">
             <div className="space-y-4 px-2">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500/50">
+              <h3 className="text-[10px] font-medium uppercase tracking-[0.2em] text-emerald-500/70">
                 Support Ministry
               </h3>
               <div className="space-y-3">

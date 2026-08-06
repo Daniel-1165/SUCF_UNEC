@@ -4,16 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiArrowRight,
-  FiMapPin,
-  FiClock,
-  FiX,
-  FiCalendar,
-  FiShare2,
-  FiInfo,
-} from "react-icons/fi";
+import { FiArrowRight, FiMapPin, FiClock, FiX, FiCalendar } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { fadeInUp } from "@/lib/animations";
 
 // Combine the separate eventDate / eventTime fields from Sanity into a single Date.
 function getEventDateTime(event) {
@@ -60,22 +53,19 @@ export default function CountdownTimer({ event }) {
   // No upcoming event scheduled yet — show a lightweight placeholder instead of crashing.
   if (!event) {
     return (
-      <div className="section-py bg-white relative overflow-hidden">
-        <div className="page-container relative z-10 text-center max-w-xl">
-          <div className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-700 font-bold text-[10px] uppercase tracking-[0.2em] rounded-full border border-emerald-100 mb-6">
-            Upcoming Fellowship
-          </div>
-          <h2 className="h2 text-neutral-900 mb-4">
-            No Service Scheduled Yet
+      <div className="section-py border-y border-neutral-200 bg-neutral-50 relative overflow-hidden">
+        <div className="page-container relative z-10 mx-auto max-w-xl text-center">
+          <h2 className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl">
+            No service scheduled yet
           </h2>
-          <p className="text-neutral-800 mb-8">
+          <p className="mt-2 text-sm text-neutral-600">
             Check back soon for our next gathering, or reach out and we&apos;ll let you know.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm uppercase tracking-wide hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/10"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
           >
-            Contact Us <FiArrowRight />
+            Contact us <FiArrowRight />
           </Link>
         </div>
       </div>
@@ -84,164 +74,111 @@ export default function CountdownTimer({ event }) {
 
   const flyerUrl = event.flyer ? urlFor(event.flyer).width(900).height(1125).url() : null;
 
+  const countdownUnits = [
+    { label: "Days", value: timeLeft.days },
+    { label: "Hours", value: timeLeft.hours },
+    { label: "Minutes", value: timeLeft.minutes },
+    { label: "Seconds", value: timeLeft.seconds },
+  ];
+
   return (
-    <div className="py-20 md:pt-32 pb-0 bg-white relative overflow-hidden">
-      {/* Abstract Background Decoration */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[500px] h-[500px] bg-emerald-900/5 rounded-full blur-3xl pointer-events-none"></div>
-
-      <div className="page-container relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 mx-auto">
-          {/* LEFT: Flyer Section */}
+    // Tinted band with hairline edges so this reads as its own section rather
+    // than continuing the white hero above it.
+    <div className="border-y border-neutral-200 bg-neutral-50">
+      <div className="page-container section-py">
+        <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
+          {/* Flyer — a plain framed image that opens the detail modal */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full lg:w-5/12 mx-auto"
+            className="lg:col-span-5"
           >
-            <div className="flex justify-center lg:justify-start mb-6">
-              <div className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-700 font-bold text-[10px] uppercase tracking-[0.2em] rounded-full border border-emerald-100">
-                Upcoming Fellowship
-              </div>
-            </div>
-
-            <div className="relative group cursor-pointer" onClick={() => setShowDetails(true)}>
-              <div className="absolute inset-0 bg-emerald-900 rounded-2xl transform rotate-2 scale-[0.98] opacity-10 transition-all duration-500 group-hover:rotate-4 group-hover:scale-100"></div>
-
-              <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl transition-all duration-500 transform group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] border border-slate-100 aspect-[4/5] flex items-center justify-center">
-                {flyerUrl ? (
-                  <>
-                    <Image
-                      src={flyerUrl}
-                      alt={event.title || "Fellowship Flyer"}
-                      fill
-                      sizes="(max-width: 1024px) 90vw, 500px"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                      <div className="w-14 h-14 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 shadow-xl">
-                        <FiInfo className="text-xl text-emerald-900" />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center p-8">
-                    <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-                      🖼️
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600">
-                      Tap for details
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowDetails(true)}
+              aria-label={`View details for ${event.title || "this fellowship"}`}
+              className="relative mx-auto block aspect-[4/5] w-full max-w-xs overflow-hidden rounded-2xl border border-neutral-200 bg-white transition-colors hover:border-neutral-300 sm:max-w-sm lg:max-w-none"
+            >
+              {flyerUrl ? (
+                <Image
+                  src={flyerUrl}
+                  alt={event.title || "Fellowship flyer"}
+                  fill
+                  sizes="(max-width: 1024px) 90vw, 400px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="flex h-full flex-col items-center justify-center gap-2 text-neutral-500">
+                  <FiCalendar className="text-2xl" />
+                  <span className="text-xs font-medium">Tap for details</span>
+                </span>
+              )}
+            </button>
           </motion.div>
 
-          {/* RIGHT: Content & Countdown */}
+          {/* Content & countdown */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="w-full lg:w-7/12 text-center lg:text-left"
+            className="lg:col-span-7"
           >
-            <h2 className="h1 text-neutral-900 mb-6 font-heading">
+            <h2 className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl">
               {event.title}
             </h2>
 
             {event.bibleReference && (
-              <div className="mb-8 relative inline-flex items-center">
-                <span className="absolute -left-2 top-0 text-3xl text-emerald-200 font-serif opacity-40">
-                  &ldquo;
-                </span>
-                <p className="text-lg md:text-xl text-neutral-800 font-serif italic pl-4 pr-4">
-                  {event.bibleReference}
-                </p>
-              </div>
+              <p className="mt-2 text-sm italic leading-relaxed text-neutral-600">
+                {event.bibleReference}
+              </p>
             )}
 
             {isLive ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mb-12 flex flex-col items-center lg:items-start"
-              >
-                <div className="flex items-center gap-3 bg-red-600 text-white px-8 py-4 rounded-2xl shadow-xl shadow-red-600/20 animate-pulse">
-                  <div className="w-3 h-3 bg-white rounded-full"></div>
-                  <span className="text-xl font-bold tracking-tight leading-none">
-                    Fellowship is Live!
-                  </span>
-                </div>
-                <p className="mt-4 text-neutral-800 font-bold uppercase text-[10px] tracking-widest flex items-center gap-2">
-                  Join us now{event.location ? ` at ${event.location}` : ""}
+              <div className="mt-6">
+                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-xs font-medium text-emerald-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-700" />
+                  Fellowship is live
+                </span>
+                <p className="mt-3 text-xs text-neutral-500">
+                  Join us now{event.location ? ` at ${event.location}` : ""}.
                 </p>
-              </motion.div>
+              </div>
             ) : (
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-12">
-                {[
-                  { label: "Days", value: timeLeft.days },
-                  { label: "Hours", value: timeLeft.hours },
-                  { label: "Minutes", value: timeLeft.minutes },
-                  { label: "Seconds", value: timeLeft.seconds },
-                ].map((item) => (
+              <div className="mt-6 flex flex-wrap gap-3">
+                {countdownUnits.map((item) => (
                   <div key={item.label} className="flex flex-col items-center">
-                    <div className="w-14 h-14 md:w-20 md:h-20 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-2 relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      <span className="text-xl md:text-3xl font-bold text-white tabular-nums relative z-10">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neutral-200 bg-white sm:h-14 sm:w-14">
+                      {/* tabular-nums keeps the digits from jittering as they tick */}
+                      <span className="text-base font-semibold tabular-nums text-neutral-900 sm:text-lg">
                         {String(item.value).padStart(2, "0")}
                       </span>
                     </div>
-                    <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">
-                      {item.label}
-                    </span>
+                    <span className="mt-2 text-[11px] text-neutral-500">{item.label}</span>
                   </div>
                 ))}
               </div>
             )}
 
-            <div className="group cursor-pointer">
-              <Link href="/contact" className="inline-flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full border border-slate-200 text-slate-900 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
-                  <FiArrowRight className="text-xl" />
-                </div>
-                <div className="text-left">
-                  <span className="block text-[10px] font-bold text-emerald-600 uppercase tracking-widest">
-                    Need Directions?
-                  </span>
-                  <span className="block text-sm font-bold text-neutral-900 underline underline-offset-4 decoration-slate-200 group-hover:decoration-emerald-500 transition-all">
-                    Get Location Info
-                  </span>
-                </div>
-              </Link>
-            </div>
+            <Link
+              href="/contact"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
+            >
+              Get directions <FiArrowRight />
+            </Link>
           </motion.div>
         </div>
       </div>
 
-      {/* Text Slider / Ticker */}
-      <div className="w-full border-t border-b border-slate-100 bg-slate-50/50 py-4 mt-24 overflow-hidden relative flex">
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50/50 to-transparent z-10"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50/50 to-transparent z-10"></div>
-
-        <motion.div
-          animate={{ x: [0, -1000] }}
-          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-          className="flex items-center whitespace-nowrap"
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="flex items-center mx-8 flex-shrink-0">
-              <span className="text-xs font-bold text-neutral-800 uppercase tracking-[0.2em] flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                {event.location
-                  ? `Join us at ${event.location} for a Life Changing Session in God's Presence`
-                  : "Join us for a Life Changing Session in God's Presence"}
-              </span>
-              <span className="text-slate-300 ml-8">|</span>
-            </div>
-          ))}
-        </motion.div>
+      {/* Quiet invitation strip — replaces the old scrolling ticker */}
+      <div className="border-t border-neutral-200">
+        <p className="page-container py-4 text-center text-xs text-neutral-600">
+          {event.location
+            ? `Join us at ${event.location} for a life-changing session in God's presence.`
+            : "Join us for a life-changing session in God's presence."}
+        </p>
       </div>
 
       {/* Event Detail Modal */}
@@ -251,53 +188,60 @@ export default function CountdownTimer({ event }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 p-4 backdrop-blur-sm"
             onClick={() => setShowDetails(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={event.title || "Service information"}
+              initial={{ opacity: 0, scale: 0.98, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: 8 }}
+              transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row relative"
+              className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white md:flex-row"
             >
               <button
                 onClick={() => setShowDetails(false)}
-                className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all backdrop-blur"
-                aria-label="Close"
+                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-700 backdrop-blur transition-colors hover:text-neutral-900"
+                aria-label="Close event details"
               >
                 <FiX />
               </button>
 
-              <div className="w-full md:w-1/2 bg-slate-100 h-64 md:h-auto relative overflow-hidden">
+              <div className="relative h-56 w-full shrink-0 overflow-hidden bg-neutral-100 md:h-auto md:w-1/2">
                 {flyerUrl ? (
-                  <Image src={flyerUrl} alt={event.title} fill sizes="50vw" className="object-cover" />
+                  <Image
+                    src={flyerUrl}
+                    alt={event.title || "Fellowship flyer"}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-8 text-center">
-                    <FiCalendar className="text-6xl mb-4 opacity-30" />
-                    <p className="font-bold uppercase text-xs tracking-widest">Weekly Service</p>
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-8 text-center text-neutral-500">
+                    <FiCalendar className="text-2xl" />
+                    <p className="text-xs font-medium">Weekly service</p>
                   </div>
                 )}
               </div>
 
-              <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto">
-                <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-widest rounded-full mb-6">
-                  Service Information
-                </span>
-
-                <h3 className="h3 text-neutral-900 mb-2">{event.title}</h3>
+              <div className="w-full overflow-y-auto p-5 sm:p-6 md:w-1/2 md:p-8">
+                <h3 className="text-base font-semibold tracking-tight text-neutral-900">
+                  {event.title}
+                </h3>
                 {event.bibleReference && (
-                  <p className="text-emerald-600 font-serif italic mb-6">{event.bibleReference}</p>
+                  <p className="mt-1.5 text-sm italic text-neutral-600">{event.bibleReference}</p>
                 )}
 
-                <div className="space-y-6 mb-10">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-emerald-600 shrink-0">
-                      <FiClock />
-                    </div>
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <FiClock className="mt-0.5 shrink-0 text-emerald-700" />
                     <div>
-                      <p className="font-bold text-neutral-900">Schedule</p>
-                      <p className="text-sm text-neutral-800">
+                      <p className="text-sm font-medium text-neutral-900">Schedule</p>
+                      <p className="mt-0.5 text-sm text-neutral-600">
                         {new Date(event.eventDate).toLocaleDateString("en-US", {
                           weekday: "long",
                           month: "long",
@@ -308,34 +252,29 @@ export default function CountdownTimer({ event }) {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-emerald-600 shrink-0">
-                      <FiMapPin />
-                    </div>
+                  <div className="flex items-start gap-3">
+                    <FiMapPin className="mt-0.5 shrink-0 text-emerald-700" />
                     <div>
-                      <p className="font-bold text-neutral-900">Venue</p>
-                      <p className="text-sm text-neutral-800">{event.location || "Architecture Auditorium, UNEC"}</p>
+                      <p className="text-sm font-medium text-neutral-900">Venue</p>
+                      <p className="mt-0.5 text-sm text-neutral-600">
+                        {event.location || "Architecture Auditorium, UNEC"}
+                      </p>
                     </div>
                   </div>
 
                   {event.description && (
-                    <div className="pt-4 border-t border-slate-100">
-                      <p className="text-neutral-800 leading-relaxed text-sm">{event.description}</p>
-                    </div>
+                    <p className="border-t border-neutral-200 pt-4 text-sm leading-relaxed text-neutral-600">
+                      {event.description}
+                    </p>
                   )}
                 </div>
 
-                <div className="flex gap-3">
-                  <Link
-                    href="/contact"
-                    className="flex-1 py-4 bg-slate-900 text-white rounded-xl text-center font-bold text-sm hover:bg-slate-800 transition-colors uppercase tracking-wide"
-                  >
-                    Get Directions
-                  </Link>
-                  <button className="px-5 py-3 bg-slate-100 text-slate-900 rounded-xl hover:bg-slate-200 transition-colors" aria-label="Share">
-                    <FiShare2 />
-                  </button>
-                </div>
+                <Link
+                  href="/contact"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
+                >
+                  Get directions <FiArrowRight />
+                </Link>
               </div>
             </motion.div>
           </motion.div>

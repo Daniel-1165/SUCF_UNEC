@@ -38,7 +38,7 @@ export default function ArticlesSection({ articles = [] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-row md:flex-col h-auto md:h-full border border-slate-50"
+              className="group bg-white rounded-xl overflow-hidden shadow-none hover:border-neutral-200 transition-colors duration-300 flex flex-row md:flex-col h-auto md:h-full border border-neutral-100"
             >
               {/* Article Image */}
               <Link
@@ -51,7 +51,7 @@ export default function ArticlesSection({ articles = [] }) {
                     alt={article.title}
                     fill
                     sizes="(max-width: 768px) 150px, 33vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-300">
@@ -59,11 +59,11 @@ export default function ArticlesSection({ articles = [] }) {
                     <FiUser size={48} className="hidden md:block" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"></div>
+                <div className="absolute inset-0 hidden"></div>
 
                 {/* Category Badge */}
                 <div className="absolute top-2 left-2 md:top-4 md:left-4">
-                  <span className="px-2 py-0.5 md:px-3 md:py-1 bg-emerald-500 text-white text-[8px] md:text-xs font-bold uppercase tracking-wider rounded-full">
+                  <span className="px-2 py-0.5 md:px-3 md:py-1 bg-white/90 text-neutral-700 text-[10px] font-medium rounded-full">
                     {article.category || "Article"}
                   </span>
                 </div>
@@ -72,7 +72,7 @@ export default function ArticlesSection({ articles = [] }) {
               {/* Article Content */}
               <div className="p-4 sm:p-6 md:p-6 flex-1 flex flex-col justify-center md:justify-start overflow-hidden">
                 {/* Meta Info */}
-                <div className="flex items-center gap-4 text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-neutral-600 mb-1 md:mb-2">
+                <div className="flex items-center gap-4 text-[11px] text-neutral-500 mb-1 md:mb-2">
                   <div className="flex items-center gap-1.5">
                     <FiCalendar size={10} className="text-emerald-500" />
                     <span>{formatDate(article.publishedAt)}</span>
@@ -81,14 +81,14 @@ export default function ArticlesSection({ articles = [] }) {
 
                 {/* Title */}
                 <Link href={`/articles/${article.slug}`}>
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-900 mb-1 md:mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight tracking-tight">
+                  <h3 className="text-sm md:text-base font-semibold text-neutral-900 mb-1 md:mb-3 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-tight tracking-tight">
                     {article.title}
                   </h3>
                 </Link>
 
                 {/* Excerpt */}
                 {article.excerpt && (
-                  <p className="text-[10px] md:text-[13px] leading-relaxed text-neutral-800 mb-2 md:mb-4 line-clamp-2 flex-1 font-serif italic">
+                  <p className="text-xs leading-relaxed text-neutral-600 mb-2 md:mb-4 line-clamp-2 flex-1">
                     {article.excerpt}
                   </p>
                 )}
@@ -96,7 +96,7 @@ export default function ArticlesSection({ articles = [] }) {
                 {/* Read More Link */}
                 <Link
                   href={`/articles/${article.slug}`}
-                  className="inline-flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 hover:gap-3 transition-all group"
+                  className="inline-flex items-center gap-2 text-[11px] font-medium text-emerald-700 hover:gap-3 transition-all group"
                 >
                   Full Story
                   <FiArrowRight className="group-hover:translate-x-1 transition-transform" />

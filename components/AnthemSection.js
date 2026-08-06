@@ -17,8 +17,7 @@ export default function AnthemSection() {
           className="mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-50 border border-amber-200 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-            <span className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.3em]">Our Heritage</span>
+            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-[0.3em]">Our Heritage</span>
           </div>
           <h2 className="h3 font-serif text-neutral-900 mb-4">The Anthem.</h2>
           <div className="w-24 h-1 bg-amber-500/30 mx-auto rounded-full"></div>
@@ -28,7 +27,7 @@ export default function AnthemSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="bg-white border border-slate-100 p-10 md:p-16 rounded-[3rem] shadow-2xl shadow-slate-200/50 relative"
+          className="bg-white border border-neutral-200 p-6 sm:p-10 rounded-2xl relative"
         >
           {/* Corner accents */}
           <div className="absolute top-10 left-10 w-8 h-8 border-t-2 border-l-2 border-amber-500/30 rounded-tl-2xl" />

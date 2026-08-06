@@ -39,24 +39,10 @@ export default function GalleryView({ images }) {
 
       <div className="page-container relative z-10">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+        <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-900/10 text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6"
-            >
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-              Visual Chronicles
-            </motion.div>
-            <h1 className="h1 mb-4">
-              The{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">
-                Gallery
-              </span>
-              .
-            </h1>
-            <p className="text-gray-400 max-w-md text-lg font-medium">
+            <h1 className="h1">The Gallery</h1>
+            <p className="mt-2 max-w-md text-sm text-neutral-400">
               Capturing the spirit of fellowship, worship, and student life at SUCF UNEC.
             </p>
           </div>
@@ -68,9 +54,9 @@ export default function GalleryView({ images }) {
                 <button
                   key={cat}
                   onClick={() => setFilter(cat)}
-                  className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors border ${
                     filter === cat
-                      ? "bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+                      ? "bg-white text-neutral-900 border-white"
                       : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20 hover:text-white"
                   }`}
                 >
@@ -84,7 +70,7 @@ export default function GalleryView({ images }) {
         {/* Masonry Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-4 gap-8 auto-rows-[250px] grid-flow-dense"
+          className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px] grid-flow-dense"
         >
           <AnimatePresence mode="popLayout">
             {displayImages.map((img, index) => {
@@ -99,7 +85,7 @@ export default function GalleryView({ images }) {
                   exit={{ opacity: 0, scale: 0.95 }}
                   key={img._id}
                   onClick={() => setSelectedImage(img)}
-                  className={`group relative rounded-3xl overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 hover:border-emerald-500/50 transition-all duration-500 ${spanClass}`}
+                  className={`group relative rounded-xl overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 hover:border-white/20 transition-colors duration-300 ${spanClass}`}
                 >
                   {/* Image only — no overlaid caption. A small zoom icon on
                       hover is enough to signal it opens; the caption lives in
@@ -129,10 +115,10 @@ export default function GalleryView({ images }) {
 
         {/* Empty State */}
         {displayImages.length === 0 && (
-          <div className="text-center py-32 border-2 border-dashed border-white/10 rounded-[3rem]">
-            <FiImage className="text-6xl text-white/20 mx-auto mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-2">No images found</h3>
-            <p className="text-gray-500">Try selecting a different category.</p>
+          <div className="text-center py-24 border border-dashed border-white/10 rounded-2xl">
+            <FiImage className="text-3xl text-white/20 mx-auto mb-4" />
+            <h3 className="text-base font-semibold text-white mb-1">No images found</h3>
+            <p className="text-sm text-neutral-500">Try selecting a different category.</p>
           </div>
         )}
       </div>
@@ -149,16 +135,17 @@ export default function GalleryView({ images }) {
           >
             <button
               onClick={() => setSelectedImage(null)}
+              aria-label="Close image"
               className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
             >
-              <FiX size={32} />
+              <FiX size={24} />
             </button>
 
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-7xl w-full max-h-[90vh] flex flex-col md:flex-row bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl border border-white/5"
+              className="relative max-w-7xl w-full max-h-[90vh] flex flex-col md:flex-row bg-[#0A0A0A] rounded-2xl overflow-hidden border border-white/10"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Full Image */}
@@ -176,7 +163,7 @@ export default function GalleryView({ images }) {
 
               {/* Sidebar Info */}
               <div className="w-full md:w-80 bg-[#111] p-8 shrink-0 border-l border-white/5 flex flex-col justify-center">
-                <span className="text-emerald-500 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+                <span className="text-emerald-400 text-[11px] font-medium mb-3">
                   {selectedImage.category || "Gallery Item"}
                 </span>
                 <h3 className="h3 text-white italic leading-none mb-6">
