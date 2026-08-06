@@ -19,30 +19,14 @@ export default function ArticlesSection({ articles = [] }) {
   if (!articles || articles.length === 0) return null;
 
   return (
-    <section className="section-py bg-gradient-to-br from-emerald-50/50 via-white to-emerald-50/30 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-
-      <div className="page-container relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 rounded-full mb-4">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Featured Content</span>
-            </div>
-            <h2 className="h2 text-neutral-900">
-              Latest <span>Articles</span>
-            </h2>
-            <p className="text-neutral-800 mt-2">Inspiring stories and faith-building insights</p>
-          </div>
-          <Link
-            href="/articles"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/30 group"
-          >
-            View All Articles
-            <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+    <section className="section-py bg-white relative">
+      <div className="page-container">
+        {/* Section Header — no eyebrow pill; the section speaks for itself */}
+        <div className="mb-10">
+          <h2 className="h2 text-neutral-900">
+            Latest <span>Articles</span>
+          </h2>
+          <p className="mt-2 text-sm text-neutral-600">Inspiring stories and faith-building insights</p>
         </div>
 
         {/* Articles Grid */}
@@ -120,6 +104,15 @@ export default function ArticlesSection({ articles = [] }) {
               </div>
             </motion.article>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href="/articles"
+            className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
+          >
+            View all articles <FiArrowRight />
+          </Link>
         </div>
       </div>
     </section>

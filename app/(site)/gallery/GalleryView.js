@@ -89,7 +89,6 @@ export default function GalleryView({ images }) {
           <AnimatePresence mode="popLayout">
             {displayImages.map((img, index) => {
               const spanClass = getSpanClass(index);
-              const isDark = index % 2 === 0;
 
               return (
                 <motion.div
@@ -102,7 +101,9 @@ export default function GalleryView({ images }) {
                   onClick={() => setSelectedImage(img)}
                   className={`group relative rounded-3xl overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 hover:border-emerald-500/50 transition-all duration-500 ${spanClass}`}
                 >
-                  {/* Image */}
+                  {/* Image only — no overlaid caption. A small zoom icon on
+                      hover is enough to signal it opens; the caption lives in
+                      the lightbox sidebar instead. */}
                   <div className="absolute inset-0">
                     {img.image && (
                       <Image
@@ -110,37 +111,15 @@ export default function GalleryView({ images }) {
                         alt={img.caption || "Gallery image"}
                         fill
                         sizes="(min-width: 768px) 25vw, 100vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     )}
                   </div>
 
-                  {/* Gradient Overlay */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t ${
-                      isDark ? "from-black/90 via-black/20" : "from-emerald-950/90 via-emerald-900/20"
-                    } to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500`}
-                  />
+                  <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/20" />
 
-                  {/* Hover Reveal Overlay (Color Tint) */}
-                  <div className="absolute inset-0 bg-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay" />
-
-                  {/* Content Info */}
-                  <div className="absolute bottom-0 left-0 w-full p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <span className="text-[9px] uppercase font-black tracking-widest text-emerald-400 mb-2 block opacity-0 group-hover:opacity-100 transition-opacity delay-100">
-                          {img.category || "Archive"}
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-bold text-white italic leading-none drop-shadow-lg">
-                          {img.caption || "Moment"}
-                        </h3>
-                      </div>
-
-                      <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100">
-                        <FiZoomIn />
-                      </div>
-                    </div>
+                  <div className="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100">
+                    <FiZoomIn size={16} />
                   </div>
                 </motion.div>
               );

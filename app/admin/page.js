@@ -7,7 +7,7 @@ export const metadata = { title: "Admin" };
 function Shell({ children }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-12">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm animate-fade-up">
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/assets/logo.png" alt="SUCF UNEC" width={40} height={40} className="h-10 w-auto" />

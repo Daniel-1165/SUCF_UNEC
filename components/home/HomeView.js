@@ -41,7 +41,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImageCount);
-    }, 5000);
+    }, 7500);
     return () => clearInterval(timer);
   }, [heroImageCount]);
 
@@ -56,7 +56,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
-              className="lg:col-span-6 flex flex-col items-center text-center space-y-5 md:space-y-6 z-20 w-full"
+              className="lg:col-span-6 flex flex-col items-start text-left space-y-5 md:space-y-6 z-20 w-full"
             >
               <motion.div
                 variants={fadeInUp}
@@ -84,7 +84,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
                 Experience a community where spiritual growth meets academic excellence. Welcome to the family.
               </motion.p>
 
-              <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-3 pt-1">
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 pt-1">
                 <Link
                   href="/activities"
                   className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
@@ -131,15 +131,16 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
                     }}
                     className="absolute inset-0 z-10 h-full w-full cursor-grab active:cursor-grabbing"
                   >
-                    {/* Each slide descends into place and the outgoing one continues
-                        downward, giving a single top-to-bottom direction of travel. */}
+                    {/* Incoming slide settles in with a slow zoom-out-to-rest while the
+                        outgoing one simply fades — two distinct motions rather than
+                        both travelling the same direction like one pushing the other. */}
                     <AnimatePresence initial={false}>
                       <motion.div
                         key={currentSlide}
-                        initial={{ y: "-100%" }}
-                        animate={{ y: "0%" }}
-                        exit={{ y: "100%" }}
-                        transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
+                        initial={{ opacity: 0, scale: 1.06 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1, transition: { duration: 0.6 } }}
+                        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
                         className="absolute inset-0"
                       >
                         <Image
@@ -243,7 +244,7 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
             galleryImages.map((img) => (
               <div
                 key={img._id}
-                className="min-w-[200px] md:min-w-[250px] aspect-square rounded-2xl overflow-hidden snap-center shadow-lg border-4 border-white relative"
+                className="min-w-[130px] sm:min-w-[180px] md:min-w-[250px] aspect-square rounded-xl md:rounded-2xl overflow-hidden snap-center shadow-md border-2 md:border-4 border-white relative"
               >
                 <Image
                   src={urlFor(img.image).width(400).height(400).url()}

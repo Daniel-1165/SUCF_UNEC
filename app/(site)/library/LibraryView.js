@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FiDownload, FiBook, FiSearch, FiChevronRight } from "react-icons/fi";
+import { FiDownload, FiBook, FiSearch } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function LibraryView({ books }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,65 +27,53 @@ export default function LibraryView({ books }) {
     return matchesSearch && matchesCategory;
   });
 
-  const featuredBooks = books.slice(0, 3);
 
   return (
-    <div className="min-h-screen pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-[#F8FAFC] font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-white font-sans">
       <div className="page-container">
         {/* Header & Search Section */}
-        <header className="mb-12">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
+        <motion.header
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8"
+        >
+          <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-6">
             <div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3"
-              >
-                Digital Library
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="h1 text-neutral-900"
-              >
+              <h1 className="h1 text-neutral-900">
                 Discover <span>Knowledge.</span>
-              </motion.h1>
+              </h1>
+              <p className="mt-2 text-sm text-neutral-600">
+                {books.length} {books.length === 1 ? "book" : "books"} to borrow and read.
+              </p>
             </div>
 
-            {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="w-full md:w-96 relative z-20"
-            >
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <FiSearch className="text-slate-400 text-lg group-focus-within:text-emerald-500 transition-colors" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search title or author..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl shadow-sm focus:shadow-xl focus:border-emerald-500 outline-none transition-all duration-300 placeholder:text-slate-400 text-neutral-900 font-medium"
-                />
+            {/* Search */}
+            <div className="w-full md:w-72 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiSearch className="text-neutral-400 text-sm" />
               </div>
-            </motion.div>
+              <input
+                type="text"
+                placeholder="Search title or author"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-9 pr-3 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10"
+              />
+            </div>
           </div>
 
           {/* Categories */}
           {categories.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
+                  className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
                     selectedCategory === cat
-                      ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-600 ring-offset-2"
-                      : "bg-white text-slate-500 border border-slate-200 hover:border-emerald-500 hover:text-emerald-600"
+                      ? "bg-neutral-900 text-white"
+                      : "border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900"
                   }`}
                 >
                   {cat}
@@ -92,142 +81,72 @@ export default function LibraryView({ books }) {
               ))}
             </div>
           )}
-        </header>
+        </motion.header>
 
-        {/* Featured Section */}
-        {!searchTerm && selectedCategory === "All" && featuredBooks.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-16"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-neutral-900">Recommended For You</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredBooks.map((book) => (
-                <div
-                  key={book._id}
-                  className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex gap-5 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className="w-24 h-32 shrink-0 rounded-2xl overflow-hidden shadow-inner relative bg-emerald-50">
-                    {book.coverImage ? (
-                      <Image
-                        src={urlFor(book.coverImage).width(200).height(266).url()}
-                        alt={book.title}
-                        fill
-                        sizes="96px"
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-emerald-200">
-                        <FiBook className="text-3xl" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col justify-between py-1">
-                    <div>
-                      <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">
-                        {book.semester || "Trending"}
-                      </p>
-                      <h3 className="font-bold text-neutral-900 leading-tight mb-1 line-clamp-2">
-                        {book.title}
-                      </h3>
-                      <p className="text-xs text-neutral-800">{book.author || "Unknown Author"}</p>
-                    </div>
-                    {book.fileUrl && (
-                      <a
-                        href={book.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-black text-neutral-900 flex items-center gap-1 group-hover:gap-2 transition-all"
-                      >
-                        Read Now <FiChevronRight className="text-emerald-500" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.section>
-        )}
-
-        {/* Main Grid */}
+        {/* One grid, no separate "Recommended" block. Two competing lists of the
+            same ten books added choice-friction without adding information. */}
         <section>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-neutral-900">
-              {searchTerm
-                ? `Search Results (${filteredBooks.length})`
-                : selectedCategory === "All"
-                  ? "All Books"
-                  : selectedCategory}
-            </h2>
-          </div>
+          {(searchTerm || selectedCategory !== "All") && (
+            <p className="mb-5 text-xs text-neutral-500">
+              {filteredBooks.length} {filteredBooks.length === 1 ? "result" : "results"}
+            </p>
+          )}
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-10">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-3 gap-x-4 gap-y-7 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7"
+          >
             {filteredBooks.length > 0 ? (
               filteredBooks.map((book) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  key={book._id}
-                  className="group flex flex-col"
-                >
-                  <div className="relative aspect-[2/3] mb-4 rounded-3xl overflow-hidden shadow-md group-hover:shadow-2xl group-hover:shadow-emerald-900/20 transition-all duration-500 bg-emerald-50">
+                <motion.div layout variants={staggerItem} key={book._id} className="group flex flex-col">
+                  <div className="relative mb-2 aspect-[3/4] overflow-hidden rounded-md bg-neutral-100">
                     {book.coverImage ? (
                       <Image
-                        src={urlFor(book.coverImage).width(400).height(600).url()}
-                        alt={book.title}
+                        src={urlFor(book.coverImage).width(260).height(347).url()}
+                        alt=""
                         fill
-                        sizes="(min-width: 1280px) 20vw, (min-width: 768px) 25vw, 50vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(min-width: 1280px) 12vw, (min-width: 1024px) 15vw, (min-width: 640px) 22vw, 30vw"
+                        placeholder={book.coverImage.lqip ? "blur" : "empty"}
+                        blurDataURL={book.coverImage.lqip}
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
-                        <FiBook className="text-4xl text-emerald-200 mb-2" />
-                        <span className="text-[10px] text-emerald-800/40 font-bold uppercase">
-                          No Cover
-                        </span>
+                      <div className="flex h-full w-full items-center justify-center text-neutral-300">
+                        <FiBook size={18} />
                       </div>
                     )}
 
-                    {/* Overlay Actions */}
                     {book.fileUrl && (
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                      <div className="absolute inset-0 flex items-end justify-center bg-black/30 p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         <a
                           href={book.fileUrl}
                           download={book.fileName}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-3 bg-white text-slate-900 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-emerald-500 hover:text-white transition-colors shadow-lg"
+                          className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-white py-2 text-[11px] font-medium text-neutral-900 transition-colors hover:bg-emerald-700 hover:text-white"
                         >
-                          <FiDownload /> Download
+                          <FiDownload size={12} /> Get
                         </a>
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-1">
-                    <h3 className="font-bold text-neutral-900 leading-tight line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                      {book.title}
-                    </h3>
-                    <p className="text-xs font-medium text-neutral-600 line-clamp-1">
-                      {book.author || "SUCF UNEC"}
-                    </p>
-                  </div>
+                  <h3 className="line-clamp-2 text-xs font-medium leading-snug text-neutral-900 transition-colors group-hover:text-emerald-700">
+                    {book.title}
+                  </h3>
+                  {book.author && (
+                    <p className="mt-0.5 line-clamp-1 text-[11px] text-neutral-500">{book.author}</p>
+                  )}
                 </motion.div>
               ))
             ) : (
-              <div className="col-span-full py-20 text-center">
-                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 text-3xl">
-                  <FiBook />
-                </div>
-                <p className="text-neutral-800 font-medium">No books found matching your criteria.</p>
+              <div className="col-span-full py-16 text-center">
+                <p className="text-sm text-neutral-500">No books match your search.</p>
               </div>
             )}
-          </div>
+          </motion.div>
         </section>
       </div>
     </div>

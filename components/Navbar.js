@@ -243,16 +243,13 @@ export default function Navbar() {
         </div>
 
         <button
-          className={`md:hidden p-2.5 rounded-xl transition-all shadow-sm active:scale-95 border
-            ${
-              isDarkPage
-                ? "text-white bg-white/10 border-white/20 hover:bg-white/20"
-                : "text-neutral-700 bg-neutral-100 border-neutral-200 hover:bg-neutral-200"
-            }`}
+          className={`md:hidden p-2 rounded-lg transition-colors active:scale-95 ${
+            isDarkPage ? "text-white hover:bg-white/10" : "text-neutral-700 hover:bg-neutral-100"
+          }`}
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
-          {isOpen ? <FiX size={26} /> : <FiMenu size={26} />}
+          {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
       </div>
 
@@ -285,22 +282,11 @@ export default function Navbar() {
 
               <div className="p-6 pb-4 shrink-0 relative z-10">
                 <div className="flex justify-between items-center mb-6 px-1">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/assets/logo.png"
-                      alt="Logo"
-                      width={36}
-                      height={36}
-                      className="h-9 w-auto drop-shadow-lg"
-                    />
-                    <div className="flex items-baseline">
-                      <span className="text-base font-black italic uppercase tracking-tighter leading-none font-heading text-white">
-                        SUCF
-                      </span>
-                      <span className="text-base font-black italic uppercase tracking-tighter leading-none font-heading bg-emerald-500 text-white px-1.5 ml-0.5 rounded-sm shadow-lg shadow-emerald-500/30">
-                        UNEC
-                      </span>
-                    </div>
+                  <div className="flex flex-col items-center leading-none">
+                    <Image src="/assets/logo.png" alt="SUCF UNEC" width={36} height={36} className="h-9 w-auto" />
+                    <span className="-mt-0.5 -rotate-3 rounded-[3px] bg-emerald-600 px-1.5 py-[2px] text-[9px] font-semibold uppercase tracking-[0.22em] text-white">
+                      UNEC
+                    </span>
                   </div>
                   <button
                     onClick={() => setIsOpen(false)}
