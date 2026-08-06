@@ -35,7 +35,7 @@ export default function AnthemSection() {
           <div className="absolute bottom-10 left-10 w-8 h-8 border-b-2 border-l-2 border-amber-500/30 rounded-bl-2xl" />
           <div className="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-amber-500/30 rounded-br-2xl" />
 
-          <div className="space-y-4 font-serif text-sm md:text-base leading-snug text-neutral-700 italic">
+          <div className="space-y-4 font-serif text-sm md:text-base leading-[1.9] text-neutral-700 italic">
             <p>
               <span className="text-neutral-900 font-bold not-italic">SUCF the Unique Family</span>
               <br />
