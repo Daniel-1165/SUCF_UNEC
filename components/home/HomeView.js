@@ -185,35 +185,29 @@ export default function HomeView({ event, weeklyPosts, articles, news, books, ga
 
       <AnthemSection />
 
-      {/* Mission Section: The Four Pillars */}
-      <section className="section-py bg-white relative">
-        <div className="absolute inset-0 bg-grid-pattern opacity-50" />
-        <div className="page-container relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-16 relative">
-            <span className="text-emerald-600 font-bold tracking-widest uppercase text-xs mb-4 block relative z-10">
-              Our Mandate
-            </span>
-            <h2 className="h2 text-neutral-900 mb-6 relative z-10">The Four Pillars</h2>
-          </div>
+      {/* Mission Section: The Four Pillars — four words and four icons don't
+          need cards, shadows or a patterned backdrop to land. */}
+      <section className="section-py bg-white">
+        <div className="page-container">
+          <h2 className="mb-8 text-center text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl">
+            The Four Pillars
+          </h2>
 
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4"
           >
             {pillars.map((item) => (
               <motion.div
                 key={item.title}
                 variants={fadeInUp}
-                whileHover={{ y: -5 }}
-                className="bg-white rounded-[2rem] p-6 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group transition-all hover:border-emerald-500/30"
+                className="flex flex-col items-center text-center"
               >
-                <div className="text-4xl lg:text-5xl mb-6 text-emerald-600 group-hover:scale-110 transition-transform duration-500">
-                  {item.icon}
-                </div>
-                <h3 className="text-lg lg:text-xl font-bold text-neutral-900">{item.title}</h3>
+                <div className="mb-2.5 text-xl text-emerald-700">{item.icon}</div>
+                <h3 className="text-sm font-medium text-neutral-900">{item.title}</h3>
               </motion.div>
             ))}
           </motion.div>

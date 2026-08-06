@@ -41,10 +41,10 @@ export default function NewsSection({ news = [] }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid lg:grid-cols-12 gap-12"
+          className="grid lg:grid-cols-12 gap-8 lg:gap-10"
         >
           {/* Hero News (Overlay Style) */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-6">
             {/* Caption sits under the image rather than over it — the dark
                 gradient that used to make overlaid text readable was dulling
                 the photo itself. */}
@@ -58,7 +58,7 @@ export default function NewsSection({ news = [] }) {
                     src={urlFor(lead.mainImage).width(1200).url()}
                     alt={lead.title}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     placeholder={lead.mainImage.lqip ? "blur" : "empty"}
                     blurDataURL={lead.mainImage.lqip}
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
@@ -77,38 +77,33 @@ export default function NewsSection({ news = [] }) {
             </Link>
           </div>
 
-          {/* Small List Items (Timeline Style) */}
+          {/* Secondary stories — a plain rule-separated list, no timeline rail,
+              no "Latest Feed" label, no grayscale-to-colour trick. */}
           {rest.length > 0 && (
-            <div className="lg:col-span-5 flex flex-col justify-center space-y-12">
-              <div className="flex items-center gap-4 mb-2">
-                <div className="w-3 h-3 bg-emerald-600 rounded-full"></div>
-                <h4 className="text-xs font-black text-neutral-600 uppercase tracking-[0.3em]">Latest Feed</h4>
-              </div>
-              <div className="relative pl-8 space-y-12 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-[1px] before:bg-slate-100">
+            <div className="lg:col-span-6">
+              <div className="divide-y divide-neutral-100 border-t border-neutral-100">
                 {rest.map((item) => (
-                  <Link key={item._id} href={`/news/${item.slug}`} className="group relative block">
-                    <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full border-2 border-white bg-slate-200 group-hover:bg-emerald-700 group-hover:scale-125 transition-all"></div>
-
-                    <div className="flex gap-6">
-                      <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest mb-2 block">
-                          {formatDate(item.publishedAt)}
-                        </span>
-                        <h5 className="text-lg font-bold text-neutral-900 line-clamp-2 leading-snug group-hover:text-emerald-700 transition-colors tracking-tight">
-                          {item.title}
-                        </h5>
-                      </div>
-                      <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-50 shrink-0 shadow-sm relative">
-                        {item.mainImage && (
-                          <Image
-                            src={urlFor(item.mainImage).width(160).height(160).url()}
-                            alt={item.title}
-                            fill
-                            sizes="80px"
-                            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                          />
-                        )}
-                      </div>
+                  <Link
+                    key={item._id}
+                    href={`/news/${item.slug}`}
+                    className="group flex gap-4 py-4"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] text-neutral-500">{formatDate(item.publishedAt)}</p>
+                      <h3 className="mt-1 line-clamp-2 text-sm font-medium leading-snug tracking-tight text-neutral-900 transition-colors group-hover:text-emerald-700">
+                        {item.title}
+                      </h3>
+                    </div>
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded bg-neutral-100">
+                      {item.mainImage && (
+                        <Image
+                          src={urlFor(item.mainImage).width(120).height(120).url()}
+                          alt=""
+                          fill
+                          sizes="56px"
+                          className="object-cover"
+                        />
+                      )}
                     </div>
                   </Link>
                 ))}

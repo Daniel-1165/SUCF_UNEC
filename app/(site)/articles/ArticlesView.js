@@ -3,10 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { urlFor } from "@/lib/sanity/image";
-import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 const CATEGORIES = ["All", "Faith", "Campus Life", "Testimonies", "Events", "Other"];
 
@@ -29,53 +28,33 @@ export default function ArticlesView({ articles }) {
       : articles.filter((article) => article.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20">
+    <div className="min-h-screen bg-white font-sans pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20">
       <div className="page-container">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 rounded-full mb-6"
-          >
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">
-              Articles & Insights
-            </span>
-          </motion.div>
-
-          <motion.h1
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-            transition={{ delay: 0.1 }}
-            className="h1 text-neutral-900 mb-4"
-          >
+        {/* Header — no eyebrow pill, no pulsing dot. */}
+        <motion.header
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-6 max-w-3xl"
+        >
+          <h1 className="h1 text-neutral-900">
             Inspiring <span>Articles</span>
-          </motion.h1>
+          </h1>
+          <p className="mt-2 text-sm text-neutral-600">
+            Faith-building content, testimonies, and insights from our community.
+          </p>
+        </motion.header>
 
-          <motion.p
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="text-lg text-neutral-800 max-w-2xl mx-auto"
-          >
-            Explore faith-building content, testimonies, and insights from our community
-          </motion.p>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        {/* Category filter — same chips as the library page. */}
+        <div className="mb-2 flex max-w-3xl gap-2 overflow-x-auto pb-1 no-scrollbar">
           {CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all ${
+              className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
                 selectedCategory === category
-                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30"
-                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+                  ? "bg-neutral-900 text-white"
+                  : "border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900"
               }`}
             >
               {category}
@@ -83,89 +62,55 @@ export default function ArticlesView({ articles }) {
           ))}
         </div>
 
-        {/* Articles Grid */}
+        {/* Same editorial index as /news: hairline rows, small type. */}
         {filteredArticles.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4 opacity-20">📝</div>
-            <p className="text-neutral-600 font-bold uppercase tracking-wider text-sm">
-              No articles found in this category
-            </p>
-          </div>
+          <p className="mt-6 max-w-3xl border-t border-neutral-100 py-16 text-sm text-neutral-500">
+            No articles in this category yet.
+          </p>
         ) : (
           <motion.div
+            variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            variants={staggerContainer}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="mt-6 max-w-3xl divide-y divide-neutral-100 border-t border-neutral-100"
           >
             {filteredArticles.map((article) => (
-              <motion.article
-                key={article._id}
-                variants={staggerItem}
-                className="group bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-row md:flex-col h-auto md:h-full border border-slate-50"
-              >
-                {/* Article Image */}
+              <motion.article key={article._id} variants={staggerItem}>
                 <Link
                   href={`/articles/${article.slug}`}
-                  className="relative w-[130px] sm:w-[160px] md:w-full aspect-square md:aspect-[16/10] overflow-hidden bg-slate-100 shrink-0"
+                  className="group flex gap-4 py-5 sm:gap-6 sm:py-6"
                 >
-                  {article.mainImage ? (
-                    <Image
-                      src={urlFor(article.mainImage).width(800).height(500).url()}
-                      alt={article.title}
-                      fill
-                      sizes="(max-width: 767px) 150px, (max-width: 1023px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300">
-                      <FiUser size={24} className="md:hidden" />
-                      <FiUser size={48} className="hidden md:block" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"></div>
-
-                  {/* Category Badge */}
-                  <div className="absolute top-2 left-2 md:top-4 md:left-4">
-                    <span className="px-2 py-0.5 md:px-3 md:py-1 bg-emerald-500 text-white text-xs md:text-sm font-bold uppercase tracking-wider rounded-full">
-                      {article.category || "Article"}
-                    </span>
-                  </div>
-                </Link>
-
-                {/* Article Content */}
-                <div className="p-4 sm:p-5 md:p-8 flex-1 flex flex-col justify-center md:justify-start overflow-hidden">
-                  {/* Meta Info */}
-                  <div className="flex items-center gap-4 text-xs md:text-sm text-neutral-600 mb-1 md:mb-3">
-                    <div className="flex items-center gap-1.5">
-                      <FiCalendar size={12} className="text-emerald-500" />
-                      <span>{formatDate(article.publishedAt)}</span>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <Link href={`/articles/${article.slug}`}>
-                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-neutral-900 mb-1 md:mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-tight tracking-tight">
-                      {article.title}
-                    </h3>
-                  </Link>
-
-                  {/* Excerpt - ONLY if explicitly provided */}
-                  {article.excerpt && (
-                    <p className="text-sm text-neutral-800 mb-2 md:mb-4 line-clamp-2 flex-1 font-serif italic">
-                      {article.excerpt}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] text-neutral-500">
+                      {formatDate(article.publishedAt)}
+                      {article.category && (
+                        <span> · {article.category}</span>
+                      )}
                     </p>
-                  )}
+                    <h2 className="mt-1 line-clamp-2 text-sm font-semibold leading-snug tracking-tight text-neutral-900 transition-colors group-hover:text-emerald-700 sm:text-base">
+                      {article.title}
+                    </h2>
+                    {article.excerpt && (
+                      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-neutral-600">
+                        {article.excerpt}
+                      </p>
+                    )}
+                  </div>
 
-                  {/* Read More Link */}
-                  <Link
-                    href={`/articles/${article.slug}`}
-                    className="inline-flex items-center gap-2 py-2 min-h-11 text-xs md:text-sm text-emerald-600 font-bold uppercase tracking-wider hover:gap-3 transition-all group"
-                  >
-                    Full Article
-                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
+                  {article.mainImage && (
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-neutral-100 sm:h-20 sm:w-32">
+                      <Image
+                        src={urlFor(article.mainImage).width(320).height(200).url()}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 96px, 128px"
+                        placeholder={article.mainImage.lqip ? "blur" : "empty"}
+                        blurDataURL={article.mainImage.lqip}
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                </Link>
               </motion.article>
             ))}
           </motion.div>

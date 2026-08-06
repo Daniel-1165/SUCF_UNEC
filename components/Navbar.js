@@ -4,20 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import {
-  FiMenu,
-  FiX,
-  FiHome,
-  FiInfo,
-  FiCalendar,
-  FiImage,
-  FiBookOpen,
-  FiFileText,
-  FiMail,
-  FiUsers,
-  FiSettings,
-  FiChevronDown,
-} from "react-icons/fi";
+import { FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Desktop nav: nine links read as clutter, so related destinations are grouped
@@ -46,15 +33,15 @@ const navGroups = [
 
 // Flat list for the mobile drawer.
 const navLinks = [
-  { name: "Home", path: "/", icon: <FiHome /> },
-  { name: "About", path: "/about", icon: <FiInfo /> },
-  { name: "Activities", path: "/activities", icon: <FiCalendar /> },
-  { name: "Gallery", path: "/gallery", icon: <FiImage /> },
-  { name: "Library", path: "/library", icon: <FiBookOpen /> },
-  { name: "Articles", path: "/articles", icon: <FiFileText /> },
-  { name: "News", path: "/news", icon: <FiFileText /> },
-  { name: "Executives", path: "/executives", icon: <FiUsers /> },
-  { name: "Contact", path: "/contact", icon: <FiMail /> },
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Activities", path: "/activities" },
+  { name: "Gallery", path: "/gallery" },
+  { name: "Library", path: "/library" },
+  { name: "Articles", path: "/articles" },
+  { name: "News", path: "/news" },
+  { name: "Executives", path: "/executives" },
+  { name: "Contact", path: "/contact" },
 ];
 
 
@@ -264,42 +251,32 @@ export default function Navbar() {
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
 
+            {/* Light sheet with plain text rows — the dark gradient drawer with
+                icon chips and uppercase labels was doing far more than a menu
+                needs to. */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[320px] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white shadow-2xl flex flex-col h-[100dvh] overflow-hidden"
+              transition={{ type: "spring", damping: 32, stiffness: 320 }}
+              className="absolute top-0 right-0 bottom-0 flex h-[100dvh] w-[88%] max-w-[340px] flex-col overflow-hidden rounded-l-3xl bg-white text-neutral-900 shadow-2xl"
             >
-              <div
-                className="absolute inset-0 opacity-5 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-                  backgroundSize: "32px 32px",
-                }}
-              />
-
-              <div className="p-6 pb-4 shrink-0 relative z-10">
-                <div className="flex justify-between items-center mb-6 px-1">
-                  <div className="flex flex-col items-center leading-none">
-                    <Image src="/assets/logo.png" alt="SUCF UNEC" width={36} height={36} className="h-9 w-auto" />
-                    <span className="-mt-0.5 -rotate-3 rounded-[3px] bg-emerald-600 px-1.5 py-[2px] text-[9px] font-semibold uppercase tracking-[0.22em] text-white">
-                      UNEC
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-all border border-white/10"
-                    aria-label="Close menu"
-                  >
-                    <FiX size={20} />
-                  </button>
-                </div>
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent mt-4" />
+              <div className="flex shrink-0 items-center justify-between px-6 pt-6 pb-4">
+                <span className="text-lg font-semibold tracking-tight">Menu</span>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-colors hover:bg-neutral-200"
+                  aria-label="Close menu"
+                >
+                  <FiX size={18} />
+                </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar min-h-0 relative z-10">
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-6">
+                <p className="mb-1 mt-2 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-400">
+                  Explore
+                </p>
+
                 {navLinks.map((link) => {
                   const isActive = pathname === link.path;
                   return (
@@ -307,39 +284,30 @@ export default function Navbar() {
                       key={link.name}
                       href={link.path}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${
-                        isActive
-                          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
-                          : "text-white/70 hover:bg-white/10 hover:text-white"
+                      className={`flex items-center justify-between border-b border-neutral-100 py-3.5 transition-colors ${
+                        isActive ? "text-emerald-700" : "text-neutral-900 hover:text-emerald-700"
                       }`}
                     >
-                      <span className="text-xl">{link.icon}</span>
-                      <span className="text-sm font-bold uppercase tracking-widest">
-                        {link.name}
-                      </span>
+                      <span className="text-[15px] font-medium">{link.name}</span>
+                      <FiChevronRight className="text-neutral-300" size={16} />
                     </Link>
                   );
                 })}
 
                 {isSignedIn && (
-                  <>
-                    <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-4" />
-                    <Link
-                      href="/admin"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-emerald-400 hover:bg-emerald-400/10 transition-all border border-emerald-400/20 hover:border-emerald-400/40"
-                    >
-                      <span className="text-xl">
-                        <FiSettings />
-                      </span>
-                      <span className="text-sm font-bold uppercase tracking-widest">Admin Panel</span>
-                    </Link>
-                  </>
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-between border-b border-neutral-100 py-3.5 text-emerald-700 transition-colors"
+                  >
+                    <span className="text-[15px] font-medium">Admin</span>
+                    <FiChevronRight className="text-neutral-300" size={16} />
+                  </Link>
                 )}
               </div>
 
-              <div className="p-6 bg-black/30 backdrop-blur-sm border-t border-white/10 relative z-10">
-                <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.3em] font-bold">
+              <div className="shrink-0 px-6 pb-7 pt-4">
+                <p className="text-[11px] text-neutral-400">
                   SUCF UNEC &copy; {new Date().getFullYear()}
                 </p>
               </div>
