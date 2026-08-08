@@ -124,25 +124,32 @@ body {
     color: #404040;
   }
 
-  /* Inline images placed between paragraphs in Sanity Studio */
+  /* Inline images placed between paragraphs in Sanity Studio. Held to a
+     narrower measure than the text column and capped by height, so a portrait
+     upload can't run the length of the screen. Centred, with a hairline frame
+     rather than a heavy radius. */
   .article-body-content figure,
   .news-body-content figure {
-    margin: 2.5em 0;
+    margin: 2em auto;
+    max-width: 30rem;
   }
 
   .article-body-content figure img,
   .news-body-content figure img {
     width: 100%;
     height: auto;
-    border-radius: 1rem;
+    max-height: 26rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e5e5;
   }
 
   .article-body-content figcaption,
   .news-body-content figcaption {
-    margin-top: 0.75em;
-    font-size: 0.875rem;
+    margin-top: 0.6em;
+    font-size: 0.75rem;
     line-height: 1.5;
-    color: #525252;
+    color: #737373;
     text-align: center;
   }
 

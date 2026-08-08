@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiBook } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { gatedHref } from "@/lib/authLinks";
 
 export default function BooksSection({ books = [] }) {
   return (
@@ -15,7 +16,7 @@ export default function BooksSection({ books = [] }) {
             From the library
           </h2>
           <Link
-            href="/library"
+            href={gatedHref("/library")}
             className="shrink-0 text-xs font-medium text-neutral-600 transition-colors hover:text-emerald-700"
           >
             View all
@@ -30,17 +31,24 @@ export default function BooksSection({ books = [] }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-6"
+            className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-8"
           >
-            {books.map((book) => (
-              <Link key={book._id} href="/library" className="group block">
+            {/* Eight covers fill one row at lg and two rows at sm. Below sm the
+                grid is three wide, so the last two are hidden to leave two
+                complete rows of three rather than a stranded partial row. */}
+            {books.map((book, index) => (
+              <Link
+                key={book._id}
+                href={gatedHref("/library")}
+                className={`group block ${index >= 6 ? "hidden sm:block" : ""}`}
+              >
                 <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-neutral-100">
                   {book.coverImage ? (
                     <Image
                       src={urlFor(book.coverImage).width(240).height(320).url()}
                       alt=""
                       fill
-                      sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 140px"
+                      sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 110px"
                       placeholder={book.coverImage.lqip ? "blur" : "empty"}
                       blurDataURL={book.coverImage.lqip}
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"

@@ -33,7 +33,7 @@ export default async function HomePage() {
       reflections={reflections}
       articles={(articles || []).slice(0, 4)}
       news={(news || []).slice(0, 3)}
-      books={(books || []).slice(0, 6)}
+      books={(books || []).slice(0, 8)}
       galleryImages={(galleryImages || []).slice(0, 6)}
     />
   );

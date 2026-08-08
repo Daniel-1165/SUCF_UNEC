@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiMapPin, FiClock, FiX, FiCalendar } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { gatedHref } from "@/lib/authLinks";
 import { fadeInUp } from "@/lib/animations";
 
 // Combine the separate eventDate / eventTime fields from Sanity into a single Date.
@@ -62,7 +63,7 @@ export default function CountdownTimer({ event }) {
             Check back soon for our next gathering, or reach out and we&apos;ll let you know.
           </p>
           <Link
-            href="/contact"
+            href={gatedHref("/contact")}
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
           >
             Contact us <FiArrowRight />
@@ -167,7 +168,7 @@ export default function CountdownTimer({ event }) {
             )}
 
             <Link
-              href="/contact"
+              href={gatedHref("/contact")}
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
             >
               Get directions <FiArrowRight />
@@ -272,7 +273,7 @@ export default function CountdownTimer({ event }) {
                 </div>
 
                 <Link
-                  href="/contact"
+                  href={gatedHref("/contact")}
                   className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
                 >
                   Get directions <FiArrowRight />

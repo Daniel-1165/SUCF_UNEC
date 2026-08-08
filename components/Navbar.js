@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import { gatedHref } from "@/lib/authLinks";
 
 // Desktop nav: nine links read as clutter, so related destinations are grouped
 // behind two dropdowns. Mobile keeps every link visible — a drawer has the room.
@@ -50,6 +51,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const pathname = usePathname();
 
@@ -63,15 +65,21 @@ export default function Navbar() {
   useEffect(() => {
     let cancelled = false;
     fetch("/api/auth-state")
-      .then((r) => (r.ok ? r.json() : { isSignedIn: false }))
+      .then((r) => (r.ok ? r.json() : {}))
       .then((d) => {
-        if (!cancelled) setIsSignedIn(Boolean(d.isSignedIn));
+        if (cancelled) return;
+        setIsSignedIn(Boolean(d.isSignedIn));
+        setIsAdmin(Boolean(d.isAdmin));
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
   }, []);
+
+  // Gated destinations route through sign-in, but only for visitors who aren't
+  // already signed in — otherwise Auth0 just bounces them straight back.
+  const linkHref = (path) => (isSignedIn ? path : gatedHref(path));
 
   // Close any open dropdown when the route changes or Escape is pressed.
   useEffect(() => {
@@ -132,7 +140,7 @@ export default function Navbar() {
                 return (
                   <Link
                     key={group.name}
-                    href={group.path}
+                    href={linkHref(group.path)}
                     className={`relative rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
                       isActive ? activeText : linkBase
                     }`}
@@ -194,7 +202,7 @@ export default function Navbar() {
                           {group.items.map((item) => (
                             <Link
                               key={item.name}
-                              href={item.path}
+                              href={linkHref(item.path)}
                               onClick={() => setOpenMenu(null)}
                               className={`block rounded-lg px-3 py-2.5 transition-colors ${
                                 pathname.startsWith(item.path)
@@ -219,7 +227,7 @@ export default function Navbar() {
             })}
           </div>
 
-          {isSignedIn && (
+          {isAdmin && (
             <Link
               href="/admin"
               className="rounded-lg bg-neutral-900 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-neutral-700"
@@ -282,7 +290,7 @@ export default function Navbar() {
                   return (
                     <Link
                       key={link.name}
-                      href={link.path}
+                      href={linkHref(link.path)}
                       onClick={() => setIsOpen(false)}
                       className={`flex items-center justify-between border-b border-neutral-100 py-3.5 transition-colors ${
                         isActive ? "text-emerald-700" : "text-neutral-900 hover:text-emerald-700"
@@ -294,7 +302,7 @@ export default function Navbar() {
                   );
                 })}
 
-                {isSignedIn && (
+                {isAdmin && (
                   <Link
                     href="/admin"
                     onClick={() => setIsOpen(false)}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 
-const RENDER_WIDTH = 1200;
+const RENDER_WIDTH = 960;
 
 const components = {
   types: {
@@ -23,7 +23,7 @@ const components = {
             alt={value.alt || value.caption || ""}
             width={RENDER_WIDTH}
             height={height}
-            sizes="(max-width: 768px) 100vw, 720px"
+            sizes="(max-width: 640px) 90vw, 480px"
             placeholder={value.lqip ? "blur" : "empty"}
             blurDataURL={value.lqip}
           />

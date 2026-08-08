@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiClock } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { gatedHref } from "@/lib/authLinks";
 
 function formatDate(dateString) {
   if (!dateString) return "";
@@ -29,7 +30,7 @@ export default function NewsSection({ news = [] }) {
             Latest <span className="italic font-serif">Fellowship</span> News
           </h2>
           <Link
-            href="/news"
+            href={gatedHref("/news")}
             className="mt-3 inline-flex items-center gap-2 text-xs font-medium text-neutral-500 transition-colors hover:text-emerald-700 group"
           >
             See full history <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -48,10 +49,12 @@ export default function NewsSection({ news = [] }) {
             {/* Caption sits under the image rather than over it — the dark
                 gradient that used to make overlaid text readable was dulling
                 the photo itself. */}
-            <Link href={`/news/${lead.slug}`} className="group block">
+            <Link href={gatedHref(`/news/${lead.slug}`)} className="group block">
+              {/* Height-capped so the lead frame stays in proportion with the
+                  story list beside it — a tall source crop used to tower over it. */}
               <div
-                className="relative overflow-hidden rounded-2xl bg-neutral-100"
-                style={{ aspectRatio: lead.mainImage?.aspectRatio || 16 / 10 }}
+                className="relative max-h-[15rem] overflow-hidden rounded-2xl bg-neutral-100 sm:max-h-[18rem] lg:max-h-[17rem]"
+                style={{ aspectRatio: Math.max(lead.mainImage?.aspectRatio || 16 / 10, 16 / 10) }}
               >
                 {lead.mainImage ? (
                   <Image
@@ -85,7 +88,7 @@ export default function NewsSection({ news = [] }) {
                 {rest.map((item) => (
                   <Link
                     key={item._id}
-                    href={`/news/${item.slug}`}
+                    href={gatedHref(`/news/${item.slug}`)}
                     className="group flex gap-4 py-4"
                   >
                     <div className="min-w-0 flex-1">

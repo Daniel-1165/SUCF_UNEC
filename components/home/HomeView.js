@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiBookOpen, FiHeart, FiGlobe, FiLifeBuoy } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { gatedHref } from "@/lib/authLinks";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import CountdownTimer from "@/components/CountdownTimer";
 import AnthemSection from "@/components/AnthemSection";
@@ -86,7 +87,7 @@ export default function HomeView({ event, weeklyPosts, reflections, articles, ne
 
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 pt-1">
                 <Link
-                  href="/activities"
+                  href={gatedHref("/activities")}
                   className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
                 >
                   Join a Gathering <FiArrowRight />
@@ -168,7 +169,7 @@ export default function HomeView({ event, weeklyPosts, reflections, articles, ne
                   </div>
 
                   <Link
-                    href="/activities"
+                    href={gatedHref("/activities")}
                     aria-label="See our activities"
                     className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-md backdrop-blur transition-colors hover:bg-emerald-700 hover:text-white"
                   >

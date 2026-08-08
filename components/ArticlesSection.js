@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiCalendar, FiUser } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
+import { gatedHref } from "@/lib/authLinks";
 
 function formatDate(dateString) {
   if (!dateString) return "";
@@ -42,7 +43,7 @@ export default function ArticlesSection({ articles = [] }) {
             >
               {/* Article Image */}
               <Link
-                href={`/articles/${article.slug}`}
+                href={gatedHref(`/articles/${article.slug}`)}
                 className="relative w-[120px] sm:w-[150px] md:w-full aspect-square md:aspect-[16/10] overflow-hidden bg-slate-100 shrink-0"
               >
                 {article.mainImage ? (
@@ -80,7 +81,7 @@ export default function ArticlesSection({ articles = [] }) {
                 </div>
 
                 {/* Title */}
-                <Link href={`/articles/${article.slug}`}>
+                <Link href={gatedHref(`/articles/${article.slug}`)}>
                   <h3 className="text-sm md:text-base font-semibold text-neutral-900 mb-1 md:mb-3 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-tight tracking-tight">
                     {article.title}
                   </h3>
@@ -95,7 +96,7 @@ export default function ArticlesSection({ articles = [] }) {
 
                 {/* Read More Link */}
                 <Link
-                  href={`/articles/${article.slug}`}
+                  href={gatedHref(`/articles/${article.slug}`)}
                   className="inline-flex items-center gap-2 text-[11px] font-medium text-emerald-700 hover:gap-3 transition-all group"
                 >
                   Full Story
@@ -108,7 +109,7 @@ export default function ArticlesSection({ articles = [] }) {
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/articles"
+            href={gatedHref("/articles")}
             className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
           >
             View all articles <FiArrowRight />
