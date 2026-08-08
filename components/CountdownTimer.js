@@ -67,6 +67,10 @@ export default function CountdownTimer({ event }) {
           >
             Contact us <FiArrowRight />
           </Link>
+
+          <p className="mt-8 text-xs italic text-neutral-600">
+            Think SUCF, Pray SUCF, Act SUCF and be a School Visitor
+          </p>
         </div>
       </div>
     );
@@ -174,10 +178,8 @@ export default function CountdownTimer({ event }) {
 
       {/* Quiet invitation strip — replaces the old scrolling ticker */}
       <div className="border-t border-neutral-200">
-        <p className="page-container py-4 text-center text-xs text-neutral-600">
-          {event.location
-            ? `Join us at ${event.location} for a life-changing session in God's presence.`
-            : "Join us for a life-changing session in God's presence."}
+        <p className="page-container py-4 text-center text-xs italic text-neutral-600">
+          Think SUCF, Pray SUCF, Act SUCF and be a School Visitor
         </p>
       </div>
 

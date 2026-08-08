@@ -4,64 +4,53 @@ import { motion } from "framer-motion";
 
 export default function AnthemSection() {
   return (
-    <section className="section-py bg-white relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-900/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="w-full mx-auto px-4 sm:px-6 max-w-4xl relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+    <section className="section-py bg-white">
+      <div className="mx-auto w-full max-w-2xl px-4 text-center sm:px-6">
+        <motion.h2
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12"
+          transition={{ duration: 0.4 }}
+          className="mb-8 text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-50 border border-amber-200 rounded-full mb-6">
-            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-[0.3em]">Our Heritage</span>
-          </div>
-          <h2 className="h3 font-serif text-neutral-900 mb-4">The Anthem.</h2>
-          <div className="w-24 h-1 bg-amber-500/30 mx-auto rounded-full"></div>
-        </motion.div>
+          The Anthem
+        </motion.h2>
 
+        {/* No corner brackets: at mobile padding they overlapped the lyrics.
+            Verses get real breathing room instead — these are sung lines, so
+            each one wants to sit on its own. */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-white border border-neutral-200 p-6 sm:p-10 rounded-2xl relative"
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="space-y-7 text-sm leading-[2.1] text-neutral-700 sm:text-base"
         >
-          {/* Corner accents */}
-          <div className="absolute top-10 left-10 w-8 h-8 border-t-2 border-l-2 border-amber-500/30 rounded-tl-2xl" />
-          <div className="absolute top-10 right-10 w-8 h-8 border-t-2 border-r-2 border-amber-500/30 rounded-tr-2xl" />
-          <div className="absolute bottom-10 left-10 w-8 h-8 border-b-2 border-l-2 border-amber-500/30 rounded-bl-2xl" />
-          <div className="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-amber-500/30 rounded-br-2xl" />
-
-          <div className="space-y-4 font-serif text-sm md:text-base leading-[1.9] text-neutral-700 italic">
-            <p>
-              <span className="text-neutral-900 font-bold not-italic">SUCF the Unique Family</span>
-              <br />
-              We are marching on by His grace
-              <br />
-              Following Jesus the author of our faith
-              <br />
-              And the owner of our soul
-            </p>
-            <p>
-              We shall follow till we all see Him
-              <br />
-              There is no time to sleep on the way
-            </p>
-            <p>
-              <span className="text-neutral-900 font-bold not-italic">Jesus the answer, He is the way</span>
-              <br />
-              Jesus the truth and the life
-              <br />
-              We shall follow righteousness
-              <br />
-              We shall follow holiness
-              <br />
-              Without which no eye shall see Him
-            </p>
-          </div>
+          <p>
+            <span className="font-medium text-neutral-900">SUCF the Unique Family</span>
+            <br />
+            We are marching on by His grace
+            <br />
+            Following Jesus the author of our faith
+            <br />
+            And the owner of our soul
+          </p>
+          <p>
+            We shall follow till we all see Him
+            <br />
+            There is no time to sleep on the way
+          </p>
+          <p>
+            <span className="font-medium text-neutral-900">Jesus the answer, He is the way</span>
+            <br />
+            Jesus the truth and the life
+            <br />
+            We shall follow righteousness
+            <br />
+            We shall follow holiness
+            <br />
+            Without which no eye shall see Him
+          </p>
         </motion.div>
       </div>
     </section>

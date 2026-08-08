@@ -8,10 +8,12 @@ import { FiClock, FiMapPin, FiCompass, FiX } from "react-icons/fi";
 import { urlFor } from "@/lib/sanity/image";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 
-const DAY_STYLE = {
-  Sunday: { icon: "✝️" },
-  Wednesday: { icon: "🔥" },
-  Thursday: { icon: "📖" },
+// The real fellowship flyers, keyed by day. These replace the emoji icons —
+// an actual designed flyer says far more than a pictogram.
+const DAY_FLYER = {
+  Sunday: "/assets/carousel/weekly_activities_schedule.jpg",
+  Wednesday: "/assets/carousel/weekly_prayers.jpg",
+  Thursday: "/assets/carousel/bible_study.jpg",
 };
 
 // Convenience "Get Directions" links, keyed by day name. Not CMS content —
@@ -100,47 +102,56 @@ export default function ActivitiesView({ weeklySchedule, units }) {
           >
             {weeklySchedule.map((event, index) => (
               <motion.div key={`${event.day}-${index}`} variants={staggerItem}>
-                <div className="flex h-full flex-col rounded-xl border border-neutral-200 bg-white p-5">
-                  <span
-                    className="mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-50 text-2xl"
-                    aria-hidden="true"
-                  >
-                    {DAY_STYLE[event.day]?.icon || "📅"}
-                  </span>
-
-                  <h3 className="text-base font-semibold tracking-tight text-neutral-900">
-                    {event.day}
-                  </h3>
-                  {event.title && (
-                    <p className="mt-0.5 text-xs font-medium text-emerald-700">{event.title}</p>
+                <div className="group flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white transition-colors hover:border-neutral-300">
+                  {/* The flyer leads the card. object-cover on a fixed 4:5 frame
+                      so flyers of differing shapes still line up as a row. */}
+                  {DAY_FLYER[event.day] && (
+                    <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
+                      <Image
+                        src={DAY_FLYER[event.day]}
+                        alt={`${event.title || event.day} flyer`}
+                        fill
+                        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                    </div>
                   )}
 
-                  <div className="mt-4 flex-1 space-y-2.5">
-                    {event.time && (
-                      <div className="flex items-start gap-2.5">
-                        <FiClock size={14} className="mt-0.5 shrink-0 text-neutral-400" />
-                        <p className="text-xs text-neutral-600">{event.time}</p>
-                      </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="text-base font-semibold tracking-tight text-neutral-900">
+                      {event.day}
+                    </h3>
+                    {event.title && (
+                      <p className="mt-0.5 text-xs font-medium text-emerald-700">{event.title}</p>
                     )}
 
-                    {event.description && (
-                      <div className="flex items-start gap-2.5">
-                        <FiMapPin size={14} className="mt-0.5 shrink-0 text-neutral-400" />
-                        <p className="text-xs leading-relaxed text-neutral-600">
-                          {event.description}
-                        </p>
-                      </div>
+                    <div className="mt-4 flex-1 space-y-2.5">
+                      {event.time && (
+                        <div className="flex items-start gap-2.5">
+                          <FiClock size={14} className="mt-0.5 shrink-0 text-neutral-400" />
+                          <p className="text-xs text-neutral-600">{event.time}</p>
+                        </div>
+                      )}
+
+                      {event.description && (
+                        <div className="flex items-start gap-2.5">
+                          <FiMapPin size={14} className="mt-0.5 shrink-0 text-neutral-400" />
+                          <p className="text-xs leading-relaxed text-neutral-600">
+                            {event.description}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {getDirectionsUrl(event.day) && (
+                      <button
+                        onClick={() => handleDirection(event.day)}
+                        className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-neutral-200 px-4 py-2.5 text-xs font-medium text-neutral-900 transition-colors hover:border-emerald-700 hover:text-emerald-700"
+                      >
+                        Get Directions <FiCompass size={14} />
+                      </button>
                     )}
                   </div>
-
-                  {getDirectionsUrl(event.day) && (
-                    <button
-                      onClick={() => handleDirection(event.day)}
-                      className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-neutral-200 px-4 py-2.5 text-xs font-medium text-neutral-900 transition-colors hover:border-emerald-700 hover:text-emerald-700"
-                    >
-                      Get Directions <FiCompass size={14} />
-                    </button>
-                  )}
                 </div>
               </motion.div>
             ))}

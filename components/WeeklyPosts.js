@@ -22,8 +22,10 @@ function ReflectionPanel({ reflections }) {
   if (!current) return null;
 
   return (
-    <div className="flex h-full flex-col justify-center rounded-xl border border-neutral-200 bg-neutral-50 p-6">
-      {/* Crossfade in place. min-h keeps the panel from jumping as entries of
+    // No card, border or fill — the text sits directly on the page beside
+    // the flyer, so the flyer stays the only framed thing in the section.
+    <div className="flex h-full flex-col justify-center">
+      {/* Crossfade in place. min-h keeps the column from jumping as entries of
           different lengths swap in. */}
       <div className="relative min-h-[9rem]">
         <AnimatePresence mode="wait">
@@ -34,7 +36,7 @@ function ReflectionPanel({ reflections }) {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="whitespace-pre-line text-sm leading-[1.8] text-neutral-700">
+            <p className="whitespace-pre-line text-sm leading-[1.9] text-neutral-700">
               {current.text}
             </p>
             {current.source && (
@@ -74,13 +76,17 @@ export default function WeeklyPosts({ posts = [], reflections = [] }) {
           Weekly spotlight
         </h2>
 
-        {/* Flyers left, rotating reflection right on desktop; stacked on mobile. */}
-        <div className="grid gap-6 lg:grid-cols-12">
+        {/* Flyer left, rotating reflection right from md up; stacked on mobile.
+            Splitting at md rather than lg means tablets and narrower desktops
+            get the side-by-side layout too, instead of dropping the text below. */}
+        <div className="grid gap-8 md:grid-cols-12 md:items-center">
           {hasPosts && (
             <div
-              className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${
-                hasReflections ? "lg:col-span-8" : "lg:col-span-12 lg:grid-cols-3"
-              }`}
+              className={`grid grid-cols-1 gap-6 ${
+                hasReflections
+                  ? "md:col-span-7"
+                  : "md:col-span-12 sm:grid-cols-2 lg:grid-cols-3"
+              } ${hasReflections && posts.length > 1 ? "sm:grid-cols-2" : ""}`}
             >
               {posts.map((post, index) => (
                 <motion.div
@@ -120,7 +126,7 @@ export default function WeeklyPosts({ posts = [], reflections = [] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className={hasPosts ? "lg:col-span-4" : "lg:col-span-12"}
+              className={hasPosts ? "md:col-span-5" : "md:col-span-12"}
             >
               <ReflectionPanel reflections={reflections} />
             </motion.div>
